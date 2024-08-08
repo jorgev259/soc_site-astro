@@ -1,15 +1,21 @@
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-    node: true,
-  },
-  extends: ["plugin:react/recommended", "standard-with-typescript", "prettier"],
-  overrides: [],
+  extends: ["plugin:astro/recommended"],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaVersion: "latest",
+    tsconfigRootDir: __dirname,
     sourceType: "module",
+    ecmaVersion: "latest",
   },
-  plugins: ["react"],
-  rules: {},
+  overrides: [
+    {
+      files: ["*.astro"],
+      parser: "astro-eslint-parser",
+      parserOptions: {
+        parser: "@typescript-eslint/parser",
+        extraFileExtensions: [".astro"],
+      },
+      rules: {},
+    },
+  ],
 };
