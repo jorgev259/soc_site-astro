@@ -15,6 +15,7 @@ const config: CodegenConfig = {
       resolverGeneration: 'disabled',
       typesPluginsConfig: {
         contextType: '../client.mts#ResolverContext',
+        maybeValue: 'T'
       },
       add: {
         './types.generated.ts': { content: '// @ts-nocheck' },

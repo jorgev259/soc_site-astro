@@ -145,8 +145,8 @@ type Query {
   searchAlbum(
     title: String
     categories: [String]
+    offset: Int
     limit: Int
-    page: Int
     order: [String]
     mode: String
     status: [String!]
