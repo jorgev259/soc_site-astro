@@ -1,0 +1,42 @@
+type Comment {
+  id: ID!
+  text: String!
+  anon: Boolean!
+  album: Album!
+  username: String
+}
+
+type Album {
+  comments: [Comment]!
+  selfComment: Comment
+  isFavorite: Boolean
+  favorites: Int!
+  avgRating: AvgRating!
+  selfScore: Int
+}
+
+type User {
+  comments: [Comment]!
+  favorites: [Album]!
+}
+
+type UserMe {
+  comments: [Comment]!
+  favorites: [Album]!
+}
+
+type AvgRating {
+    score: Float!
+    users: Int!
+}
+
+type Query {
+  recentComments(limit: Int): [Comment]!
+}
+
+type Mutation {
+  updateComment(text: String!, anon: Boolean!, albumId: ID!): Boolean
+  addFavorite(albumId: String!): Boolean
+  removeFavorite(albumId: String!): Boolean
+  rateAlbum(albumId: ID!, score: Int!): Boolean
+}

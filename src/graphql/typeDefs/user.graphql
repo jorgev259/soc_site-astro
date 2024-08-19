@@ -1,0 +1,57 @@
+    type User {
+        username: String!
+        roles: [Role]! 
+        permissions: [String]!  
+        pages: [Page]!
+        createdAt: Float!
+        placeholder: String!
+        imgUrl: String!
+    }
+
+    type UserMe {
+        email: String!
+        username: String!
+        roles: [Role]! 
+        permissions: [String]!  
+        pages: [Page]!
+        createdAt: Float!
+        placeholder: String!
+        imgUrl: String!
+    }
+
+    type Page {
+        url: String!
+        perms: [String!]!
+    }
+
+    type Role {
+        name: String!
+        permissions: [String]!
+    }
+
+    type Query {
+        me: UserMe
+        roles: [Role]!
+        permissions: [String]!
+        users(search: String): [User]!
+        user(username: String!): User
+
+        login(username: String!, password: String!): Int!
+    }
+
+    type Mutation {
+        login(username: String!, password: String!): Int!
+        logout: Int!
+        
+        registerUser(email: String!, username: String!, pfp: Upload): Boolean!
+        updateUserRoles(username: String!, roles: [String]!): Boolean!
+        deleteUser(username: String!): Int
+
+        createForgorLink(key: String!): Boolean!
+        updatePass(key: String!, pass:String!): Boolean!
+        updateUser(username: String, password: String, email: String, pfp: Upload): Boolean!
+
+        createRole(name: String!, permissions: [String]!): Role
+        updateRole(key:String!, name: String!, permissions: [String]!): Role
+        deleteRole(name: String!): String  
+    }

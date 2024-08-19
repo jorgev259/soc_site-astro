@@ -1,0 +1,19 @@
+type VgmResult {
+  title: String
+  subTitle: String
+  releaseDate: String
+  coverUrl: String
+  artists: [String]!
+  categories: [String]!
+  classifications: [String]!
+  trackList: [VGMDBDisc]!
+}
+
+type VGMDBDisc {
+  number: Int
+  tracks: [String!]
+}
+
+type Query {
+  vgmdb(url: String!): VgmResult
+}

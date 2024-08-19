@@ -1,0 +1,24 @@
+type SearchAlbumResult {
+  rows: [Album]
+  count: Int
+}
+
+type SearchAnimResult {
+  rows: [Animation]
+  count: Int
+}
+
+type SearchStudioResult {
+  rows: [Studio]
+  count: Int
+}
+
+type SearchGameResult {
+  rows: [Game]
+  count: Int
+}
+
+type SearchSeriesResult {
+  rows: [Series]
+  count: Int
+}

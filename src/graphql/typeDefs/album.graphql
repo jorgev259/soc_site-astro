@@ -1,0 +1,301 @@
+type Album {
+  id: ID!
+  title: String!
+  subTitle: String
+  releaseDate: String!
+  label: String
+  vgmdb: String
+  description: String
+  stores: [Store]!
+  discs: [Disc]!
+  artists: [Artist]!
+  categories: [Category]!
+  classifications: [Classification]!
+  platforms: [Platform]!
+  games: [Game]!
+  animations: [Animation]!
+  downloads: [Download]!
+  related: [Album]!
+  updatedAt: Float!
+  createdAt: Float!
+  status: String!
+  placeholder: String
+  headerColor: String!
+}
+
+type Disc {
+  id: ID!
+  number: Int
+  body: String
+  tracks: [String]
+  album: Album
+}
+
+type Download {
+  id: ID!
+  title: String
+  small: Boolean
+  links: [Link]
+}
+
+type Store {
+  id: ID!
+  provider: String
+  url: String
+}
+
+type Link {
+  id: ID!
+  provider: String
+  custom: String
+  url: String
+  directUrl: String
+}
+
+type Artist {
+  name: String!
+  slug: String!
+  albums: [Album]
+}
+
+type Category {
+  name: String!
+  albums: [Album]!
+  count: Int!
+}
+
+type Classification {
+  name: String!
+}
+
+type Game {
+  slug: String!
+  name: String
+  releaseDate: String
+  placeholder: String
+  publishers: [Publisher]
+  platforms: [Platform]
+  albums(order: [String]): [Album]
+  series: [Series]
+  headerColor: String!
+}
+
+type Animation {
+  id: ID!
+  title: String
+  subTitle: String
+  releaseDate: String
+  placeholder: String
+  studios: [Studio]!
+  albums(order: [String]): [Album]!
+  headerColor: String!
+}
+
+type Studio {
+  slug: String!
+  name: String
+  animations: [Animation]!
+}
+
+type Platform {
+  id: ID!
+  name: String
+  type: String!
+  albums: [Album]
+  games: [Game]!
+}
+
+type Publisher {
+  id: ID!
+  name: String
+  games: [Game]
+}
+
+type Series {
+  slug: String!
+  name: String
+  placeholder: String
+  games: [Game]
+  headerColor: String!
+}
+
+type Query {
+  albums: [Album!]!
+  downloads(id: ID!): [Download]!
+  albumCount: Float!
+  categories: [Category]!
+  classifications: [Classification]!
+  album(id: ID): Album
+  artists: [Artist!]!
+  platforms: [Platform!]!
+  platform(id: ID): Platform!
+  publishers: [Publisher]!
+  publisher(id: ID!): Publisher!
+  series: [Series]!
+  seriesOne(slug: String): Series
+  games: [Game!]!
+  game(slug: String): Game!
+  animations: [Animation]!
+  animation(id: ID): Animation!
+  studios: [Studio]!
+  studio(slug: String!): Studio!
+
+  highlight: Album!
+
+  searchAlbum(
+    title: String
+    categories: [String]
+    limit: Int
+    page: Int
+    order: [String]
+    mode: String
+    status: [String!]
+  ): SearchAlbumResult
+  searchAlbumByArtist(
+    name: String!
+    categories: [String]
+    limit: Int
+    page: Int
+    order: [String]
+    mode: String
+    status: [String!]
+  ): SearchAlbumResult
+  searchAnimation(
+    title: String
+    limit: Int
+    page: Int
+    order: String
+    mode: String
+  ): SearchAnimResult
+  searchStudio(
+    name: String
+    limit: Int
+    page: Int
+    order: String
+    mode: String
+  ): SearchStudioResult
+  searchGame(
+    name: String
+    limit: Int
+    page: Int
+    order: String
+    mode: String
+  ): SearchGameResult
+  searchSeries(
+    name: String
+    limit: Int
+    page: Int
+    order: String
+    mode: String
+  ): SearchSeriesResult
+
+  searchSeriesByName(name: String): [Series]
+  recentSeries(limit: Int!): [Series]
+  searchPublishersByName(name: String): [Publisher]
+  recentPublishers(limit: Int!): [Publisher]
+  searchPlatformsByName(name: String, categories: [String]!): [Platform]
+  searchPlatformsByCategories(categories: [String]!): [Platform]!
+  recentPlatforms(limit: Int!, type: [String]!): [Platform]
+
+  getRandomAlbum(limit: Int): [Album!]!
+}
+
+type Mutation {
+  createPlatform(name: String, type: String!): Platform!
+  updatePlatform(key: ID!, name: String, type: String!): Platform!
+  deletePlatform(key: ID!): Int
+
+  createPublisher(name: String): Publisher!
+  updatePublisher(id: ID!, name: String): Publisher!
+  deletePublisher(id: ID!): Int
+
+  createSeries(slug: String, name: String, cover: Upload!): Series!
+  updateSeries(slug: String, name: String, cover: Upload): Series!
+  deleteSeries(slug: String!): Int
+
+  createGame(
+    releaseDate: String
+    slug: String
+    name: String
+    publishers: [ID]
+    series: [String]
+    platforms: [ID]
+    cover: Upload!
+  ): Game!
+  updateGame(
+    releaseDate: String
+    slug: String
+    name: String
+    publishers: [ID]
+    series: [String]
+    platforms: [ID]
+    cover: Upload
+  ): Game!
+  deleteGame(slug: String!): Int
+
+  createStudio(slug: String, name: String): Studio!
+  updateStudio(slug: String, name: String): Studio!
+  deleteStudio(slug: String!): Int
+
+  createAnimation(
+    title: String
+    subTitle: String
+    releaseDate: String
+    studios: [String]
+    cover: Upload
+  ): Animation
+  updateAnimation(
+    id: ID!
+    title: String
+    subTitle: String
+    releaseDate: String
+    studios: [String]
+    cover: Upload
+  ): Animation
+  deleteAnimation(id: ID!): Int
+
+  createAlbum(
+    title: String
+    subTitle: String
+    cover: Upload
+    releaseDate: String
+    label: String
+    vgmdb: String
+    description: String
+    stores: [StoreInput]
+    downloads: [DownloadInput]
+    artists: [String]
+    categories: [String]
+    classifications: [String]
+    platforms: [ID]
+    games: [String]
+    animations: [ID]
+    discs: [DiscInput]
+    related: [ID]
+    status: String!
+    request: ID
+  ): Album!
+  updateAlbum(
+    id: ID!
+    title: String
+    subTitle: String
+    cover: Upload
+    releaseDate: String
+    label: String
+    vgmdb: String
+    description: String
+    stores: [StoreInput]
+    downloads: [DownloadInput]
+    artists: [String]
+    categories: [String]
+    classifications: [String]
+    platforms: [ID]
+    games: [String]
+    animations: [ID]
+    discs: [DiscInput]
+    related: [ID]
+    status: String!
+    request: ID
+  ): Album!
+  deleteAlbum(id: ID!): Int
+}

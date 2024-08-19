@@ -1,0 +1,64 @@
+type Request {
+  id: ID!
+  title: String
+  link: String
+  user: String
+  userID: String
+  state: String!
+  donator: Boolean!
+  reason: String
+  comments: String
+  message: String
+}
+
+type Submission {
+  id: ID!
+  title: String!
+  vgmdb: String
+  request: Request
+  links: String
+  score: Int!
+  state: String!
+  submitter: User!
+}
+
+type RequestResult {
+  count: Int!
+  rows: [Request]!
+}
+
+type Query {
+  requests(
+    state: [String!], 
+    donator: [Boolean]!
+  ): [Request]!
+  request(link: String!): Request
+  searchRequests(
+    state: [String!]
+    donator: [Boolean!]
+    limit: Int
+    page: Int
+    filter: String
+  ): RequestResult!
+  submissions(filter: String, state: [String]): [Submission]!
+}
+
+type Mutation {
+  editRequest(
+    id: ID!
+    title: String
+    link: String
+    state: String
+    comments: String
+    reason: String
+  ): Request!
+
+  submitAlbum(
+    title: String!
+    vgmdb: String
+    request: ID
+    links: String!
+  ): Submission!
+
+  rejectRequest(id: ID!, reason: String): Boolean!
+}

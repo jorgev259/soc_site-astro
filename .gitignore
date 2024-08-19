@@ -1,7 +1,9 @@
 # build output
 dist/
+
 # generated types
 .astro/
+src/graphql/__generated__/
 
 # dependencies
 node_modules/

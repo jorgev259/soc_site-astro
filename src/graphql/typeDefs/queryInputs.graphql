@@ -1,0 +1,27 @@
+input ArtistInput {
+  name: String!
+  slug: String!
+}
+
+input StoreInput {
+  provider: String!
+  url: String!
+}
+
+input DownloadInput {
+  title: String
+  small: Boolean
+  links: [LinkInput]
+}
+
+input LinkInput {
+  provider: String
+  custom: String
+  url: String
+  directUrl: String
+}
+
+input DiscInput {
+  number: Int
+  body: String
+}
