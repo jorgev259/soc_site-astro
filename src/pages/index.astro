@@ -1,8 +1,8 @@
 ---
-
+import { languageTag } from '../paraglide/runtime'
 ---
 
-<html lang='en'>
+<html lang={languageTag()} dir={Astro.locals.paraglide.dir}>
   <head>
     <meta charset='utf-8' />
     <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
