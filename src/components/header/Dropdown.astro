@@ -21,10 +21,9 @@ import NavButton from './NavButton.astro'
       const button = this.querySelector('.dropdown-btn')
       const items = this.querySelector('.dropdown-items')
 
-      button.addEventListener('click', () => {
-        console.log('click')
-        items.classList.toggle('hidden')
-        items.classList.toggle('flex')
+      button?.addEventListener('click', () => {
+        items?.classList.toggle('hidden')
+        items?.classList.toggle('flex')
       })
     }
   }

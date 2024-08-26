@@ -1,6 +1,9 @@
-import { Op } from 'sequelize'
+import type { Resolvers } from '@/graphql/__generated__/types.generated'
+import Sequelize from 'sequelize'
 
-const resolvers = {
+const { Op } = Sequelize
+
+const resolvers: Resolvers = {
   Query: {
     artists: (parent, args, { db }, info) => db.models.artist.findAll(),
     platforms: (parent, args, { db }, info) => db.models.platform.findAll(),
@@ -24,7 +27,7 @@ const resolvers = {
     animation: (parent, { id }, { db }) => db.models.animation.findByPk(id),
     animations: (parent, args, { db }) => db.models.animation.findAll(),
     studio: (parent, { slug }, { db }) => db.models.studio.findByPk(slug),
-    studios: (parent, { slug }, { db }) => db.models.studio.findAll(),
+    studios: (parent, _, { db }) => db.models.studio.findAll(),
     seriesOne: (parent, { slug }, { db }, info) =>
       db.models.series.findByPk(slug),
     albumCount: async (parent, params, { db }) => db.models.album.count(),

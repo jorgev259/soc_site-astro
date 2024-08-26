@@ -22,6 +22,7 @@ export default defineConfig({
         const user = await db.models.user.findByPk(credentials.username)
         if (!user) throw new InvalidLoginError()
 
+        // @ts-ignore
         const valid = await bcrypt.compare(credentials.password, user.password)
         if (!valid) throw new InvalidLoginError()
 

@@ -25,8 +25,8 @@ import { Icon } from 'astro-icon/components'
       const items = this.querySelector('.nav-items')
       const btn = document.getElementById('nav-toggler')
 
-      btn.addEventListener('click', () => {
-        items.classList.toggle('hidden')
+      btn?.addEventListener('click', () => {
+        items?.classList.toggle('hidden')
       })
     }
   }
