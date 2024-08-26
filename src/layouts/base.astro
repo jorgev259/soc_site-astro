@@ -1,0 +1,36 @@
+---
+import { languageTag } from '../paraglide/runtime'
+
+import Header from '@/components/Header.astro'
+
+import '@/styles/global.css'
+---
+
+<html lang={languageTag()} dir={Astro.locals.paraglide.dir} class='h-full'>
+  <head>
+    <title>Sitting on Clouds</title>
+    <meta property='og:type' content='website' />
+    <meta property='og:site_name' content='Sitting on Clouds' />
+
+    <meta name='theme-color' content='#ffffff' />
+    <meta property='og:url' content='/' />
+    <meta
+      property='og:title'
+      content='Sitting on Clouds — High Quality soundtrack library'
+    />
+    <meta
+      property='og:description'
+      content='Largest Video Game & Animation Soundtrack サウンドトラック Archive'
+    />
+    <meta property='og:image' content='/img/assets/clouds_thumb.png' />
+    <meta name='generator' content={Astro.generator} />
+    <meta charset='utf-8' />
+  </head>
+  <body class='flex flex-col min-h-full m-0 color-'>
+    <Header />
+    <main class='flex-1'>
+      <slot />
+    </main>
+    <footer>This is the footer</footer>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+---
+import Button from '../Button.astro'
+
+const { class: className } = Astro.props
+---
+
+<Button
+  class:list={[
+    'w-full md:w-fit md:h-full bg-dark hover:bg-dark-hover py-3.5 md:py-1 px-2 rounded-none text-left md:text-center',
+    className
+  ]}
+>
+  <slot />
+</Button>

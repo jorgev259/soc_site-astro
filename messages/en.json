@@ -1,3 +1,25 @@
 {
-    "$schema": "https://inlang.com/schema/inlang-message-format"
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "register": "Register",
+  "login": "Login",
+  "logout": "Logout",
+  "home": "Home",
+  "lastaddednav": "Last Added",
+  "albumlist": "Album List",
+  "games": "Games",
+  "albums": "Albums",
+  "series": "Series",
+  "publishers": "Publishers",
+  "platforms": "Platforms",
+  "gamelist": "Game List",
+  "animation": "Animation",
+  "animationlist": "Animation List",
+  "studios": "Studios",
+  "requests": "Requests",
+  "submitalbum": "Submit Album",
+  "admingrounds": "Admin Grounds",
+  "managealbums": "Manage Albums",
+  "manageusers": "Manage Users",
+  "managerequests": "Manage Requests",
+  "managesubmissions": "Manage Submissions"
 }

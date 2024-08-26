@@ -1,0 +1,33 @@
+---
+import NavButton from './NavButton.astro'
+---
+
+<nav-dropdown>
+  <NavButton class='dropdown-btn group relative'>
+    <div class='after:content-["▼"] after:text-xs'><slot /></div>
+    <div
+      class='dropdown-items md:absolute flex-col bg-gray hidden md:group-hover:flex top-full left-0 py-1 min-w-36 rounded-md md:rounded-t-none mt-1.5 md:mt-0'
+    >
+      <slot name='items' />
+    </div>
+  </NavButton>
+</nav-dropdown>
+
+<script>
+  class Dropdown extends HTMLElement {
+    constructor() {
+      super()
+
+      const button = this.querySelector('.dropdown-btn')
+      const items = this.querySelector('.dropdown-items')
+
+      button.addEventListener('click', () => {
+        console.log('click')
+        items.classList.toggle('hidden')
+        items.classList.toggle('flex')
+      })
+    }
+  }
+
+  customElements.define('nav-dropdown', Dropdown)
+</script>

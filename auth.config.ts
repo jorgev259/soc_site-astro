@@ -1,6 +1,6 @@
 import { CredentialsSignin } from '@auth/core/errors'
 import { defineConfig } from 'auth-astro'
-import Credentials from "next-auth/providers/credentials"
+import Credentials from "@auth/core/providers/credentials"
 import bcrypt from 'bcrypt'
 
 import db from '@/sequelize'
@@ -11,7 +11,6 @@ class InvalidLoginError extends CredentialsSignin {
 
 export default defineConfig({
   providers: [
-    // @ts-ignore @auth/core cringe
     Credentials({
       credentials: {
         username: { label: "Username" },

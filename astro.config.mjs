@@ -3,8 +3,9 @@ import tailwind from '@astrojs/tailwind'
 import node from '@astrojs/node'
 import paraglide from '@inlang/paraglide-astro'
 import auth from 'auth-astro'
-
 import { languageTags } from './project.inlang/settings.json'
+
+import icon from 'astro-icon'
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,10 +24,14 @@ export default defineConfig({
       // recommended settings
       project: './project.inlang',
       outdir: './src/paraglide' //where your files should be
-    })
+    }),
+    icon({ iconDir: 'src/img/icons' })
   ],
   output: 'server',
   adapter: node({
     mode: 'standalone'
-  })
+  }),
+  image: {
+    domains: ['cdn.sittingonclouds.net']
+  }
 })

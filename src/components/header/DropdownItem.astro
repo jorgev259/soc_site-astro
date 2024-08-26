@@ -1,0 +1,10 @@
+---
+const { class: className, href } = Astro.props
+---
+
+<a
+  href={href}
+  class:list={['hover:bg-gray-hover py-1 text-left ps-4', className]}
+>
+  <slot />
+</a>
