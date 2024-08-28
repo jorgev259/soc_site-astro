@@ -25,6 +25,13 @@ import '@/styles/global.css'
     <meta property='og:image' content='/img/assets/clouds_thumb.png' />
     <meta name='generator' content={Astro.generator} />
     <meta charset='utf-8' />
+
+    <link
+      rel='alternate'
+      type='application/rss+xml'
+      title='Sitting on Clouds'
+      href={new URL('rss.xml', Astro.site)}
+    />
   </head>
   <body class='flex flex-col min-h-full m-0 color-'>
     <Header />
