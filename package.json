@@ -52,5 +52,8 @@
     "prettier-config-standard": "^7.0.0",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.5.4"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
   }
 }
