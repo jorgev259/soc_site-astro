@@ -1,29 +1,35 @@
-import Sequelize from 'sequelize'
-const { Op, literal } = Sequelize
+//@ts-ignore
+import { Op, literal } from 'sequelize'
 import type { Resolvers } from '@/graphql/__generated__/types.generated'
+
+
 
 const fuzzySearch = (words: string[]) => `^${words.map(w => `(?=.*\b${w}\b)`)}.+/i`
 
 const resolvers: Resolvers = {
   Query: {
-    searchAlbum: (parent, args, { db }) => {
+    searchAlbum: (_, args, { db }) => {
       const { title, categories, limit = 10, offset = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] } = args
-      const titleWords = title?.split(' ') || []
+      const fuzzyCondition = title ? {
+        [Op.or]: [
+          { title: { [Op.regexp]: fuzzySearch(title.split(' ')) } },
+          { subTitle: { [Op.regexp]: fuzzySearch(title.split(' ')) } }
+        ]
+      } : {}
+
+      const include = []
+      if (categories) include.push({ model: db.models.category, where: { name: { [Op.in]: categories } } })
 
       return db.models.album.findAndCountAll({
         limit, offset,
         where: {
-          [Op.or]: [
-            { title: { [Op.regexp]: fuzzySearch(titleWords) } },
-            { subTitle: { [Op.regexp]: fuzzySearch(titleWords) } }
-          ],
+          ...fuzzyCondition,
           status: { [Op.in]: status }
         },
-        include: categories ? [{ model: db.models.category, where: { name: { [Op.in]: categories } } }] : [],
+        include,
         order: [literal('`album`.`status` = \'coming\' DESC'), ...order.map(o => [o, mode])]
       })
-
-    },
+    }
     /* searchAlbumByArtist: async (parent, { name, categories, limit, page = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] }, { db }) => {
       const include = [{ model: db.models.artist, where: { name: { [Op.like]: `%${name}%` } } }]
 

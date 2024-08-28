@@ -1,18 +1,12 @@
-import { GraphQLUpload } from 'graphql-upload-minimal'
+// import { GraphQLUpload } from 'graphql-upload-minimal'
+import type { Resolvers } from "@/graphql/__generated__/types.generated"
 
-import {
-  checkHeaderColor,
-  solveRating,
-  checkPlaceholder
-} from '@/server/utils/resolvers'
-
-import { getUser } from '@/next/utils/getSession'
-
-const resolvers = {
-  Upload: GraphQLUpload,
+const resolvers: Resolvers = {
+  // Upload: GraphQLUpload,
   Album: {
+    // @ts-ignore
     artists: (parent, args, context, info) => parent.getArtists(),
-    categories: (parent, args, context, info) => parent.getCategories(),
+    /* categories: (parent, args, context, info) => parent.getCategories(),
     classifications: (parent, args, context, info) =>
       parent.getClassifications(),
     platforms: (parent, args, context, info) =>
@@ -50,10 +44,10 @@ const resolvers = {
     favorites: (album, _, { db }) => album.countUsers(),
     placeholder: (album, _, { db }) => checkPlaceholder(album, 'album'),
     headerColor: (album, _, { db }) => checkHeaderColor(album, 'album'),
-    avgRating: async (album, _, { db }) => solveRating(album)
+    avgRating: async (album, _, { db }) => solveRating(album) */
   },
 
-  Comment: {
+  /* Comment: {
     username: (parent) => (parent.anon ? null : parent.username),
     album: (comment, _, { db }) => comment.getAlbum()
   },
@@ -148,7 +142,7 @@ const resolvers = {
   Disc: {
     album: (parent) => parent.getAlbum(),
     tracks: (parent) => parent.body.split(',')
-  }
+  } */
 }
 
 export default resolvers
