@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes } from '@/sequelize'
 import { PLACEHOLDER } from '@/constants'
 
 const animation = (sequelize) => {

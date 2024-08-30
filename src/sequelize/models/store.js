@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize'
+import { DataTypes } from '@/sequelize'
 const model = (sequelize) => {
   const Store = sequelize.define('store', {
     url: DataTypes.STRING,

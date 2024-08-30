@@ -1,24 +1,30 @@
-import { Op, fn, col, where } from 'sequelize'
+import { Op, fn, col, where } from '@/sequelize'
 
 const resolvers = {
   Query: {
-    requests: (_, {
-      state = ['complete', 'hold', 'pending'],
-      donator = [true, false]
-    }, { db }) => db.models.request.findAll({ where: { state, donator } }),
-    request: (_, { link }, { db }) => db.models.request.findOne({ where: { link } }),
+    requests: (
+      _,
+      { state = ['complete', 'hold', 'pending'], donator = [true, false] },
+      { db }
+    ) => db.models.request.findAll({ where: { state, donator } }),
+    request: (_, { link }, { db }) =>
+      db.models.request.findOne({ where: { link } }),
 
-    searchRequests: async (_, {
-      state = ['complete', 'hold', 'pending'],
-      donator = [true, false],
-      limit = 10,
-      page = 0,
-      filter
-    }, { db }) => {
+    searchRequests: async (
+      _,
+      {
+        state = ['complete', 'hold', 'pending'],
+        donator = [true, false],
+        limit = 10,
+        page = 0,
+        filter
+      },
+      { db }
+    ) => {
       const options = { limit, offset: limit * page }
       const optionsWhere = { state, donator }
 
-      async function exactSearch () {
+      async function exactSearch() {
         if (!filter) return
 
         const results = await db.models.request.findAndCountAll({
@@ -37,7 +43,7 @@ const resolvers = {
         if (results.rows.length > 0) return results
       }
 
-      function looseSearch () {
+      function looseSearch() {
         return db.models.request.findAndCountAll({
           where: [
             optionsWhere,
@@ -47,7 +53,7 @@ const resolvers = {
         })
       }
 
-      return await exactSearch() || looseSearch()
+      return (await exactSearch()) || looseSearch()
     },
 
     submissions: (_, args, context) => {
@@ -63,7 +69,9 @@ const resolvers = {
                 { id: filter },
                 { vgmdb: filter },
                 { userUsername: filter },
-                where(fn('LOWER', col('title')), { [Op.like]: `%${filter.toLowerCase()}%` })
+                where(fn('LOWER', col('title')), {
+                  [Op.like]: `%${filter.toLowerCase()}%`
+                })
               ]
             }
           ]

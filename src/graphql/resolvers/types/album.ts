@@ -1,11 +1,11 @@
 // import { GraphQLUpload } from 'graphql-upload-minimal'
 import type { Resolvers } from "@/graphql/__generated__/types.generated"
+import type Album from "@/sequelize/models/album"
 
 const resolvers: Resolvers = {
   // Upload: GraphQLUpload,
   Album: {
-    // @ts-ignore
-    artists: (parent, args, context, info) => parent.getArtists(),
+    artists: (parent: Album, args, context, info) => parent.getArtists(),
     /* categories: (parent, args, context, info) => parent.getCategories(),
     classifications: (parent, args, context, info) =>
       parent.getClassifications(),

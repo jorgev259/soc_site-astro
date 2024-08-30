@@ -1,26 +1,11 @@
-import bcrypt from 'bcrypt'
-import generator from 'generate-password'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
-import { DateTime } from 'luxon'
-import { Op } from 'sequelize'
-import path from 'path'
-import fs from 'fs-extra'
-import sharp from 'sharp'
-
-import { createForgor } from '@/server/utils/forgor'
-import { isAuthedApp } from '@/server/utils/resolvers'
-import { processImage } from '@/server/utils/image'
-import { getSession, getUser } from '@/next/utils/getSession'
-import {
-  ForbiddenError,
-  UserInputError
-} from '@/next/server/utils/graphQLErrors'
+import type { Resolvers } from '@/graphql/__generated__/types.generated'
 
 const resolversComposition = {
-  'Mutation.updateUser': [isAuthedApp]
+  //'Mutation.updateUser': [isAuthedApp]
 }
 
-const streamToString = (stream) => {
+/* const streamToString = (stream) => {
   const chunks = []
   return new Promise((resolve, reject) => {
     stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)))
@@ -45,51 +30,28 @@ async function cropPFP(streamItem, username, imgId) {
     sharpImage = sharpImage.extract(
       width > height
         ? {
-            left: Math.floor((width - height) / 2),
-            top: 0,
-            width: height,
-            height
-          }
+          left: Math.floor((width - height) / 2),
+          top: 0,
+          width: height,
+          height
+        }
         : {
-            left: 0,
-            top: Math.floor((height - width) / 2),
-            width,
-            height: width
-          }
+          left: 0,
+          top: Math.floor((height - width) / 2),
+          width,
+          height: width
+        }
     )
   }
 
   await sharpImage.resize({ width: 200, height: 200 }).png().toFile(fullPath)
 
   return await processImage(fullPath)
-}
+}*/
 
-const resolvers = {
+const resolvers: Resolvers = {
   Mutation: {
-    login: async (_, { username, password }, { db }) => {
-      const user = await db.models.user.findByPk(username)
-      if (!user) throw UserInputError()
-
-      const valid = await bcrypt.compare(password, user.password)
-      if (!valid) throw UserInputError()
-
-      const session = await getSession()
-      session.username = user.username
-      // Remove this when new site version is fully implemented
-      session.permissions = (await user.getRoles())
-        .map((r) => r.permissions)
-        .flat()
-      await session.save()
-
-      return 200
-    },
-    logout: async () => {
-      const session = await getSession()
-      await session.destroy()
-
-      return 200
-    },
-    registerUser: async (_, { username, email, pfp }, { db }) => {
+    /*registerUser: async (_, { username, email, pfp }, { db }) => {
       await Promise.all([
         db.models.user.findByPk(username).then((result) => {
           if (result) throw UserInputError('Username already in use')
@@ -213,7 +175,7 @@ const resolvers = {
       await role.destroy()
 
       return name
-    }
+    }*/
   }
 }
 

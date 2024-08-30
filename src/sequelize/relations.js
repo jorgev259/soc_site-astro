@@ -1,11 +1,27 @@
-export default function relations (sequelize) {
+export default function relations(sequelize) {
   const {
-    album, classification, disc, download, link,
-    publisher, game, series,
-    platform, artist, category, store,
-    animation, studio,
-    user, role, forgor, log, comment, rating,
-    submission, request
+    album,
+    classification,
+    disc,
+    download,
+    link,
+    publisher,
+    game,
+    series,
+    platform,
+    artist,
+    category,
+    store,
+    animation,
+    studio,
+    user,
+    role,
+    forgor,
+    log,
+    comment,
+    rating,
+    submission,
+    request
   } = sequelize.models
 
   user.belongsToMany(role, { through: 'User_Role' })
@@ -32,15 +48,25 @@ export default function relations (sequelize) {
   platform.belongsToMany(game, { through: 'Game_Platform' })
 
   album.belongsToMany(artist, { onDelete: 'SET NULL', through: 'Album_Artist' })
-  album.belongsToMany(classification, { onDelete: 'SET NULL', through: 'Album_Classification' })
-  album.belongsToMany(category, { onDelete: 'SET NULL', through: 'Album_Category' })
-  album.belongsToMany(platform, { onDelete: 'SET NULL', through: 'Album_Platform' })
+  album.belongsToMany(classification, {
+    onDelete: 'SET NULL',
+    through: 'Album_Classification'
+  })
+  // album.belongsToMany(category, { onDelete: 'SET NULL', through: 'Album_Category' })
+  album.belongsToMany(platform, {
+    onDelete: 'SET NULL',
+    through: 'Album_Platform'
+  })
   album.belongsToMany(game, { onDelete: 'SET NULL', through: 'Album_Game' })
   album.belongsToMany(animation, { through: 'Album_Animation' })
   album.hasMany(disc, { onDelete: 'SET NULL' })
   album.hasMany(download, { onDelete: 'SET NULL' })
   album.hasMany(store, { onDelete: 'SET NULL' })
-  album.belongsToMany(album, { onDelete: 'SET NULL', through: 'related_album', as: 'related' })
+  album.belongsToMany(album, {
+    onDelete: 'SET NULL',
+    through: 'related_album',
+    as: 'related'
+  })
 
   platform.belongsToMany(album, { through: 'Album_Platform' })
 
