@@ -4,8 +4,9 @@ import { Attribute, PrimaryKey, AutoIncrement, Default, Table } from '@sequelize
 @Table({
   freezeTableName: true,
 })
+
 export default class Config extends Model<InferAttributes<Config>, InferCreationAttributes<Config>> {
-  @Attribute(DataTypes.STRING)
+  @Attribute(DataTypes.ENUM('banner', 'banner-position'))
   @PrimaryKey
   declare name: string
 

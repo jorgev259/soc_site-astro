@@ -2,6 +2,8 @@
 import { gql } from '@/graphql/__generated__/client'
 import { getApolloClient } from '@/graphql/apolloClient.mjs'
 import { Image } from 'astro:assets'
+// @ts-ignore
+import { Picture } from 'astro-imagetools/components'
 import { getSession } from 'auth-astro/server'
 import * as m from '../paraglide/messages.js'
 
@@ -16,7 +18,10 @@ import NavButton from './header/NavButton.astro'
 
 const headerQuery = gql(`
     query HeaderInfo {
-      config(name: "banner") {
+      banner: config(name: "banner") {
+        value
+      }
+      bannerPosition: config(name: "banner-position") {
         value
       }
     }
@@ -24,17 +29,25 @@ const headerQuery = gql(`
 
 const client = await getApolloClient()
 const { data: headerInfo } = await client.query({ query: headerQuery })
+const { banner, bannerPosition } = headerInfo
 
 const session = await getSession(Astro.request)
 ---
 
 <header class='relative'>
-  <div
-    class='h-[150px] bg-top bg-no-repeat bg-cover'
-    style={{
-      backgroundImage: `url(https://cdn.sittingonclouds.net/live/${headerInfo?.config?.value}.png)`
-    }}
-  >
+  <div class='relative h-[150px] bg-top bg-no-repeat bg-cover'>
+    <div class='absolute size-full'>
+      <Picture
+        attributes={{
+          picture: { class: '!size-full' },
+          img: {
+            class: `!size-full !object-cover !object-${bannerPosition?.value || 'top'} !z-0`
+          }
+        }}
+        src={`https://cdn.sittingonclouds.net/live/${banner?.value}.png`}
+        alt=''
+      />
+    </div>
     <div class='relative px-20 size-full'>
       <a href='/'>
         <Image
