@@ -1,9 +1,7 @@
 ---
 import { gql } from '@/graphql/__generated__/client'
 import { getApolloClient } from '@/graphql/apolloClient.mjs'
-import { Image } from 'astro:assets'
-// @ts-ignore
-import { Picture } from 'astro-imagetools/components'
+import { Image, Picture } from 'astro:assets'
 import { getSession } from 'auth-astro/server'
 import * as m from '../paraglide/messages.js'
 
@@ -38,14 +36,11 @@ const session = await getSession(Astro.request)
   <div class='relative h-[150px] bg-top bg-no-repeat bg-cover'>
     <div class='absolute size-full'>
       <Picture
-        attributes={{
-          picture: { class: '!size-full' },
-          img: {
-            class: `!size-full !object-cover !object-${bannerPosition?.value || 'top'} !z-0`
-          }
-        }}
+        class={`size-full object-cover object-${bannerPosition?.value || 'top'}`}
         src={`https://cdn.sittingonclouds.net/live/${banner?.value}.png`}
         alt=''
+        width={2560}
+        height={150}
       />
     </div>
     <div class='relative px-20 size-full'>
