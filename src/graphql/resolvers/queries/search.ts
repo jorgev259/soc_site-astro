@@ -8,6 +8,7 @@ const fuzzySearch = (words: string[]) => `^${words.map(w => `(?=.*\b${w}\b)`)}.+
 
 const resolvers: Resolvers = {
   Query: {
+    // @ts-ignore
     searchAlbum: async (_, args, { db }) => {
       const { title, categories, limit = 10, offset = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] } = args
       const fuzzyCondition = title ? {
@@ -27,6 +28,7 @@ const resolvers: Resolvers = {
           status: { [Op.in]: status }
         },
         include,
+        // @ts-ignore
         order: [literal('`album`.`status` = \'coming\' DESC'), ...order.map(o => [o, mode])]
       })
 

@@ -1,5 +1,5 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
-import type { Resolvers } from '@/graphql/__generated__/types.generated'
+// import type { Resolvers } from '@/graphql/__generated__/types.generated'
 
 const resolversComposition = {
   //'Mutation.updateUser': [isAuthedApp]
@@ -49,7 +49,7 @@ async function cropPFP(streamItem, username, imgId) {
   return await processImage(fullPath)
 }*/
 
-const resolvers: Resolvers = {
+const resolvers = {
   Mutation: {
     /*registerUser: async (_, { username, email, pfp }, { db }) => {
       await Promise.all([

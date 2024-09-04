@@ -5,7 +5,8 @@ import type Album from "@/sequelize/models/album"
 const resolvers: Resolvers = {
   // Upload: GraphQLUpload,
   Album: {
-    artists: (parent: Album, args, context, info) => parent.getArtists(),
+    // @ts-ignore
+    artists: (parent, args, context, info) => parent.getArtists(),
     /* categories: (parent, args, context, info) => parent.getCategories(),
     classifications: (parent, args, context, info) =>
       parent.getClassifications(),

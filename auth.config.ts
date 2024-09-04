@@ -3,7 +3,14 @@ import { defineConfig } from 'auth-astro'
 import Credentials from "@auth/core/providers/credentials"
 import bcrypt from 'bcrypt'
 
-import db from '@/sequelize'
+import User from '@/sequelize/models/user'
+
+declare module "@auth/core" {
+  interface Session {
+    id: string
+    username: string
+  }
+}
 
 class InvalidLoginError extends CredentialsSignin {
   code = "Invalid username/email or password"
@@ -19,7 +26,7 @@ export default defineConfig({
       async authorize(credentials) {
         if (!credentials?.username || !credentials.password) throw new InvalidLoginError()
 
-        const user = await db.models.user.findByPk(credentials.username)
+        const user = await User.findByPk(credentials.username)
         if (!user) throw new InvalidLoginError()
 
         // @ts-ignore
