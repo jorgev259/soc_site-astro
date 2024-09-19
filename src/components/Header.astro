@@ -1,12 +1,12 @@
 ---
-import { gql } from '@/graphql/__generated__/client'
+import { gql } from '@/graphql/__generated__/client/index.js'
 import { getApolloClient } from '@/graphql/apolloClient.mjs'
 import { Image, Picture } from 'astro:assets'
 import { getSession } from 'auth-astro/server'
 import * as m from '../paraglide/messages.js'
 
-import logo from '@/img/logos/winter.png'
-// import logoEs from '@/img/logos/default_es.png'
+import logo from 'img/logos/winter.png'
+// import logoEs from 'img/logos/default_es.png'
 
 import Button from './Button.astro'
 import Dropdown from './header/Dropdown.astro'

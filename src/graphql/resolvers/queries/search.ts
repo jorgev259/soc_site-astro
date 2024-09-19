@@ -1,8 +1,8 @@
 import { Op, literal } from '@sequelize/core'
 import type { Resolvers } from '@/graphql/__generated__/types.generated'
 
-import Category from '@/sequelize/models/category'
-import Album from '@/sequelize/models/album'
+import Category from 'sequelize/models/category'
+import Album from 'sequelize/models/album'
 
 const fuzzySearch = (words: string[]) => `^${words.map(w => `(?=.*\b${w}\b)`)}.+/i`
 

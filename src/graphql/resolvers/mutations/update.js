@@ -1,10 +1,10 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
-import { createLog, createUpdateLog } from '@/server/utils/log'
-import { img, getImgColor } from '@/server/utils/image'
-import { hasRole } from '@/server/utils/resolvers'
-import { handleComplete } from '@/server/utils/requests'
-import { slugify } from '@/server/utils/slugify'
+import { createLog, createUpdateLog } from 'server/utils/log'
+import { img, getImgColor } from 'server/utils/image'
+import { hasRole } from 'server/utils/resolvers'
+import { handleComplete } from 'server/utils/requests'
+import { slugify } from 'server/utils/slugify'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {

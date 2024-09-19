@@ -1,4 +1,4 @@
-import { DataTypes } from '@/sequelize'
+import { DataTypes } from 'sequelize'
 const model = (sequelize) => {
   const Publisher = sequelize.define(
     'publisher',

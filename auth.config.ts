@@ -3,7 +3,7 @@ import { defineConfig } from 'auth-astro'
 import Credentials from "@auth/core/providers/credentials"
 import bcrypt from 'bcrypt'
 
-import User from '@/sequelize/models/user'
+import User from 'sequelize/models/user'
 
 declare module "@auth/core" {
   interface Session {

@@ -1,6 +1,6 @@
 // import { GraphQLUpload } from 'graphql-upload-minimal'
 import type { Resolvers } from "@/graphql/__generated__/types.generated"
-import type Album from "@/sequelize/models/album"
+import type Album from "sequelize/models/album"
 
 const resolvers: Resolvers = {
   // Upload: GraphQLUpload,

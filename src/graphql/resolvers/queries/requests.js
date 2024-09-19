@@ -1,4 +1,4 @@
-import { Op, fn, col, where } from '@/sequelize'
+import { Op, fn, col, where } from 'sequelize'
 
 const resolvers = {
   Query: {

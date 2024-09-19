@@ -8,7 +8,7 @@ import type { Session } from '@auth/core/types';
 import { typeDefs } from "./__generated__/typeDefs.generated";
 import resolvers from '@/graphql/resolvers'
 
-import db from '@/sequelize';
+import db from 'sequelize';
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 export type ResolverContext = { request?: Request, session?: Session }

@@ -1,10 +1,10 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import { mergeResolvers } from '@graphql-tools/merge'
 
-import { hasRole, isAuthedApp } from '@/server/utils/resolvers'
-import { getUser } from '@/next/utils/getSession'
-import { requestPOST } from '@/server/utils/requests'
-import { UserInputError } from '@/next/server/utils/graphQLErrors'
+import { hasRole, isAuthedApp } from 'server/utils/resolvers'
+import { getUser } from 'next/utils/getSession'
+import { requestPOST } from 'server/utils/requests'
+import { UserInputError } from 'next/server/utils/graphQLErrors'
 
 const resolvers = {
   Mutation: {

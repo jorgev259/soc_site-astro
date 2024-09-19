@@ -1,3 +1,4 @@
+// @ts-check
 import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import node from '@astrojs/node'
@@ -21,18 +22,9 @@ export default defineConfig({
   integrations: [
     tailwind(),
     auth(),
-    paraglide({
-      // recommended settings
-      project: './project.inlang',
-      outdir: './src/paraglide' //where your files should be
-    }),
+    paraglide({ project: './project.inlang', outdir: './src/paraglide' }),
     icon({ iconDir: 'src/img/icons' })
   ],
   output: 'server',
-  adapter: node({
-    mode: 'standalone'
-  }),
-  image: {
-    domains: ['cdn.sittingonclouds.net']
-  }
+  adapter: node({ mode: 'standalone' })
 })

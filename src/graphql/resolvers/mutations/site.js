@@ -2,9 +2,9 @@ import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import fs from 'fs-extra'
 import path from 'path'
 
-import { img } from '@/server/utils/image'
-import { hasRole } from '@/server/utils/resolvers'
-import { UserInputError } from '@/next/server/utils/graphQLErrors'
+import { img } from 'server/utils/image'
+import { hasRole } from 'server/utils/resolvers'
+import { UserInputError } from 'next/server/utils/graphQLErrors'
 
 const resolversComposition = { 'Mutation.*': hasRole('UPDATE') }
 const resolvers = {

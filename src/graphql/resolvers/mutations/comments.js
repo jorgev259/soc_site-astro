@@ -1,8 +1,8 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 // import axios from 'axios'
 
-import { isAuthedApp } from '@/server/utils/resolvers'
-import { getSession, getUser } from '@/next/utils/getSession'
+import { isAuthedApp } from 'server/utils/resolvers'
+import { getSession, getUser } from 'next/utils/getSession'
 
 // const token = process.env.IRONCLAD
 

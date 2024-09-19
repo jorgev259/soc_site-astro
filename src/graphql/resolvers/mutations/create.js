@@ -1,11 +1,11 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
-import { createLog, createUpdateLog } from '@/server/utils/log'
-import { getImgColor, img } from '@/server/utils/image'
-import { hasRole } from '@/server/utils/resolvers'
-import { handleComplete } from '@/server/utils/requests'
-import { slugify } from '@/server/utils/slugify'
-import { UserInputError } from '@/next/server/utils/graphQLErrors'
+import { createLog, createUpdateLog } from 'server/utils/log'
+import { getImgColor, img } from 'server/utils/image'
+import { hasRole } from 'server/utils/resolvers'
+import { handleComplete } from 'server/utils/requests'
+import { slugify } from 'server/utils/slugify'
+import { UserInputError } from 'next/server/utils/graphQLErrors'
 
 const resolversComposition = { 'Mutation.*': hasRole('CREATE') }
 const resolvers = {

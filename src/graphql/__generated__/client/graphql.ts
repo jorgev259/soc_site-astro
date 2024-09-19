@@ -1,4 +1,5 @@
 /* eslint-disable */
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -926,3 +927,19 @@ export type VgmResult = {
   title?: Maybe<Scalars['String']['output']>;
   trackList: Array<Maybe<VgmdbDisc>>;
 };
+
+export type HeaderInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HeaderInfoQuery = { __typename?: 'Query', banner?: { __typename?: 'Config', value?: string | null } | null, bannerPosition?: { __typename?: 'Config', value?: string | null } | null };
+
+export type LastAddedQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type LastAddedQuery = { __typename?: 'Query', added?: { __typename?: 'SearchAlbumResult', rows?: Array<{ __typename?: 'Album', id: string, createdAt: number, title: string, subTitle?: string | null, artists: Array<{ __typename?: 'Artist', name: string } | null> } | null> | null } | null };
+
+
+export const HeaderInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HeaderInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"banner"},"name":{"kind":"Name","value":"config"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"StringValue","value":"banner","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"bannerPosition"},"name":{"kind":"Name","value":"config"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"StringValue","value":"banner-position","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]} as unknown as DocumentNode<HeaderInfoQuery, HeaderInfoQueryVariables>;
+export const LastAddedDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LastAdded"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"added"},"name":{"kind":"Name","value":"searchAlbum"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"status"},"value":{"kind":"ListValue","values":[{"kind":"StringValue","value":"show","block":false}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rows"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"subTitle"}},{"kind":"Field","name":{"kind":"Name","value":"artists"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<LastAddedQuery, LastAddedQueryVariables>;

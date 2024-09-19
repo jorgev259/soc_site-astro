@@ -1,5 +1,5 @@
 
-import User from "@/sequelize/models/user";
+import User from "sequelize/models/user";
 import type { Session } from "@auth/core";
 
 export async function getUser(session: Session | null) {

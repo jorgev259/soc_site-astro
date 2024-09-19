@@ -1,5 +1,5 @@
-import { DataTypes } from '@/sequelize'
-import { PLACEHOLDER } from '@/constants'
+import { DataTypes } from 'sequelize'
+import { PLACEHOLDER } from 'constants'
 
 const model = (sequelize) => {
   const Series = sequelize.define(
