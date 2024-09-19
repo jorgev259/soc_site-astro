@@ -5,13 +5,12 @@
   "scripts": {
     "dev": "concurrently \"npm:gql:watch\" \"npm:astro:dev\"",
     "astro:dev": "astro dev",
-    "build": "npm run paraglide:compile && astro check && npm run gql:compile && astro build",
+    "build": "npm run paraglide:compile && npm run gql:compile && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "gql:compile": "graphql-codegen",
     "gql:watch": "graphql-codegen -w",
-    "paraglide:compile": "paraglide-js compile --project ./project.inlang --outdir ./src\\paraglide",
-    "postinstall": "npm run paraglide:compile"
+    "paraglide:compile": "paraglide-js compile --project ./project.inlang --outdir ./src\\paraglide"
   },
   "dependencies": {
     "@apollo/client": "^3.11.4",
