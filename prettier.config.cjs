@@ -1,8 +1,8 @@
-/** @type {import("prettier").Config} */
-module.exports = {
-  ...require('prettier-config-standard'),
+const merge = require('lodash/merge')
+const prettierConfigStandard = require('prettier-config-standard')
 
-  pluginSearchDirs: [__dirname],
+/** @type {import("prettier").Config} */
+const config = merge(prettierConfigStandard, {
   plugins: [require.resolve('prettier-plugin-astro')],
   overrides: [
     {
@@ -12,4 +12,6 @@ module.exports = {
       }
     }
   ]
-}
+})
+
+module.exports = config

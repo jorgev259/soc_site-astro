@@ -1,24 +1,11 @@
+import eslintConfigStandard from 'eslint-config-standard'
+import eslintConfigPrettier from 'eslint-config-prettier'
+
+import eslintPluginAstro from 'eslint-plugin-astro'
+
 /** @type {import("eslint").Linter.Config} */
-module.exports = {
-  extends: ['plugin:astro/recommended'],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    tsconfigRootDir: __dirname,
-    sourceType: 'module',
-    ecmaVersion: 'latest'
-  },
-  overrides: [
-    {
-      files: ['*.astro'],
-      parser: 'astro-eslint-parser',
-      parserOptions: {
-        parser: '@typescript-eslint/parser',
-        extraFileExtensions: ['.astro']
-      },
-      rules: {}
-    }
-  ],
-  rules: {
-    'no-multiple-empty-lines': [2, { max: 1 }]
-  }
-}
+module.exports = [
+  eslintConfigStandard,
+  eslintConfigPrettier,
+  eslintPluginAstro.configs.recommended
+]

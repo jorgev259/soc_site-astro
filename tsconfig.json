@@ -1,17 +1,8 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "experimentalDecorators": true,
     "moduleResolution": "Bundler",
     "allowJs": true,
     "baseUrl": "src",
-    "paths": {
-      "@/*": [
-        "*"
-      ],
-      "@/root/*": [
-        "../*"
-      ]
-    }
   }
 }
