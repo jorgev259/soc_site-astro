@@ -1,9 +1,10 @@
 import { DataTypes, Model, type BelongsToManyGetAssociationsMixin, type CreationOptional, type InferAttributes, type InferCreationAttributes, type NonAttribute } from '@sequelize/core';
-import { Attribute, PrimaryKey, AutoIncrement, Default, BelongsToMany } from '@sequelize/core/decorators-legacy';
+import { Attribute, PrimaryKey, AutoIncrement, Default, BelongsToMany, Table } from '@sequelize/core/decorators-legacy';
 
 import Category from './category';
 import Artist from './artist';
 
+Table({ tableName: 'albums' })
 export default class Album extends Model<InferAttributes<Album>, InferCreationAttributes<Album>> {
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey
@@ -28,7 +29,7 @@ export default class Album extends Model<InferAttributes<Album>, InferCreationAt
   @Attribute(DataTypes.STRING)
   declare description: string
 
-  @Attribute(DataTypes.ENUM('show', 'hidden', 'coming'))
+  @Attribute(DataTypes.STRING)
   @Default('hidden')
   declare status: CreationOptional<string>
 
