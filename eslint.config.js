@@ -1,11 +1,11 @@
-import eslintConfigStandard from 'eslint-config-standard'
+import neostandard from 'neostandard'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
 import eslintPluginAstro from 'eslint-plugin-astro'
 
 /** @type {import("eslint").Linter.Config} */
-module.exports = [
-  eslintConfigStandard,
+export default [
+  ...neostandard(),
   eslintConfigPrettier,
-  eslintPluginAstro.configs.recommended
+  ...eslintPluginAstro.configs.recommended
 ]
