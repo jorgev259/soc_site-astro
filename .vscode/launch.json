@@ -1,9 +1,28 @@
 {
   "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Development Server",
+      "configurations": ["Prisma: Development server", "GQL: Development server", "Astro: Development server"],
+      "stopAll": false
+    }
+  ],
   "configurations": [
     {
-      "command": "npm run dev",
-      "name": "Development server",
+      "command": "npx prisma generate --watch",
+      "name": "Prisma: Development server",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "command": "npx graphql-codegen -w",
+      "name": "GQL: Development server",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "command": "npx astro dev",
+      "name": "Astro: Development server",
       "request": "launch",
       "type": "node-terminal"
     }

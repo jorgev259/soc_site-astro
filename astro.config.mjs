@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField } from 'astro/config'
+import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import node from '@astrojs/node'
 import paraglide from '@inlang/paraglide-astro'
@@ -26,12 +26,5 @@ export default defineConfig({
     icon({ iconDir: 'src/img/icons' })
   ],
   output: 'server',
-  adapter: node({ mode: 'standalone' }),
-  experimental: {
-    env: {
-      schema: {
-        SEQUELIZE: envField.string({ context: 'server', access: 'public' })
-      }
-    }
-  }
+  adapter: node({ mode: 'standalone' })
 })

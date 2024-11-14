@@ -1,9 +1,8 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "moduleResolution": "Bundler",
-    "allowJs": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "baseUrl": "src",
     "paths": {
       "@/graphql/*": [
