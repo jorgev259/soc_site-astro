@@ -1,6 +1,6 @@
 ---
 import { gql } from '@/graphql/__generated__/client/index.js'
-import { getApolloClient } from '@/graphql/apolloClient.mjs'
+import { getApolloClient } from '@/graphql/apolloClient.js'
 import { Image, Picture } from 'astro:assets'
 import { getSession } from 'auth-astro/server'
 import * as m from '../paraglide/messages.js'
@@ -45,13 +45,7 @@ const session = await getSession(Astro.request)
     </div>
     <div class='relative px-20 size-full'>
       <a href='/'>
-        <Image
-          src={logo}
-          class='h-full py-0.5 w-auto'
-          alt='logo'
-          height={150}
-          width={265}
-        />
+        <Image src={logo} class='h-full py-0.5 w-auto' alt='logo' height={150} width={265} />
       </a>
 
       <div class='absolute top-0 right-0 space-x-2 mr-10'>

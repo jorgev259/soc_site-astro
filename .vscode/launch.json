@@ -3,8 +3,8 @@
   "compounds": [
     {
       "name": "Development Server",
-      "configurations": ["Prisma: Development server", "GQL: Development server", "Astro: Development server"],
-      "stopAll": false
+      "configurations": [/*"Prisma: Development server",*/ "GQL: Development server", "Astro: Development server"],
+      "stopAll": true
     }
   ],
   "configurations": [

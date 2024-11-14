@@ -150,7 +150,7 @@ type Query {
     order: [String]
     mode: String
     status: [String!]
-  ): SearchAlbumResult
+  ): [Album]!
   searchAlbumByArtist(
     name: String!
     categories: [String]
@@ -160,34 +160,10 @@ type Query {
     mode: String
     status: [String!]
   ): SearchAlbumResult
-  searchAnimation(
-    title: String
-    limit: Int
-    page: Int
-    order: String
-    mode: String
-  ): SearchAnimResult
-  searchStudio(
-    name: String
-    limit: Int
-    page: Int
-    order: String
-    mode: String
-  ): SearchStudioResult
-  searchGame(
-    name: String
-    limit: Int
-    page: Int
-    order: String
-    mode: String
-  ): SearchGameResult
-  searchSeries(
-    name: String
-    limit: Int
-    page: Int
-    order: String
-    mode: String
-  ): SearchSeriesResult
+  searchAnimation(title: String, limit: Int, page: Int, order: String, mode: String): SearchAnimResult
+  searchStudio(name: String, limit: Int, page: Int, order: String, mode: String): SearchStudioResult
+  searchGame(name: String, limit: Int, page: Int, order: String, mode: String): SearchGameResult
+  searchSeries(name: String, limit: Int, page: Int, order: String, mode: String): SearchSeriesResult
 
   searchSeriesByName(name: String): [Series]
   recentSeries(limit: Int!): [Series]
@@ -237,13 +213,7 @@ type Mutation {
   updateStudio(slug: String, name: String): Studio!
   deleteStudio(slug: String!): Int
 
-  createAnimation(
-    title: String
-    subTitle: String
-    releaseDate: String
-    studios: [String]
-    cover: Upload
-  ): Animation
+  createAnimation(title: String, subTitle: String, releaseDate: String, studios: [String], cover: Upload): Animation
   updateAnimation(
     id: ID!
     title: String

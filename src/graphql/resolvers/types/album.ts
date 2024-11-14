@@ -1,12 +1,12 @@
 // import { GraphQLUpload } from 'graphql-upload-minimal'
-import type { Resolvers } from "@/graphql/__generated__/types.generated"
-import type Album from "sequelize/models/album"
+import prismaClient from 'prisma/client'
+
+import type { Resolvers } from '@/graphql/__generated__/types.generated'
 
 const resolvers: Resolvers = {
   // Upload: GraphQLUpload,
   Album: {
-    // @ts-ignore
-    artists: (parent, args, context, info) => parent.getArtists(),
+    artists: (album) => prismaClient.artist.findMany({ where: { Album_Artist: { some: { albumId: album.id } } } })
     /* categories: (parent, args, context, info) => parent.getCategories(),
     classifications: (parent, args, context, info) =>
       parent.getClassifications(),
@@ -46,7 +46,7 @@ const resolvers: Resolvers = {
     placeholder: (album, _, { db }) => checkPlaceholder(album, 'album'),
     headerColor: (album, _, { db }) => checkHeaderColor(album, 'album'),
     avgRating: async (album, _, { db }) => solveRating(album) */
-  },
+  }
 
   /* Comment: {
     username: (parent) => (parent.anon ? null : parent.username),

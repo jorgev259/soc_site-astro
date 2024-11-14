@@ -1,0 +1,530 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Album_Animation {
+  createdAt   DateTime  @db.DateTime(0)
+  updatedAt   DateTime  @db.DateTime(0)
+  albumId     Int
+  animationId Int
+  albums      albums    @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Animation_ibfk_1")
+  animation   animation @relation(fields: [animationId], references: [id], onDelete: Cascade, map: "Album_Animation_ibfk_2")
+
+  @@id([albumId, animationId])
+  @@index([animationId], map: "animationId")
+}
+
+model Album_Artist {
+  createdAt  DateTime @db.DateTime(0)
+  updatedAt  DateTime @db.DateTime(0)
+  albumId    Int
+  artistSlug String   @db.VarChar(255)
+  albums     albums   @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Artist_ibfk_1")
+  artist     artist   @relation(fields: [artistSlug], references: [slug], onDelete: Cascade, map: "Album_Artist_ibfk_2")
+
+  @@id([albumId, artistSlug])
+  @@index([artistSlug], map: "artistSlug")
+}
+
+model Album_Category {
+  createdAt    DateTime @db.DateTime(0)
+  updatedAt    DateTime @db.DateTime(0)
+  categoryName String   @db.VarChar(255)
+  albumId      Int
+  category     category @relation(fields: [categoryName], references: [name], onDelete: Cascade, map: "Album_Category_ibfk_1")
+  albums       albums   @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Category_ibfk_2")
+
+  @@id([categoryName, albumId])
+  @@index([albumId], map: "ostId")
+}
+
+model Album_Classification {
+  createdAt          DateTime       @db.DateTime(0)
+  updatedAt          DateTime       @db.DateTime(0)
+  albumId            Int
+  classificationName String         @db.VarChar(255)
+  albums             albums         @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Classification_ibfk_1")
+  classification     classification @relation(fields: [classificationName], references: [name], onDelete: Cascade, map: "Album_Classification_ibfk_2")
+
+  @@id([albumId, classificationName])
+  @@index([classificationName], map: "categoryName")
+}
+
+model Album_Game {
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  gameSlug  String   @db.VarChar(255)
+  albumId   Int
+  game      game     @relation(fields: [gameSlug], references: [slug], onDelete: Cascade, map: "Album_Game_ibfk_1")
+  albums    albums   @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Game_ibfk_2")
+
+  @@id([gameSlug, albumId])
+  @@index([albumId], map: "ostId")
+}
+
+model Album_Platform {
+  createdAt  DateTime @db.DateTime(0)
+  updatedAt  DateTime @db.DateTime(0)
+  albumId    Int
+  platformId Int
+  albums     albums   @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Platform_ibfk_1")
+  platform   platform @relation(fields: [platformId], references: [id], onDelete: Cascade, map: "Album_Platform_ibfk_2")
+
+  @@id([albumId, platformId])
+  @@index([platformId], map: "platformId")
+}
+
+model Album_Type {
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int
+  typeId    Int
+  albums    albums   @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Type_ibfk_1")
+  type      type     @relation(fields: [typeId], references: [id], onDelete: Cascade, map: "Album_Type_ibfk_2")
+
+  @@id([albumId, typeId])
+  @@index([typeId], map: "typeId")
+}
+
+model Game_Platform {
+  createdAt  DateTime @db.DateTime(0)
+  updatedAt  DateTime @db.DateTime(0)
+  gameSlug   String   @db.VarChar(255)
+  platformId Int
+  game       game     @relation(fields: [gameSlug], references: [slug], onDelete: Cascade, map: "Game_Platform_ibfk_1")
+  platform   platform @relation(fields: [platformId], references: [id], onDelete: Cascade, map: "Game_Platform_ibfk_2")
+
+  @@id([gameSlug, platformId])
+  @@index([platformId], map: "platformId")
+}
+
+model Publisher_Game {
+  createdAt   DateTime  @db.DateTime(0)
+  updatedAt   DateTime  @db.DateTime(0)
+  gameSlug    String    @db.VarChar(255)
+  publisherId Int
+  game        game      @relation(fields: [gameSlug], references: [slug], onDelete: Cascade, map: "Publisher_Game_ibfk_1")
+  publisher   publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade, map: "Publisher_Game_ibfk_2")
+
+  @@id([gameSlug, publisherId])
+  @@index([publisherId], map: "publisherId")
+}
+
+model SequelizeMeta {
+  name String @id @unique(map: "name") @db.VarChar(255)
+}
+
+model Series_Game {
+  createdAt  DateTime @db.DateTime(0)
+  updatedAt  DateTime @db.DateTime(0)
+  gameSlug   String   @db.VarChar(255)
+  seriesSlug String   @db.VarChar(255)
+  game       game     @relation(fields: [gameSlug], references: [slug], onDelete: Cascade, map: "Series_Game_ibfk_1")
+  series     series   @relation(fields: [seriesSlug], references: [slug], onDelete: Cascade, map: "Series_Game_ibfk_2")
+
+  @@id([gameSlug, seriesSlug])
+  @@index([seriesSlug], map: "seriesSlug")
+}
+
+model Studio_Animation {
+  createdAt   DateTime  @db.DateTime(0)
+  updatedAt   DateTime  @db.DateTime(0)
+  animationId Int
+  studioSlug  String    @db.VarChar(255)
+  animation   animation @relation(fields: [animationId], references: [id], onDelete: Cascade, map: "Studio_Animation_ibfk_1")
+  studio      studio    @relation(fields: [studioSlug], references: [slug], onDelete: Cascade, map: "Studio_Animation_ibfk_2")
+
+  @@id([animationId, studioSlug])
+  @@index([studioSlug], map: "studioSlug")
+}
+
+model User_Role {
+  createdAt    DateTime @db.DateTime(0)
+  updatedAt    DateTime @db.DateTime(0)
+  userUsername String   @db.VarChar(255)
+  roleName     String   @db.VarChar(255)
+  users        users    @relation(fields: [userUsername], references: [username], onDelete: Cascade, map: "User_Role_ibfk_1")
+  roles        roles    @relation(fields: [roleName], references: [name], onDelete: Cascade, map: "User_Role_ibfk_2")
+
+  @@id([userUsername, roleName])
+  @@index([roleName], map: "roleName")
+}
+
+model albumHistories {
+  id          Int      @id @default(autoincrement())
+  updatedData Json?
+  createdAt   DateTime @db.DateTime(0)
+  updatedAt   DateTime @db.DateTime(0)
+  username    String?  @db.VarChar(255)
+  albumId     Int?
+  users       users?   @relation(fields: [username], references: [username], map: "albumHistories_ibfk_1")
+  albums      albums?  @relation(fields: [albumId], references: [id], map: "albumHistories_ibfk_2")
+
+  @@index([albumId], map: "ostId")
+  @@index([username], map: "username")
+}
+
+model albums {
+  id                                            Int                    @id @default(autoincrement())
+  title                                         String?                @db.VarChar(255)
+  subTitle                                      String?                @db.Text
+  releaseDate                                   DateTime?              @db.Date
+  label                                         String?                @db.VarChar(255)
+  vgmdb                                         String?                @db.VarChar(255)
+  createdAt                                     DateTime               @db.DateTime(0)
+  updatedAt                                     DateTime               @db.DateTime(0)
+  description                                   String?                @db.VarChar(255)
+  createdBy                                     String?                @db.VarChar(255)
+  status                                        String?                @db.VarChar(255)
+  placeholder                                   String?                @db.Text
+  headerColor                                   String?                @default("#ffffff") @db.VarChar(255)
+  Album_Animation                               Album_Animation[]
+  Album_Artist                                  Album_Artist[]
+  Album_Category                                Album_Category[]
+  Album_Classification                          Album_Classification[]
+  Album_Game                                    Album_Game[]
+  Album_Platform                                Album_Platform[]
+  Album_Type                                    Album_Type[]
+  albumHistories                                albumHistories[]
+  availables                                    availables[]
+  comments                                      comments[]
+  discs                                         discs[]
+  downloads                                     downloads[]
+  favorites                                     favorites[]
+  linkCategories                                linkCategories[]
+  ratings                                       ratings[]
+  related_album_related_album_albumIdToalbums   related_album[]        @relation("related_album_albumIdToalbums")
+  related_album_related_album_relatedIdToalbums related_album[]        @relation("related_album_relatedIdToalbums")
+  stores                                        stores[]
+}
+
+model animation {
+  id               Int                @id @default(autoincrement())
+  title            String?            @unique(map: "title") @db.VarChar(255)
+  releaseDate      DateTime?          @db.Date
+  createdAt        DateTime           @db.DateTime(0)
+  updatedAt        DateTime           @db.DateTime(0)
+  studioSlug       String?            @db.VarChar(255)
+  subTitle         String?            @unique(map: "subTitle") @db.VarChar(255)
+  placeholder      String?            @db.Text
+  headerColor      String?            @default("#ffffff") @db.VarChar(255)
+  Album_Animation  Album_Animation[]
+  Studio_Animation Studio_Animation[]
+  studio           studio?            @relation(fields: [studioSlug], references: [slug], map: "animation_ibfk_1")
+
+  @@index([studioSlug], map: "studioSlug")
+}
+
+model artist {
+  slug         String         @id @db.VarChar(255)
+  name         String?        @db.VarChar(255)
+  createdAt    DateTime       @db.DateTime(0)
+  updatedAt    DateTime       @db.DateTime(0)
+  Album_Artist Album_Artist[]
+}
+
+model availables {
+  id        Int      @id @default(autoincrement())
+  url       String?  @db.VarChar(255)
+  provider  String?  @db.VarChar(255)
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  albums    albums?  @relation(fields: [albumId], references: [id], map: "availables_ibfk_1")
+
+  @@index([albumId], map: "ostId")
+}
+
+model category {
+  name           String           @id @db.VarChar(255)
+  createdAt      DateTime         @db.DateTime(0)
+  updatedAt      DateTime         @db.DateTime(0)
+  Album_Category Album_Category[]
+}
+
+model classification {
+  name                 String                 @id @db.VarChar(255)
+  createdAt            DateTime               @db.DateTime(0)
+  updatedAt            DateTime               @db.DateTime(0)
+  Album_Classification Album_Classification[]
+}
+
+model comments {
+  id        Int      @id @default(autoincrement())
+  text      String?  @db.VarChar(300)
+  anon      Boolean?
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  username  String?  @db.VarChar(255)
+  albums    albums?  @relation(fields: [albumId], references: [id], map: "comments_ibfk_1")
+  users     users?   @relation(fields: [username], references: [username], map: "comments_ibfk_2")
+
+  @@index([albumId], map: "ostId")
+  @@index([username], map: "username")
+}
+
+model config {
+  name      String   @id @db.VarChar(255)
+  value     String?  @default("") @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @default(now()) @db.DateTime(0)
+}
+
+model discs {
+  id        Int      @id @default(autoincrement())
+  number    Int?
+  body      String?  @db.Text
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  albums    albums?  @relation(fields: [albumId], references: [id], map: "discs_ibfk_1")
+
+  @@index([albumId], map: "ostId")
+}
+
+model downloads {
+  id        Int      @id @default(autoincrement())
+  title     String?  @db.VarChar(255)
+  small     Boolean?
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  albums    albums?  @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "downloads_ibfk_1")
+  links     links[]
+
+  @@index([albumId], map: "ostId")
+}
+
+model favorites {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  username  String?  @db.VarChar(255)
+  albums    albums?  @relation(fields: [albumId], references: [id], map: "favorites_ibfk_1")
+  users     users?   @relation(fields: [username], references: [username], map: "favorites_ibfk_2")
+
+  @@index([albumId], map: "ostId")
+  @@index([username], map: "username")
+}
+
+model forgors {
+  id        Int       @id @default(autoincrement())
+  expires   DateTime? @db.DateTime(0)
+  key       String?   @db.VarChar(255)
+  createdAt DateTime  @db.DateTime(0)
+  updatedAt DateTime  @db.DateTime(0)
+  username  String?   @db.VarChar(255)
+  users     users?    @relation(fields: [username], references: [username], map: "forgors_ibfk_1")
+
+  @@index([username], map: "username")
+}
+
+model game {
+  slug           String           @id @db.VarChar(255)
+  name           String?          @db.VarChar(255)
+  releaseDate    DateTime?        @db.Date
+  createdAt      DateTime         @db.DateTime(0)
+  updatedAt      DateTime         @db.DateTime(0)
+  placeholder    String?          @db.Text
+  headerColor    String?          @default("#ffffff") @db.VarChar(255)
+  Album_Game     Album_Game[]
+  Game_Platform  Game_Platform[]
+  Publisher_Game Publisher_Game[]
+  Series_Game    Series_Game[]
+}
+
+model linkCategories {
+  id        Int      @id @default(autoincrement())
+  title     String?  @db.VarChar(255)
+  small     Boolean?
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  albums    albums?  @relation(fields: [albumId], references: [id], map: "linkCategories_ibfk_1")
+
+  @@index([albumId], map: "ostId")
+}
+
+model links {
+  id         Int        @id @default(autoincrement())
+  url        String?    @db.VarChar(255)
+  directUrl  String?    @db.VarChar(255)
+  provider   String?    @db.VarChar(255)
+  custom     String?    @db.VarChar(255)
+  createdAt  DateTime   @db.DateTime(0)
+  updatedAt  DateTime   @db.DateTime(0)
+  downloadId Int?
+  url2       String?    @db.VarChar(255)
+  downloads  downloads? @relation(fields: [downloadId], references: [id], map: "links_ibfk_1")
+
+  @@index([downloadId], map: "downloadId")
+}
+
+model logs {
+  id        Int      @id @default(autoincrement())
+  action    String?  @db.VarChar(255)
+  data      String?  @db.Text
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  username  String?  @db.VarChar(255)
+  users     users?   @relation(fields: [username], references: [username], map: "logs_ibfk_1")
+
+  @@index([username], map: "username")
+}
+
+model pendings {
+  id        Int      @id
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+}
+
+model platform {
+  id             Int              @id @default(autoincrement())
+  name           String?          @db.VarChar(255)
+  createdAt      DateTime         @db.DateTime(0)
+  updatedAt      DateTime         @db.DateTime(0)
+  type           String?          @default("Game") @db.VarChar(255)
+  Album_Platform Album_Platform[]
+  Game_Platform  Game_Platform[]
+}
+
+model publisher {
+  id             Int              @id @default(autoincrement())
+  name           String?          @db.VarChar(255)
+  createdAt      DateTime         @db.DateTime(0)
+  updatedAt      DateTime         @db.DateTime(0)
+  Publisher_Game Publisher_Game[]
+}
+
+model ratings {
+  id        Int      @id @default(autoincrement())
+  score     Int?
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  username  String?  @db.VarChar(255)
+  albums    albums?  @relation(fields: [albumId], references: [id], map: "ratings_ibfk_1")
+  users     users?   @relation(fields: [username], references: [username], map: "ratings_ibfk_2")
+
+  @@index([albumId], map: "ostId")
+  @@index([username], map: "username")
+}
+
+model related_album {
+  createdAt                              DateTime @db.DateTime(0)
+  updatedAt                              DateTime @db.DateTime(0)
+  albumId                                Int
+  relatedId                              Int
+  albums_related_album_albumIdToalbums   albums   @relation("related_album_albumIdToalbums", fields: [albumId], references: [id], onDelete: Cascade, map: "related_album_ibfk_1")
+  albums_related_album_relatedIdToalbums albums   @relation("related_album_relatedIdToalbums", fields: [relatedId], references: [id], onDelete: Cascade, map: "related_album_ibfk_2")
+
+  @@id([albumId, relatedId])
+  @@index([relatedId], map: "relatedId")
+}
+
+model requests {
+  id          Int           @id @default(autoincrement())
+  title       String?       @db.VarChar(255)
+  link        String?       @db.VarChar(255)
+  user        String?       @db.VarChar(255)
+  userID      String?       @db.VarChar(255)
+  state       String        @db.VarChar(255)
+  donator     Boolean
+  reason      String?       @db.VarChar(255)
+  comments    String?       @db.VarChar(255)
+  message     String?       @db.VarChar(255)
+  createdAt   DateTime      @default(now()) @db.DateTime(0)
+  updatedAt   DateTime      @default(now()) @db.DateTime(0)
+  submissions submissions[]
+}
+
+model roles {
+  name        String      @id @db.VarChar(255)
+  permissions Json?
+  createdAt   DateTime    @db.DateTime(0)
+  updatedAt   DateTime    @db.DateTime(0)
+  User_Role   User_Role[]
+}
+
+model series {
+  slug        String        @id @db.VarChar(255)
+  name        String?       @db.VarChar(255)
+  createdAt   DateTime      @db.DateTime(0)
+  updatedAt   DateTime      @db.DateTime(0)
+  placeholder String?       @db.Text
+  headerColor String?       @default("#ffffff") @db.VarChar(255)
+  Series_Game Series_Game[]
+}
+
+model stores {
+  id        Int      @id @default(autoincrement())
+  url       String?  @db.VarChar(255)
+  provider  String?  @db.VarChar(255)
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  albumId   Int?
+  albums    albums?  @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "stores_ibfk_1")
+
+  @@index([albumId], map: "ostId")
+}
+
+model studio {
+  slug             String             @id @db.VarChar(255)
+  name             String?            @db.VarChar(255)
+  createdAt        DateTime           @db.DateTime(0)
+  updatedAt        DateTime           @db.DateTime(0)
+  Studio_Animation Studio_Animation[]
+  animation        animation[]
+}
+
+model submissions {
+  id           Int       @id @default(autoincrement())
+  state        String?   @default("pending") @db.VarChar(255)
+  title        String?   @db.VarChar(255)
+  vgmdb        String?   @db.VarChar(255)
+  links        String?   @db.Text
+  score        Int?      @default(0)
+  createdAt    DateTime  @db.DateTime(0)
+  updatedAt    DateTime  @db.DateTime(0)
+  userUsername String?   @db.VarChar(255)
+  requestId    Int?
+  users        users?    @relation(fields: [userUsername], references: [username], map: "submissions_ibfk_1")
+  requests     requests? @relation(fields: [requestId], references: [id], map: "submissions_ibfk_2")
+
+  @@index([requestId], map: "requestId")
+  @@index([userUsername], map: "userUsername")
+}
+
+model type {
+  id         Int          @id @default(autoincrement())
+  name       String?      @db.VarChar(255)
+  createdAt  DateTime     @db.DateTime(0)
+  updatedAt  DateTime     @db.DateTime(0)
+  Album_Type Album_Type[]
+}
+
+model users {
+  username       String           @id @db.VarChar(255)
+  email          String?          @db.VarChar(255)
+  password       String?          @db.VarChar(255)
+  createdAt      DateTime         @db.DateTime(0)
+  updatedAt      DateTime         @db.DateTime(0)
+  placeholder    String?          @db.Text
+  imgId          String?          @db.VarChar(255)
+  User_Role      User_Role[]
+  albumHistories albumHistories[]
+  comments       comments[]
+  favorites      favorites[]
+  forgors        forgors[]
+  logs           logs[]
+  ratings        ratings[]
+  submissions    submissions[]
+}

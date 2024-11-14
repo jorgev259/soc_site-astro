@@ -1,35 +1,41 @@
-import { Op, literal } from '@sequelize/core'
+import prismaClient from 'prisma/client'
+
 import type { Resolvers } from '@/graphql/__generated__/types.generated'
-
-import Category from 'sequelize/models/category'
-import Album from 'sequelize/models/album'
-
-const fuzzySearch = (words: string[]) => `^${words.map(w => `(?=.*\b${w}\b)`)}.+/i`
 
 const resolvers: Resolvers = {
   Query: {
-    // @ts-ignore
-    searchAlbum: async (_, args, { db }) => {
-      const { title, categories, limit = 10, offset = 0, order = ['createdAt'], mode = 'DESC', status = ['show'] } = args
-      const fuzzyCondition = title ? {
-        [Op.or]: [
-          { title: { [Op.regexp]: fuzzySearch(title.split(' ')) } },
-          { subTitle: { [Op.regexp]: fuzzySearch(title.split(' ')) } }
-        ]
-      } : {}
+    searchAlbum: async (_, args, context, info) => {
+      const {
+        title,
+        categories,
+        limit = 10,
+        offset = 0,
+        order = ['createdAt'],
+        mode = 'DESC',
+        status = ['show']
+      } = args
+      const fuzzyCondition = title
+        ? {
+            OR: [
+              { title: { search: title.toLowerCase().split(' ').join(' & ') } },
+              { subTitle: { search: title.toLowerCase().split(' ').join(' & ') } }
+            ]
+          }
+        : {}
 
-      const include = []
-      if (categories) include.push({ model: Category, where: { name: { [Op.in]: categories } } })
-
-      const result = await Album.findAndCountAll({
-        limit, offset,
+      const result = prismaClient.albums.findMany({
+        take: limit,
+        skip: offset,
         where: {
-          ...fuzzyCondition,
-          status: { [Op.in]: status }
+          AND: {
+            ...fuzzyCondition,
+            // category condition
+            status: { in: status }
+          }
         },
-        include,
-        // @ts-ignore
-        order: [literal('`album`.`status` = \'coming\' DESC'), ...order.map(o => [o, mode])]
+        include: { Album_Category: !!categories },
+        orderBy: [...order.map((o) => ({ [o]: mode.toLowerCase() }))]
+        // order: [literal("`album`.`status` = 'coming' DESC")]
       })
 
       return result

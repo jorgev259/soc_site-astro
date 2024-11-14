@@ -14,7 +14,7 @@ const config: CodegenConfig = {
     './src/graphql/__generated__/': defineConfig({
       resolverGeneration: 'disabled',
       typesPluginsConfig: {
-        contextType: '../client.mts#ResolverContext',
+        contextType: '../client.ts#ResolverContext',
         maybeValue: 'T'
       },
       add: {

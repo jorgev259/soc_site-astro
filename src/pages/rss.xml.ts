@@ -1,13 +1,12 @@
-import rss, { type RSSFeedItem } from '@astrojs/rss';
-import type { APIContext } from 'astro';
+import rss, { type RSSFeedItem } from '@astrojs/rss'
+import type { APIContext } from 'astro'
 
-import { getApolloClient } from '@/graphql/apolloClient.mjs';
-import { gql } from '@/graphql/__generated__/client';
+import { getApolloClient } from '@/graphql/apolloClient.js'
+import { gql } from '@/graphql/__generated__/client'
 
 const addedQuery = gql(`
   query LastAdded ($limit: Int) {
     added: searchAlbum(limit: $limit, status: ["show"]) {
-      rows {
         id
         createdAt
         title
@@ -15,7 +14,6 @@ const addedQuery = gql(`
         artists {
           name
         }
-      }
     }
   }
 `)
@@ -23,15 +21,13 @@ const addedQuery = gql(`
 export async function GET(context: APIContext) {
   const client = await getApolloClient()
   const { data } = await client.query({ query: addedQuery, variables: { limit: 15 } })
+  const { added } = data
 
-  if (!data.added?.rows) throw new Error()
-  const { rows } = data.added
-
-  const items: RSSFeedItem[] = rows.map((album) => ({
+  const items: RSSFeedItem[] = added.map((album) => ({
     guid: `album/${album?.id}`,
     title: album?.title,
     pubDate: new Date(album?.createdAt || ''),
-    description: album?.subTitle || album?.artists.map(a => a?.name).join(' - '),
+    description: album?.subTitle || album?.artists.map((a) => a?.name).join(' - '),
     link: `https://www.sittingonclouds.net/album/${album?.id}`,
     customData: `<media:content
           type="image/png"
@@ -39,18 +35,18 @@ export async function GET(context: APIContext) {
           height="100"
           medium="image"
           url="https://cdn.sittingonclouds.net/album/${album?.id}.png" />
-      `,
+      `
   }))
 
   return rss({
     xmlns: {
-      media: "http://search.yahoo.com/mrss/",
+      media: 'http://search.yahoo.com/mrss/'
     },
     stylesheet: '/rss/pretty-feed-v3.xsl',
     title: 'Sitting on Clouds',
     description: 'High Quality soundtrack library',
     site: context.site as unknown as string,
     trailingSlash: false,
-    items,
-  });
+    items
+  })
 }

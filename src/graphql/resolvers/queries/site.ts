@@ -1,22 +1,21 @@
 // import fg from 'fast-glob'
-import type { Resolvers } from '@/graphql/__generated__/types.generated'
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 
-import Config from 'sequelize/models/config'
-
-// import { hasRole } from 'server/utils/resolvers'
+import type { Resolvers } from '@/graphql/__generated__/types.generated'
+import prismaClient from 'prisma/client'
 
 const resolversComposition = {
   /* 'Query.banners': hasRole('UPDATE') */
 }
+
 const resolvers: Resolvers = {
   Query: {
-    config: async (_, args) => {
-      const { name } = args
-      const [result] = await Config.findOrCreate({ where: { name } })
-
-      return result
-    },
+    config: async (_, { name }) =>
+      prismaClient.config.upsert({
+        where: { name },
+        create: { name },
+        update: {}
+      })
 
     /* highlight: async (parent, args, { db }) => {
       const { value } = await db.models.config.findByPk('highlight')
