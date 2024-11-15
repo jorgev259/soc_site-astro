@@ -185,8 +185,8 @@ type Mutation {
   updatePublisher(id: ID!, name: String): Publisher!
   deletePublisher(id: ID!): Int
 
-  createSeries(slug: String, name: String, cover: Upload!): Series!
-  updateSeries(slug: String, name: String, cover: Upload): Series!
+  createSeries(slug: String, name: String, cover: File!): Series!
+  updateSeries(slug: String, name: String, cover: File): Series!
   deleteSeries(slug: String!): Int
 
   createGame(
@@ -196,7 +196,7 @@ type Mutation {
     publishers: [ID]
     series: [String]
     platforms: [ID]
-    cover: Upload!
+    cover: File!
   ): Game!
   updateGame(
     releaseDate: String
@@ -205,7 +205,7 @@ type Mutation {
     publishers: [ID]
     series: [String]
     platforms: [ID]
-    cover: Upload
+    cover: File
   ): Game!
   deleteGame(slug: String!): Int
 
@@ -213,21 +213,21 @@ type Mutation {
   updateStudio(slug: String, name: String): Studio!
   deleteStudio(slug: String!): Int
 
-  createAnimation(title: String, subTitle: String, releaseDate: String, studios: [String], cover: Upload): Animation
+  createAnimation(title: String, subTitle: String, releaseDate: String, studios: [String], cover: File): Animation
   updateAnimation(
     id: ID!
     title: String
     subTitle: String
     releaseDate: String
     studios: [String]
-    cover: Upload
+    cover: File
   ): Animation
   deleteAnimation(id: ID!): Int
 
   createAlbum(
     title: String
     subTitle: String
-    cover: Upload
+    cover: File
     releaseDate: String
     label: String
     vgmdb: String
@@ -249,7 +249,7 @@ type Mutation {
     id: ID!
     title: String
     subTitle: String
-    cover: Upload
+    cover: File
     releaseDate: String
     label: String
     vgmdb: String

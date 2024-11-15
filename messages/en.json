@@ -26,5 +26,7 @@
   "manageusers": "Manage Users",
   "managerequests": "Manage Requests",
   "managesubmissions": "Manage Submissions",
-  "profilePic": "Profile picture"
+  "profilePic": "Profile picture",
+  "emailSuccess": "An email with further instructions has been sent to the address linked to the account. Check your spam folder.",
+  "close": "Close"
 }

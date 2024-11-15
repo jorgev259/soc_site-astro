@@ -1,28 +1,38 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
-// import type { Resolvers } from '@/graphql/__generated__/types.generated'
+import type { Resolvers } from '@/graphql/__generated__/types.generated'
+import generator from 'generate-password-ts'
+import bcrypt from 'bcrypt'
+import sharp from 'sharp'
+import fs from 'fs-extra'
+import type { User } from '@auth/core/types'
+import prismaClient from 'prisma/client'
+import nodemailer from 'nodemailer'
 
-const resolversComposition = {
-  //'Mutation.updateUser': [isAuthedApp]
+import { UserInputError } from 'utils/graphQLErrors'
+import forgorTemplate from 'utils/forgorTemplate'
+
+async function processImage(imagePath) {
+  const sharpImg = sharp(imagePath)
+  const meta = await sharpImg.metadata()
+  const placeholderImgWidth = 20
+  const imgAspectRatio = meta.width / meta.height
+  const placeholderImgHeight = Math.round(placeholderImgWidth / imgAspectRatio)
+
+  const buffer = await sharpImg.resize(placeholderImgWidth, placeholderImgHeight).toBuffer()
+
+  return `data:image/${meta.format};base64,${buffer.toString('base64')}`
 }
 
-/* const streamToString = (stream) => {
-  const chunks = []
-  return new Promise((resolve, reject) => {
-    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)))
-    stream.on('error', (err) => reject(err))
-    stream.on('end', () => resolve(Buffer.concat(chunks)))
-  })
-}
+async function cropPFP(pfpFile: File, username: string, imgId: string) {
+  if (!imgId)
+    return 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoEAAQAAUAmJZgCdAEO9p5AAPa//NFYLcn+a7b+3z7ynq/qXv+iG0yH/y1D9eBf9pqWugq9G0RnxmxwsjaA2bW8AAA='
 
-async function cropPFP(streamItem, username, imgId) {
-  const { createReadStream } = await streamItem
   const pathString = '/var/www/soc_img/img/user'
-  const fullPath = path.join(pathString, `${username}_${imgId}.png`)
+  const fullPath = `${pathString}/${username}_${imgId}.png`
 
   await fs.ensureDir(pathString)
 
-  const image = await streamToString(createReadStream())
-  let sharpImage = sharp(image)
+  let sharpImage = sharp(await pfpFile.arrayBuffer())
   const metadata = await sharpImage.metadata()
   const { width, height } = metadata
 
@@ -30,36 +40,63 @@ async function cropPFP(streamItem, username, imgId) {
     sharpImage = sharpImage.extract(
       width > height
         ? {
-          left: Math.floor((width - height) / 2),
-          top: 0,
-          width: height,
-          height
-        }
+            left: Math.floor((width - height) / 2),
+            top: 0,
+            width: height,
+            height
+          }
         : {
-          left: 0,
-          top: Math.floor((height - width) / 2),
-          width,
-          height: width
-        }
+            left: 0,
+            top: Math.floor((height - width) / 2),
+            width,
+            height: width
+          }
     )
   }
 
   await sharpImage.resize({ width: 200, height: 200 }).png().toFile(fullPath)
 
   return await processImage(fullPath)
-}*/
+}
 
-const resolvers = {
+export const mailConfig = JSON.parse(process.env.MAILSERVER || '{}')
+export const transporter = nodemailer.createTransport(mailConfig)
+
+async function createForgor(user: User) {
+  await prismaClient.forgors.deleteMany({ where: { username: user.username } })
+
+  const key = generator.generate({
+    length: 15,
+    numbers: true,
+    uppercase: false,
+    strict: true
+  })
+
+  const row = await prismaClient.forgors.create({ data: { key, username: user.username } })
+  const html = forgorTemplate.replaceAll('{{forgor_link}}', `https://sittingonclouds.net/forgor?key=${key}`)
+  const message = {
+    from: mailConfig.auth.user,
+    to: user.email,
+    subject: 'Password Reset',
+    html
+  }
+  await transporter.sendMail(message)
+
+  return row
+}
+
+const resolversComposition = {
+  //'Mutation.updateUser': [isAuthedApp]
+}
+
+const resolvers: Resolvers = {
   Mutation: {
-    /*registerUser: async (_, { username, email, pfp }, { db }) => {
-      await Promise.all([
-        db.models.user.findByPk(username).then((result) => {
-          if (result) throw UserInputError('Username already in use')
-        }),
-        db.models.user.findOne({ where: { email } }).then((result) => {
-          if (result) throw UserInputError('Email already in use')
-        })
-      ])
+    registerUser: async (_, args) => {
+      const { username, email } = args
+      const pfp: File = args.pfp
+
+      const checkUser = await prismaClient.users.findFirst({ where: { OR: [{ username }, { email }] } })
+      if (checkUser) throw UserInputError('Username/email already in use')
 
       const password = generator.generate({
         length: 30,
@@ -68,26 +105,14 @@ const resolvers = {
         strict: true
       })
 
-      return db.transaction(async (transaction) => {
-        const user = await db.models.user.create(
-          { username, email, password: await bcrypt.hash(password, 10) },
-          { transaction }
-        )
-        if (pfp) {
-          const imgId = Date.now()
-          user.placeholder = await cropPFP(pfp, username, imgId)
-          user.imgId = imgId
-        } else {
-          user.placeholder =
-            'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoEAAQAAUAmJZgCdAEO9p5AAPa//NFYLcn+a7b+3z7ynq/qXv+iG0yH/y1D9eBf9pqWugq9G0RnxmxwsjaA2bW8AAA='
-        }
+      const imgId = pfp.size > 0 ? Date.now().toString() : null
+      const [hash, placeholder] = await Promise.all([bcrypt.hash(password, 10), cropPFP(pfp, username, imgId)])
+      const user = await prismaClient.users.create({ data: { username, email, password: hash, placeholder, imgId } })
+      await createForgor(user)
 
-        await user.save({ transaction })
-        await createForgor(user, db, transaction)
-
-        return true
-      })
-    },
+      return true
+    }
+    /*
     updateUserRoles: async (
       parent,
       { username, roles },

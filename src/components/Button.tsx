@@ -7,8 +7,8 @@ export default function Button(props: PropsWithChildren<{ className?: string; lo
   return (
     <button
       className={clsx(
-        loading ? 'bg-blue-400 cursor-progress' : 'bg-blue-600 hover:bg-blue-700',
-        'py-2 px-3.5 rounded-lg',
+        { 'cursor-progress': loading },
+        'py-2 px-3.5 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400',
         className
       )}
       {...restProps}

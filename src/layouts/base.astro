@@ -1,6 +1,7 @@
 ---
-import { languageTag } from '../paraglide/runtime'
+import { Toaster } from 'react-hot-toast'
 
+import { languageTag } from '../paraglide/runtime'
 import Header from 'components/Header.astro'
 
 import 'styles/global.css'
@@ -14,28 +15,18 @@ import 'styles/global.css'
 
     <meta name='theme-color' content='#ffffff' />
     <meta property='og:url' content='/' />
-    <meta
-      property='og:title'
-      content='Sitting on Clouds — High Quality soundtrack library'
-    />
-    <meta
-      property='og:description'
-      content='Largest Video Game & Animation Soundtrack サウンドトラック Archive'
-    />
+    <meta property='og:title' content='Sitting on Clouds — High Quality soundtrack library' />
+    <meta property='og:description' content='Largest Video Game & Animation Soundtrack サウンドトラック Archive' />
     <meta property='og:image' content='/img/assets/clouds_thumb.png' />
     <meta name='generator' content={Astro.generator} />
     <meta charset='utf-8' />
 
-    <link
-      rel='alternate'
-      type='application/rss+xml'
-      title='Sitting on Clouds'
-      href={new URL('rss.xml', Astro.site)}
-    />
+    <link rel='alternate' type='application/rss+xml' title='Sitting on Clouds' href={new URL('rss.xml', Astro.site)} />
   </head>
   <body class='flex flex-col min-h-full m-0 color-'>
     <Header />
     <main class='flex-1'>
+      <Toaster client:only='react' toastOptions={{ duration: 6000 }} />
       <slot />
     </main>
     <footer>This is the footer</footer>

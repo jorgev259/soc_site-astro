@@ -1,4 +1,4 @@
-scalar Upload
+scalar File
 scalar JSON
 scalar JSONObject
 
@@ -13,7 +13,7 @@ type Query {
 }
 
 type Mutation {
-  uploadBanner(banner: Upload!): Int
+  uploadBanner(banner: File!): Int
   selectBanner(name: String!): Int
   config(name: String!, value: String!): Config!
 }
