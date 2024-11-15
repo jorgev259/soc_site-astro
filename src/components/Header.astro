@@ -1,6 +1,6 @@
 ---
 import { gql } from '@/graphql/__generated__/client/index.js'
-import { getApolloClient } from '@/graphql/apolloClient.js'
+import { getApolloClient } from '@/graphql/apolloClientSSR.js'
 import { Image, Picture } from 'astro:assets'
 import { getSession } from 'auth-astro/server'
 import * as m from '../paraglide/messages.js'
@@ -8,11 +8,11 @@ import * as m from '../paraglide/messages.js'
 import logo from 'img/logos/winter.png'
 // import logoEs from 'img/logos/default_es.png'
 
-import Button from './Button.astro'
 import Dropdown from './header/Dropdown.astro'
 import DropdownItem from './header/DropdownItem.astro'
 import Toggler from './header/Toggler.astro'
 import NavButton from './header/NavButton.astro'
+import LoginNav from './header/LoginNav.astro'
 
 const headerQuery = gql(`
     query HeaderInfo {
@@ -48,16 +48,7 @@ const session = await getSession(Astro.request)
         <Image src={logo} class='h-full py-0.5 w-auto' alt='logo' height={150} width={265} />
       </a>
 
-      <div class='absolute top-0 right-0 space-x-2 mr-10'>
-        {
-          session === null ? (
-            <Button class='rounded-t-none'>{m.login()}</Button>
-          ) : (
-            <Button class='rounded-t-none'>{m.logout()}</Button>
-          )
-        }
-        <Button class='rounded-t-none'>{m.register()}</Button>
-      </div>
+      <LoginNav />
     </div>
   </div>
   <nav class='w-full md:h-[55px] bg-dark'>

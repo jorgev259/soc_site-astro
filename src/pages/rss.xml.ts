@@ -1,7 +1,7 @@
 import rss, { type RSSFeedItem } from '@astrojs/rss'
 import type { APIContext } from 'astro'
 
-import { getApolloClient } from '@/graphql/apolloClient.js'
+import { getApolloClient } from '@/graphql/apolloClientSSR'
 import { gql } from '@/graphql/__generated__/client'
 
 const addedQuery = gql(`

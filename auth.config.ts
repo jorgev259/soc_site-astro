@@ -18,7 +18,10 @@ export default defineConfig({
       async authorize(credentials) {
         if (!credentials?.username || !credentials.password) throw new InvalidLoginError()
 
-        const user = await prismaClient.users.findUnique({ where: { username: credentials.username } })
+        const user = await prismaClient.users.findUnique({
+          select: { username: true, password: true },
+          where: { username: credentials.username }
+        })
         if (!user) throw new InvalidLoginError()
 
         const valid = await bcrypt.compare(credentials.password, user.password)

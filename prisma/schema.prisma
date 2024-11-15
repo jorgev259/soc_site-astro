@@ -317,10 +317,10 @@ model favorites {
 
 model forgors {
   id        Int       @id @default(autoincrement())
-  expires   DateTime? @db.DateTime(0)
+  expires   DateTime? @default(dbgenerated("DATE_ADD(NOW(), INTERVAL 24 HOUR)")) @db.DateTime(0)
   key       String?   @db.VarChar(255)
-  createdAt DateTime  @db.DateTime(0)
-  updatedAt DateTime  @db.DateTime(0)
+  createdAt DateTime  @default(now()) @db.DateTime(0)
+  updatedAt DateTime  @default(now()) @db.DateTime(0)
   username  String?   @db.VarChar(255)
   users     users?    @relation(fields: [username], references: [username], map: "forgors_ibfk_1")
 
@@ -515,8 +515,8 @@ model users {
   username       String           @id @db.VarChar(255)
   email          String?          @db.VarChar(255)
   password       String?          @db.VarChar(255)
-  createdAt      DateTime         @db.DateTime(0)
-  updatedAt      DateTime         @db.DateTime(0)
+  createdAt      DateTime         @default(now()) @db.DateTime(0)
+  updatedAt      DateTime         @default(now()) @db.DateTime(0)
   placeholder    String?          @db.Text
   imgId          String?          @db.VarChar(255)
   User_Role      User_Role[]

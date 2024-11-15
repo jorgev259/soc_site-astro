@@ -1,0 +1,15 @@
+---
+import { getSession } from 'auth-astro/server'
+import { SignIn, SignOut } from 'auth-astro/components'
+
+import RegisterBtn from './RegisterButton'
+import * as m from 'paraglide/messages.js'
+
+const session = await getSession(Astro.request)
+const btnClass = 'bg-blue-600 hover:bg-blue-700 py-2 px-3.5 rounded-lg rounded-t-none'
+---
+
+<div class='absolute top-0 right-0 space-x-2 mr-10'>
+  {session === null ? <SignIn class={btnClass}>{m.login()}</SignIn> : <SignOut class={btnClass}>{m.logout()}</SignOut>}
+  {!session ? <RegisterBtn client:only='react' /> : null}
+</div>
