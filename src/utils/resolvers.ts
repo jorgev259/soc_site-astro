@@ -1,32 +1,26 @@
-// import User from "sequelize/models/user";
-import type { Session } from '@auth/core'
+import type { ResolverContext } from '@/graphql/apolloClientSSR'
+import { AuthenticationError, ForbiddenError } from './graphQLErrors'
+import prismaClient from 'prisma/client'
+import { COOKIE_NAME, validateSessionToken } from './session'
 
-export async function getUser(session: Session | null) {
-  if (!session) return null
-
-  const { id } = session
-  const user = await User.findByPk(id)
-  return user
-}
-
-const isAuthed = (next) => async (root, args, context, info) => {
-  const session = await getSession()
-  const { username = null } = session
-
-  if (!username) throw AuthenticationError()
-  return next(root, args, context, info)
-}
-
-const hasPerm = (perm) => (next) => async (root, args, context, info) => {
-  const { db } = context
-  const user = await getUser(db)
-  const roles = await user.getRoles()
-  const permissions = roles.map((r) => r.permissions).flat()
-  if (!permissions.includes(perm)) throw ForbiddenError()
+export const checkAuth = (next) => async (root, args, context: ResolverContext, info) => {
+  const { user } = await validateSessionToken(context.cookies?.get(COOKIE_NAME)?.value)
+  if (!user) throw AuthenticationError()
 
   return next(root, args, context, info)
 }
 
-consoley.log()
+export const checkPerm = (perm: string) => (next) => async (root, args, context: ResolverContext, info) => {
+  const { user } = await validateSessionToken(context.cookies?.get(COOKIE_NAME)?.value)
+  if (!user) throw AuthenticationError()
 
-export const hasRole = (role) => [isAuthedApp, hasPermApp(role)]
+  const { roles } = await prismaClient.users.findUnique({
+    where: { username: user?.username },
+    include: { roles: { include: { role: { select: { permissions: true } } } } }
+  })
+  const perms = roles.map((r) => r.role.permissions).flat()
+
+  if (!perms.includes(perm)) throw ForbiddenError()
+
+  return next(root, args, context, info)
+}

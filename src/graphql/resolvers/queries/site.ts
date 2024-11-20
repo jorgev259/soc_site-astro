@@ -1,40 +1,31 @@
-// import fg from 'fast-glob'
-import { composeResolvers } from '@graphql-tools/resolvers-composition'
+import fg from 'fast-glob'
 
+import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import type { Resolvers } from '@/graphql/__generated__/types.generated'
 import prismaClient from 'prisma/client'
+import { checkPerm } from 'utils/resolvers'
 
 const resolversComposition = {
-  /* 'Query.banners': hasRole('UPDATE') */
+  'Query.banners': checkPerm('UPDATE')
 }
 
 const resolvers: Resolvers = {
   Query: {
-    config: async (_, { name }) =>
+    config: (_, { name }, __, ___) =>
       prismaClient.config.upsert({
         where: { name },
         create: { name },
         update: {}
-      })
-
-    /* highlight: async (parent, args, { db }) => {
-      const { value } = await db.models.config.findByPk('highlight')
-      return db.models.album.findByPk(value)
-    }, 
-
-      banners: async (parent, args) => {
+      }),
+    banners: async (parent, args) => {
       const filePaths = await fg(['/var/www/soc_img/img/live/**/ /**.png'])
-const images = filePaths.map((f) => f.split('/').pop())
+      const images = filePaths.map((f) => f.split('/').pop())
 
-return images
-}, 
-
-recentComments: async (parent, { limit = 5 }, { db }) => {
-return db.models.comment.findAll({
-limit,
-order: [['updatedAt', 'DESC']]
-})
-} */
+      return images
+    },
+    highlight: () => prismaClient.config.findUnique({ where: { name: 'highlight' } }),
+    recentComments: async (parent, { limit: take = 5 }) =>
+      prismaClient.comments.findMany({ take, orderBy: [{ updatedAt: 'desc' }] })
   }
 }
 

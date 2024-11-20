@@ -38,6 +38,9 @@ type Query {
 }
 
 type Mutation {
+  login(username: String!, password: String!): String!
+  logout: Boolean!
+
   registerUser(email: String!, username: String!, pfp: File): Boolean!
   updateUserRoles(username: String!, roles: [String]!): Boolean!
   deleteUser(username: String!): Int

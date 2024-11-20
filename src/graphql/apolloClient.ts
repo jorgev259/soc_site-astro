@@ -9,7 +9,8 @@ const httpLink = createUploadLink({
 
 const apolloClient = new ApolloClient({
   link: httpLink,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  credentials: 'same-origin'
 })
 
 export default apolloClient

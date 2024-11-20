@@ -149,8 +149,8 @@ model User_Role {
   updatedAt    DateTime @db.DateTime(0)
   userUsername String   @db.VarChar(255)
   roleName     String   @db.VarChar(255)
-  users        users    @relation(fields: [userUsername], references: [username], onDelete: Cascade, map: "User_Role_ibfk_1")
-  roles        roles    @relation(fields: [roleName], references: [name], onDelete: Cascade, map: "User_Role_ibfk_2")
+  user         users    @relation(fields: [userUsername], references: [username], onDelete: Cascade, map: "User_Role_ibfk_1")
+  role         roles    @relation(fields: [roleName], references: [name], onDelete: Cascade, map: "User_Role_ibfk_2")
 
   @@id([userUsername, roleName])
   @@index([roleName], map: "roleName")
@@ -317,7 +317,7 @@ model favorites {
 
 model forgors {
   id        Int       @id @default(autoincrement())
-  expires   DateTime? @default(dbgenerated("DATE_ADD(NOW(), INTERVAL 24 HOUR)")) @db.DateTime(0)
+  expires   DateTime? @db.DateTime(0)
   key       String?   @db.VarChar(255)
   createdAt DateTime  @default(now()) @db.DateTime(0)
   updatedAt DateTime  @default(now()) @db.DateTime(0)
@@ -519,7 +519,7 @@ model users {
   updatedAt      DateTime         @default(now()) @db.DateTime(0)
   placeholder    String?          @db.Text
   imgId          String?          @db.VarChar(255)
-  User_Role      User_Role[]
+  roles          User_Role[]
   albumHistories albumHistories[]
   comments       comments[]
   favorites      favorites[]
@@ -527,4 +527,13 @@ model users {
   logs           logs[]
   ratings        ratings[]
   submissions    submissions[]
+  sessions       Session[]
+}
+
+model Session {
+  id        String   @id
+  userId    String   @db.VarChar(255)
+  expiresAt DateTime
+
+  user users @relation(references: [username], fields: [userId], onDelete: Cascade)
 }

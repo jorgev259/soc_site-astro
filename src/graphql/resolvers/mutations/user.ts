@@ -1,15 +1,23 @@
 import { composeResolvers } from '@graphql-tools/resolvers-composition'
 import type { Resolvers } from '@/graphql/__generated__/types.generated'
 import generator from 'generate-password-ts'
-import bcrypt from 'bcrypt'
 import sharp from 'sharp'
 import fs from 'fs-extra'
 import type { User } from '@auth/core/types'
 import prismaClient from 'prisma/client'
 import nodemailer from 'nodemailer'
 
-import { UserInputError } from 'utils/graphQLErrors'
+import { AuthenticationError, UserInputError } from 'utils/graphQLErrors'
 import forgorTemplate from 'utils/forgorTemplate'
+import {
+  argon2id,
+  COOKIE_NAME,
+  createSession,
+  generateSessionToken,
+  invalidateSession,
+  setSessionTokenCookie,
+  validateSessionToken
+} from 'utils/session'
 
 async function processImage(imagePath) {
   const sharpImg = sharp(imagePath)
@@ -62,6 +70,12 @@ async function cropPFP(pfpFile: File, username: string, imgId: string) {
 export const mailConfig = JSON.parse(process.env.MAILSERVER || '{}')
 export const transporter = nodemailer.createTransport(mailConfig)
 
+function addHours(date: Date, hours: number) {
+  const hoursToAdd = hours * 60 * 60 * 1000
+  date.setTime(date.getTime() + hoursToAdd)
+  return date
+}
+
 async function createForgor(user: User) {
   await prismaClient.forgors.deleteMany({ where: { username: user.username } })
 
@@ -72,7 +86,9 @@ async function createForgor(user: User) {
     strict: true
   })
 
-  const row = await prismaClient.forgors.create({ data: { key, username: user.username } })
+  const row = await prismaClient.forgors.create({
+    data: { key, username: user.username, expires: addHours(new Date(), 24) }
+  })
   const html = forgorTemplate.replaceAll('{{forgor_link}}', `https://sittingonclouds.net/forgor?key=${key}`)
   const message = {
     from: mailConfig.auth.user,
@@ -104,12 +120,34 @@ const resolvers: Resolvers = {
         upercase: true,
         strict: true
       })
+      const hashPassword = await argon2id.hash(password)
 
       const imgId = pfp.size > 0 ? Date.now().toString() : null
-      const [hash, placeholder] = await Promise.all([bcrypt.hash(password, 10), cropPFP(pfp, username, imgId)])
+      const [hash, placeholder] = await Promise.all([hashPassword, cropPFP(pfp, username, imgId)])
       const user = await prismaClient.users.create({ data: { username, email, password: hash, placeholder, imgId } })
       await createForgor(user)
 
+      return true
+    },
+    login: async (_, args, context) => {
+      const { username, password } = args
+      let { user } = await validateSessionToken(context.cookies?.get(COOKIE_NAME)?.value)
+      if (user) throw AuthenticationError('Already logged in')
+
+      user = await prismaClient.users.findUnique({ where: { username } })
+      if (!user) throw UserInputError('Invalid Username/email')
+
+      const checkPassword = await argon2id.verify(user.password, password)
+      if (!checkPassword) throw UserInputError('Invalid Username/email')
+
+      const token = generateSessionToken()
+      const session = await createSession(user.username, token)
+      setSessionTokenCookie(context.cookies, token, session.expiresAt)
+
+      return token
+    },
+    logout: async (_, args, context) => {
+      await invalidateSession(context.locals.session.id)
       return true
     }
     /*

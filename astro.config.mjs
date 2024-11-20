@@ -4,7 +4,6 @@ import tailwind from '@astrojs/tailwind'
 import node from '@astrojs/node'
 import react from '@astrojs/react';
 import paraglide from '@inlang/paraglide-astro'
-import auth from 'auth-astro'
 import icon from 'astro-icon'
 
 import { languageTags } from './project.inlang/settings.json'
@@ -22,11 +21,13 @@ export default defineConfig({
   },
   integrations: [
     tailwind(),
-    auth(),
     paraglide({ project: './project.inlang', outdir: './src/paraglide' }),
     icon({ iconDir: 'src/img/icons' }),
     react()
   ],
   output: 'server',
-  adapter: node({ mode: 'standalone' })
+  adapter: node({ mode: 'standalone' }),
+  security: {
+		checkOrigin: true
+	}
 })

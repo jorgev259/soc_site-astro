@@ -8,15 +8,15 @@ import Modal from 'components/Modal'
 import apolloClient from '@/graphql/apolloClient'
 import toast from 'react-hot-toast'
 
-const registerMutation = gql(`
-  mutation Register($username: String!, $email: String!, $pfp: File) {
-    registerUser(username: $username, email: $email, pfp: $pfp)
+const loginMutation = gql(`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password)
   }
 `)
 
-export default function RegisterBtn() {
+export default function LoginBtn() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [mutate, { loading }] = useMutation(registerMutation, { client: apolloClient, ignoreResults: true })
+  const [mutate, { loading }] = useMutation(loginMutation, { client: apolloClient })
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
@@ -24,8 +24,8 @@ export default function RegisterBtn() {
     const variables = Object.fromEntries(formData)
 
     mutate({ variables })
-      .then(() => {
-        toast.success(m.emailSuccess())
+      .then((res) => {
+        // toast.success(m.emailSuccess())
         setModalOpen(false)
       })
       .catch((err) => {
@@ -36,7 +36,7 @@ export default function RegisterBtn() {
   return (
     <>
       <Button className='rounded-t-none' onClick={() => setModalOpen(true)}>
-        {m.register()}
+        {m.login()}
       </Button>
       {modalOpen ? (
         <Modal setOpen={setModalOpen}>
@@ -49,29 +49,18 @@ export default function RegisterBtn() {
                   </label>
                   <input type='text' name='username' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' />
                 </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='email' className='font-medium text-black'>
-                    {m.email()}:
-                  </label>
-                  <input type='text' name='email' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' />
-                </div>
               </div>
               <div className='flex flex-col'>
-                <label htmlFor='pfp' className='font-medium text-black'>
-                  {m.profilePic()}:
+                <label htmlFor='password' className='font-medium text-black'>
+                  {m.password()}:
                 </label>
-                <input
-                  type='file'
-                  name='pfp'
-                  className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black'
-                  accept='image/*'
-                />
+                <input type='password' name='password' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' />
               </div>
             </div>
             <div className='bg-zinc-200 px-4 py-3 text-right gap-x-2 flex justify-end'>
               <Button className='bg-zinc-500 hover:bg-zinc-600'>{m.close()}</Button>
               <Button loading={loading} disabled={loading}>
-                {m.register()}
+                {m.login()}
               </Button>
             </div>
           </form>
