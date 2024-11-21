@@ -2,11 +2,10 @@
 import { gql } from '@/graphql/__generated__/client/index.js'
 import { getApolloClient } from '@/graphql/apolloClientSSR.js'
 import { Image, Picture } from 'astro:assets'
-import { getSession } from 'auth-astro/server'
 import * as m from '../paraglide/messages.js'
 
 import logo from 'img/logos/winter.png'
-// import logoEs from 'img/logos/default_es.png'
+import logoEs from 'img/logos/default_es.png'
 
 import Dropdown from './header/Dropdown.astro'
 import DropdownItem from './header/DropdownItem.astro'
@@ -45,7 +44,13 @@ const session = await getSession(Astro.request)
     </div>
     <div class='relative px-20 size-full'>
       <a href='/'>
-        <Image src={logo} class='h-full py-0.5 w-auto' alt='logo' height={150} width={265} />
+        <Image
+          src={Astro.currentLocale === 'es' ? logoEs : logo}
+          class='h-full py-0.5 w-auto'
+          alt='logo'
+          height={150}
+          width={265}
+        />
       </a>
 
       <LoginNav />
