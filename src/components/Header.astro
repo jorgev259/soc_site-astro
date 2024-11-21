@@ -27,8 +27,6 @@ const headerQuery = gql(`
 const client = await getApolloClient()
 const { data: headerInfo } = await client.query({ query: headerQuery })
 const { banner, bannerPosition } = headerInfo
-
-const session = await getSession(Astro.request)
 ---
 
 <header class='relative'>
