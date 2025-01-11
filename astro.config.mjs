@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config'
 import tailwind from '@astrojs/tailwind'
 import node from '@astrojs/node'
-import react from '@astrojs/react';
+import react from '@astrojs/react'
 import paraglide from '@inlang/paraglide-astro'
 import icon from 'astro-icon'
 
@@ -26,8 +26,5 @@ export default defineConfig({
     react()
   ],
   output: 'server',
-  adapter: node({ mode: 'standalone' }),
-  security: {
-		checkOrigin: true
-	}
+  adapter: node({ mode: 'standalone' })
 })
