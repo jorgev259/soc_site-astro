@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -149,8 +148,8 @@ model User_Role {
   updatedAt    DateTime @db.DateTime(0)
   userUsername String   @db.VarChar(255)
   roleName     String   @db.VarChar(255)
-  user         users    @relation(fields: [userUsername], references: [username], onDelete: Cascade, map: "User_Role_ibfk_1")
-  role         roles    @relation(fields: [roleName], references: [name], onDelete: Cascade, map: "User_Role_ibfk_2")
+  users        users    @relation(fields: [userUsername], references: [username], onDelete: Cascade, map: "User_Role_ibfk_1")
+  roles        roles    @relation(fields: [roleName], references: [name], onDelete: Cascade, map: "User_Role_ibfk_2")
 
   @@id([userUsername, roleName])
   @@index([roleName], map: "roleName")
@@ -273,8 +272,8 @@ model comments {
 model config {
   name      String   @id @db.VarChar(255)
   value     String?  @default("") @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @default(now()) @db.DateTime(0)
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
 }
 
 model discs {
@@ -319,8 +318,8 @@ model forgors {
   id        Int       @id @default(autoincrement())
   expires   DateTime? @db.DateTime(0)
   key       String?   @db.VarChar(255)
-  createdAt DateTime  @default(now()) @db.DateTime(0)
-  updatedAt DateTime  @default(now()) @db.DateTime(0)
+  createdAt DateTime  @db.DateTime(0)
+  updatedAt DateTime  @db.DateTime(0)
   username  String?   @db.VarChar(255)
   users     users?    @relation(fields: [username], references: [username], map: "forgors_ibfk_1")
 
@@ -515,11 +514,11 @@ model users {
   username       String           @id @db.VarChar(255)
   email          String?          @db.VarChar(255)
   password       String?          @db.VarChar(255)
-  createdAt      DateTime         @default(now()) @db.DateTime(0)
-  updatedAt      DateTime         @default(now()) @db.DateTime(0)
+  createdAt      DateTime         @db.DateTime(0)
+  updatedAt      DateTime         @db.DateTime(0)
   placeholder    String?          @db.Text
   imgId          String?          @db.VarChar(255)
-  roles          User_Role[]
+  User_Role      User_Role[]
   albumHistories albumHistories[]
   comments       comments[]
   favorites      favorites[]
@@ -527,13 +526,4 @@ model users {
   logs           logs[]
   ratings        ratings[]
   submissions    submissions[]
-  sessions       Session[]
-}
-
-model Session {
-  id        String   @id
-  userId    String   @db.VarChar(255)
-  expiresAt DateTime
-
-  user users @relation(references: [username], fields: [userId], onDelete: Cascade)
 }
