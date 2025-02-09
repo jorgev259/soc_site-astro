@@ -526,4 +526,27 @@ model users {
   logs           logs[]
   ratings        ratings[]
   submissions    submissions[]
+  sessions       session[]
+}
+
+model session {
+  id        String   @id
+  userId    String   @db.VarChar(255)
+  token     String
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime
+  updatedAt DateTime
+
+  user users @relation(fields: [userId], references: [username])
+}
+
+model verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime
+  updatedAt  DateTime
 }
