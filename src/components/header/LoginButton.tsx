@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { gql } from '@/graphql/__generated__/client'
-import { useMutation } from '@apollo/client/react/hooks'
+import { useState, type FormEvent, type SyntheticEvent } from 'react'
 
 import Button from 'components/Button'
 import * as m from 'paraglide/messages.js'
@@ -16,9 +14,9 @@ const loginMutation = gql(`
 
 export default function LoginBtn() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [mutate, { loading }] = useMutation(loginMutation, { client: apolloClient })
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (ev) => {
+  const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault()
     const formData = new FormData(ev.target)
     const variables = Object.fromEntries(formData)
