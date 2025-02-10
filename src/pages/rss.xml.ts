@@ -1,40 +1,27 @@
 import rss, { type RSSFeedItem } from '@astrojs/rss'
 import type { APIContext } from 'astro'
-
-import { getApolloClient } from '@/graphql/apolloClientSSR'
-import { gql } from '@/graphql/__generated__/client'
-
-const addedQuery = gql(`
-  query LastAdded ($limit: Int) {
-    added: searchAlbum(limit: $limit, status: ["show"]) {
-        id
-        createdAt
-        title
-        subTitle
-        artists {
-          name
-        }
-    }
-  }
-`)
+import prismaClient from 'utils/prisma-client'
 
 export async function GET(context: APIContext) {
-  const client = await getApolloClient()
-  const { data } = await client.query({ query: addedQuery, variables: { limit: 15 } })
-  const { added } = data
+  const albums = await prismaClient.albums.findMany({
+    where: { status: 'show' },
+    include: { artistList: { include: { artist: { select: { name: true } } } } },
+    take: 15,
+    orderBy: { createdAt: 'desc' }
+  })
 
-  const items: RSSFeedItem[] = added.map((album) => ({
-    guid: `album/${album?.id}`,
-    title: album?.title,
-    pubDate: new Date(album?.createdAt || ''),
-    description: album?.subTitle || album?.artists.map((a) => a?.name).join(' - '),
-    link: `https://www.sittingonclouds.net/album/${album?.id}`,
+  const items: RSSFeedItem[] = albums.map((album) => ({
+    guid: `album/${album.id}`,
+    title: album.title || 'Error: Missing title',
+    pubDate: new Date(album.createdAt || ''),
+    description: album.subTitle || album.artistList.map((a) => a.artist.name).join(' - '),
+    link: `https://www.sittingonclouds.net/album/${album.id}`,
     customData: `<media:content
           type="image/png"
           width="100"
           height="100"
           medium="image"
-          url="https://cdn.sittingonclouds.net/album/${album?.id}.png" />
+          url="https://cdn.sittingonclouds.net/album/${album.id}.png" />
       `
   }))
 

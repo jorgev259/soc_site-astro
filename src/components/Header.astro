@@ -1,6 +1,4 @@
 ---
-import { gql } from '@/graphql/__generated__/client/index.js'
-import { getApolloClient } from '@/graphql/apolloClientSSR.js'
 import { Image, Picture } from 'astro:assets'
 import * as m from '../paraglide/messages.js'
 
@@ -12,29 +10,18 @@ import DropdownItem from './header/DropdownItem.astro'
 import Toggler from './header/Toggler.astro'
 import NavButton from './header/NavButton.astro'
 import LoginNav from './header/LoginNav.astro'
+import prismaClient from 'utils/prisma-client.js'
 
-const headerQuery = gql(`
-    query HeaderInfo {
-      banner: config(name: "banner") {
-        value
-      }
-      bannerPosition: config(name: "banner-position") {
-        value
-      }
-    }
-  `)
-
-const client = await getApolloClient()
-const { data: headerInfo } = await client.query({ query: headerQuery })
-const { banner, bannerPosition } = headerInfo
+const { value: bannerId } = (await prismaClient.config.findUnique({ where: { name: 'banner' } })) ?? {}
+const { value: bannerPosition } = (await prismaClient.config.findUnique({ where: { name: 'banner-position' } })) ?? {}
 ---
 
 <header class='relative'>
   <div class='relative h-[150px] bg-top bg-no-repeat bg-cover'>
     <div class='absolute size-full'>
       <Picture
-        class={`size-full object-cover object-${bannerPosition?.value || 'top'}`}
-        src={`https://cdn.sittingonclouds.net/live/${banner?.value}.png`}
+        class={`size-full object-cover object-${bannerPosition || 'top'}`}
+        src={`https://cdn.sittingonclouds.net/live/${bannerId}.png`}
         alt=''
         width={2560}
         height={150}

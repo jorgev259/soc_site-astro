@@ -3,10 +3,18 @@ import RegisterBtn from './RegisterButton'
 import LoginBtn from './LoginButton'
 import LogoutBtn from './LogoutButton'
 
-const { user } = Astro.locals
+const session = Astro.locals.session
 ---
 
 <div class='absolute top-0 right-0 space-x-2 mr-10'>
-  {!user ? <LoginBtn client:only='react' /> : <LogoutBtn client:only='react' />}
-  {!user ? <RegisterBtn client:only='react' /> : null}
+  {
+    session ? (
+      <LogoutBtn client:only='react' />
+    ) : (
+      <>
+        <LoginBtn client:only='react' />
+        <RegisterBtn client:only='react' />
+      </>
+    )
+  }
 </div>

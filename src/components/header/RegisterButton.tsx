@@ -1,36 +1,26 @@
 import { useState } from 'react'
-import { gql } from '@/graphql/__generated__/client'
-import { useMutation } from '@apollo/client/react/hooks'
+// import toast from 'react-hot-toast'
 
-import Button from 'components/Button'
 import * as m from 'paraglide/messages.js'
+import Button from 'components/Button'
 import Modal from 'components/Modal'
-import apolloClient from '@/graphql/apolloClient'
-import toast from 'react-hot-toast'
-
-const registerMutation = gql(`
-  mutation Register($username: String!, $email: String!, $pfp: File) {
-    registerUser(username: $username, email: $email, pfp: $pfp)
-  }
-`)
 
 export default function RegisterBtn() {
   const [modalOpen, setModalOpen] = useState(false)
-  const [mutate, { loading }] = useMutation(registerMutation, { client: apolloClient, ignoreResults: true })
 
   const handleSubmit = (ev) => {
     ev.preventDefault()
     const formData = new FormData(ev.target)
     const variables = Object.fromEntries(formData)
 
-    mutate({ variables })
+    /*     mutate({ variables })
       .then(() => {
         toast.success(m.emailSuccess())
         setModalOpen(false)
       })
       .catch((err) => {
         toast.error(err.message)
-      })
+      }) */
   }
 
   return (
@@ -70,9 +60,9 @@ export default function RegisterBtn() {
             </div>
             <div className='bg-zinc-200 px-4 py-3 text-right gap-x-2 flex justify-end'>
               <Button className='bg-zinc-500 hover:bg-zinc-600'>{m.close()}</Button>
-              <Button loading={loading} disabled={loading}>
+              {/*      <Button loading={loading} disabled={loading}>
                 {m.register()}
-              </Button>
+              </Button> */}
             </div>
           </form>
         </Modal>
