@@ -3,14 +3,8 @@ import { useState, type FormEvent, type SyntheticEvent } from 'react'
 import Button from 'components/Button'
 import * as m from 'paraglide/messages.js'
 import Modal from 'components/Modal'
-import apolloClient from '@/graphql/apolloClient'
-import toast from 'react-hot-toast'
 
-const loginMutation = gql(`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
-  }
-`)
+import toast from 'react-hot-toast'
 
 export default function LoginBtn() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -21,14 +15,14 @@ export default function LoginBtn() {
     const formData = new FormData(ev.target)
     const variables = Object.fromEntries(formData)
 
-    mutate({ variables })
+    /*     mutate({ variables })
       .then((res) => {
         // toast.success(m.emailSuccess())
         setModalOpen(false)
       })
       .catch((err) => {
         toast.error(err.message)
-      })
+      }) */
   }
 
   return (
