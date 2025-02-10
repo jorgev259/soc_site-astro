@@ -148,7 +148,7 @@ model User_Role {
   updatedAt    DateTime @db.DateTime(0)
   userUsername String   @db.VarChar(255)
   roleName     String   @db.VarChar(255)
-  users        users    @relation(fields: [userUsername], references: [username], onDelete: Cascade, map: "User_Role_ibfk_1")
+  users        users    @relation(fields: [userUsername], references: [id], onDelete: Cascade, map: "User_Role_ibfk_1")
   roles        roles    @relation(fields: [roleName], references: [name], onDelete: Cascade, map: "User_Role_ibfk_2")
 
   @@id([userUsername, roleName])
@@ -162,7 +162,7 @@ model albumHistories {
   updatedAt   DateTime @db.DateTime(0)
   username    String?  @db.VarChar(255)
   albumId     Int?
-  users       users?   @relation(fields: [username], references: [username], map: "albumHistories_ibfk_1")
+  users       users?   @relation(fields: [username], references: [id], map: "albumHistories_ibfk_1")
   albums      albums?  @relation(fields: [albumId], references: [id], map: "albumHistories_ibfk_2")
 
   @@index([albumId], map: "ostId")
@@ -263,7 +263,7 @@ model comments {
   albumId   Int?
   username  String?  @db.VarChar(255)
   albums    albums?  @relation(fields: [albumId], references: [id], map: "comments_ibfk_1")
-  users     users?   @relation(fields: [username], references: [username], map: "comments_ibfk_2")
+  users     users?   @relation(fields: [username], references: [id], map: "comments_ibfk_2")
 
   @@index([albumId], map: "ostId")
   @@index([username], map: "username")
@@ -308,7 +308,7 @@ model favorites {
   albumId   Int?
   username  String?  @db.VarChar(255)
   albums    albums?  @relation(fields: [albumId], references: [id], map: "favorites_ibfk_1")
-  users     users?   @relation(fields: [username], references: [username], map: "favorites_ibfk_2")
+  users     users?   @relation(fields: [username], references: [id], map: "favorites_ibfk_2")
 
   @@index([albumId], map: "ostId")
   @@index([username], map: "username")
@@ -321,7 +321,7 @@ model forgors {
   createdAt DateTime  @db.DateTime(0)
   updatedAt DateTime  @db.DateTime(0)
   username  String?   @db.VarChar(255)
-  users     users?    @relation(fields: [username], references: [username], map: "forgors_ibfk_1")
+  users     users?    @relation(fields: [username], references: [id], map: "forgors_ibfk_1")
 
   @@index([username], map: "username")
 }
@@ -374,7 +374,7 @@ model logs {
   createdAt DateTime @db.DateTime(0)
   updatedAt DateTime @db.DateTime(0)
   username  String?  @db.VarChar(255)
-  users     users?   @relation(fields: [username], references: [username], map: "logs_ibfk_1")
+  users     users?   @relation(fields: [username], references: [id], map: "logs_ibfk_1")
 
   @@index([username], map: "username")
 }
@@ -411,7 +411,7 @@ model ratings {
   albumId   Int?
   username  String?  @db.VarChar(255)
   albums    albums?  @relation(fields: [albumId], references: [id], map: "ratings_ibfk_1")
-  users     users?   @relation(fields: [username], references: [username], map: "ratings_ibfk_2")
+  users     users?   @relation(fields: [username], references: [id], map: "ratings_ibfk_2")
 
   @@index([albumId], map: "ostId")
   @@index([username], map: "username")
@@ -495,7 +495,7 @@ model submissions {
   updatedAt    DateTime  @db.DateTime(0)
   userUsername String?   @db.VarChar(255)
   requestId    Int?
-  users        users?    @relation(fields: [userUsername], references: [username], map: "submissions_ibfk_1")
+  users        users?    @relation(fields: [userUsername], references: [id], map: "submissions_ibfk_1")
   requests     requests? @relation(fields: [requestId], references: [id], map: "submissions_ibfk_2")
 
   @@index([requestId], map: "requestId")
@@ -511,14 +511,16 @@ model type {
 }
 
 model users {
-  username       String           @id @db.VarChar(255)
-  email          String?          @db.VarChar(255)
-  password       String?          @db.VarChar(255)
-  createdAt      DateTime         @db.DateTime(0)
-  updatedAt      DateTime         @db.DateTime(0)
-  placeholder    String?          @db.Text
-  imgId          String?          @db.VarChar(255)
-  User_Role      User_Role[]
+  id            String   @id @db.VarChar(255)
+  name          String   @db.VarChar(20)
+  username      String   @unique @db.VarChar(255)
+  email         String?  @unique @db.VarChar(255)
+  emailVerified Boolean
+  createdAt     DateTime @db.DateTime(0)
+  updatedAt     DateTime @db.DateTime(0)
+  image         String?  @db.VarChar(255)
+
+  roles          User_Role[]
   albumHistories albumHistories[]
   comments       comments[]
   favorites      favorites[]
@@ -527,6 +529,7 @@ model users {
   ratings        ratings[]
   submissions    submissions[]
   sessions       session[]
+  accounts       account[]
 }
 
 model session {
@@ -539,7 +542,7 @@ model session {
   createdAt DateTime
   updatedAt DateTime
 
-  user users @relation(fields: [userId], references: [username])
+  user users @relation(fields: [userId], references: [id])
 }
 
 model verification {
@@ -549,4 +552,22 @@ model verification {
   expiresAt  DateTime
   createdAt  DateTime
   updatedAt  DateTime
+}
+
+model account {
+  id                    String    @id
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  user users @relation(fields: [userId], references: [id])
 }

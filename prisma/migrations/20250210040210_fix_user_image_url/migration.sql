@@ -1,0 +1,1 @@
+UPDATE `users` SET `image`=CONCAT("https://cdn.sittingonclouds.net/user/",`image`);

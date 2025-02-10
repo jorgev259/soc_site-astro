@@ -7,7 +7,7 @@ CREATE TABLE `Album_Animation` (
 
     INDEX `animationId`(`animationId`),
     PRIMARY KEY (`albumId`, `animationId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Album_Artist` (
@@ -18,7 +18,7 @@ CREATE TABLE `Album_Artist` (
 
     INDEX `artistSlug`(`artistSlug`),
     PRIMARY KEY (`albumId`, `artistSlug`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Album_Category` (
@@ -29,7 +29,7 @@ CREATE TABLE `Album_Category` (
 
     INDEX `ostId`(`albumId`),
     PRIMARY KEY (`categoryName`, `albumId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Album_Classification` (
@@ -40,7 +40,7 @@ CREATE TABLE `Album_Classification` (
 
     INDEX `categoryName`(`classificationName`),
     PRIMARY KEY (`albumId`, `classificationName`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Album_Game` (
@@ -51,7 +51,7 @@ CREATE TABLE `Album_Game` (
 
     INDEX `ostId`(`albumId`),
     PRIMARY KEY (`gameSlug`, `albumId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Album_Platform` (
@@ -62,7 +62,7 @@ CREATE TABLE `Album_Platform` (
 
     INDEX `platformId`(`platformId`),
     PRIMARY KEY (`albumId`, `platformId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Album_Type` (
@@ -73,7 +73,7 @@ CREATE TABLE `Album_Type` (
 
     INDEX `typeId`(`typeId`),
     PRIMARY KEY (`albumId`, `typeId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Game_Platform` (
@@ -84,7 +84,7 @@ CREATE TABLE `Game_Platform` (
 
     INDEX `platformId`(`platformId`),
     PRIMARY KEY (`gameSlug`, `platformId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Publisher_Game` (
@@ -95,7 +95,7 @@ CREATE TABLE `Publisher_Game` (
 
     INDEX `publisherId`(`publisherId`),
     PRIMARY KEY (`gameSlug`, `publisherId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `SequelizeMeta` (
@@ -103,7 +103,7 @@ CREATE TABLE `SequelizeMeta` (
 
     UNIQUE INDEX `name`(`name`),
     PRIMARY KEY (`name`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Series_Game` (
@@ -114,7 +114,7 @@ CREATE TABLE `Series_Game` (
 
     INDEX `seriesSlug`(`seriesSlug`),
     PRIMARY KEY (`gameSlug`, `seriesSlug`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `Studio_Animation` (
@@ -125,7 +125,7 @@ CREATE TABLE `Studio_Animation` (
 
     INDEX `studioSlug`(`studioSlug`),
     PRIMARY KEY (`animationId`, `studioSlug`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `User_Role` (
@@ -136,7 +136,7 @@ CREATE TABLE `User_Role` (
 
     INDEX `roleName`(`roleName`),
     PRIMARY KEY (`userUsername`, `roleName`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `albumHistories` (
@@ -150,7 +150,7 @@ CREATE TABLE `albumHistories` (
     INDEX `ostId`(`albumId`),
     INDEX `username`(`username`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `albums` (
@@ -169,7 +169,7 @@ CREATE TABLE `albums` (
     `headerColor` VARCHAR(255) NULL DEFAULT '#ffffff',
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `animation` (
@@ -187,7 +187,7 @@ CREATE TABLE `animation` (
     UNIQUE INDEX `subTitle`(`subTitle`),
     INDEX `studioSlug`(`studioSlug`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `artist` (
@@ -197,7 +197,7 @@ CREATE TABLE `artist` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`slug`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `availables` (
@@ -210,7 +210,7 @@ CREATE TABLE `availables` (
 
     INDEX `ostId`(`albumId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `category` (
@@ -219,7 +219,7 @@ CREATE TABLE `category` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`name`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `classification` (
@@ -228,7 +228,7 @@ CREATE TABLE `classification` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`name`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `comments` (
@@ -243,7 +243,7 @@ CREATE TABLE `comments` (
     INDEX `ostId`(`albumId`),
     INDEX `username`(`username`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `config` (
@@ -253,7 +253,7 @@ CREATE TABLE `config` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`name`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `discs` (
@@ -266,7 +266,7 @@ CREATE TABLE `discs` (
 
     INDEX `ostId`(`albumId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `downloads` (
@@ -279,7 +279,7 @@ CREATE TABLE `downloads` (
 
     INDEX `ostId`(`albumId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `favorites` (
@@ -292,7 +292,7 @@ CREATE TABLE `favorites` (
     INDEX `ostId`(`albumId`),
     INDEX `username`(`username`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `forgors` (
@@ -305,7 +305,7 @@ CREATE TABLE `forgors` (
 
     INDEX `username`(`username`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `game` (
@@ -318,7 +318,7 @@ CREATE TABLE `game` (
     `headerColor` VARCHAR(255) NULL DEFAULT '#ffffff',
 
     PRIMARY KEY (`slug`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `linkCategories` (
@@ -331,7 +331,7 @@ CREATE TABLE `linkCategories` (
 
     INDEX `ostId`(`albumId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `links` (
@@ -347,7 +347,7 @@ CREATE TABLE `links` (
 
     INDEX `downloadId`(`downloadId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `logs` (
@@ -360,7 +360,7 @@ CREATE TABLE `logs` (
 
     INDEX `username`(`username`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `pendings` (
@@ -369,7 +369,7 @@ CREATE TABLE `pendings` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `platform` (
@@ -380,7 +380,7 @@ CREATE TABLE `platform` (
     `type` VARCHAR(255) NULL DEFAULT 'Game',
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `publisher` (
@@ -390,7 +390,7 @@ CREATE TABLE `publisher` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `ratings` (
@@ -404,7 +404,7 @@ CREATE TABLE `ratings` (
     INDEX `ostId`(`albumId`),
     INDEX `username`(`username`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `related_album` (
@@ -415,7 +415,7 @@ CREATE TABLE `related_album` (
 
     INDEX `relatedId`(`relatedId`),
     PRIMARY KEY (`albumId`, `relatedId`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `requests` (
@@ -433,7 +433,7 @@ CREATE TABLE `requests` (
     `updatedAt` DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `roles` (
@@ -443,7 +443,7 @@ CREATE TABLE `roles` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`name`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `series` (
@@ -455,7 +455,7 @@ CREATE TABLE `series` (
     `headerColor` VARCHAR(255) NULL DEFAULT '#ffffff',
 
     PRIMARY KEY (`slug`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `stores` (
@@ -468,7 +468,7 @@ CREATE TABLE `stores` (
 
     INDEX `ostId`(`albumId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `studio` (
@@ -478,7 +478,7 @@ CREATE TABLE `studio` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`slug`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `submissions` (
@@ -496,7 +496,7 @@ CREATE TABLE `submissions` (
     INDEX `requestId`(`requestId`),
     INDEX `userUsername`(`userUsername`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `type` (
@@ -506,7 +506,7 @@ CREATE TABLE `type` (
     `updatedAt` DATETIME(0) NOT NULL,
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- CreateTable
 CREATE TABLE `users` (
@@ -519,7 +519,7 @@ CREATE TABLE `users` (
     `imgId` VARCHAR(255) NULL,
 
     PRIMARY KEY (`username`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+);
 
 -- AddForeignKey
 ALTER TABLE `Album_Animation` ADD CONSTRAINT `Album_Animation_ibfk_1` FOREIGN KEY (`albumId`) REFERENCES `albums`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
