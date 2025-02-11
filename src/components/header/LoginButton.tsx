@@ -55,7 +55,7 @@ function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetSta
   }
 
   return (
-    <>
+    <div className='flex gap-y-2 justify-center flex-col'>
       <form method='post' onSubmit={handleSubmit}>
         <div className='flex gap-x-4'>
           <div className='flex flex-col'>
@@ -71,8 +71,8 @@ function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetSta
             <input type='password' name='password' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
           </div>
         </div>
-        <div className='mx-auto'>
-          <Button loading={loading} disabled={loading}>
+        <div className='flex'>
+          <Button loading={loading} disabled={loading} className='mx-auto px-6'>
             {m.login()}
           </Button>
         </div>
@@ -87,7 +87,7 @@ function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetSta
           {m.recoverPassword()}
         </Button>
       </div>
-    </>
+    </div>
   )
 }
 
