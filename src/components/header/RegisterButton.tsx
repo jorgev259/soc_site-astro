@@ -1,26 +1,39 @@
-import { useState } from 'react'
-// import toast from 'react-hot-toast'
+import { useState, type FormEvent } from 'react'
+import toast from 'react-hot-toast'
 
 import * as m from 'paraglide/messages.js'
 import Button from 'components/Button'
 import Modal from 'components/Modal'
+import Input from 'components/form/Input'
+import { signUp } from 'utils/auth-client'
 
 export default function RegisterBtn() {
   const [modalOpen, setModalOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (ev) => {
+  async function handleSubmit(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault()
-    const formData = new FormData(ev.target)
-    const variables = Object.fromEntries(formData)
+    const formData = new FormData(ev.currentTarget)
+    const variables = Object.fromEntries(formData) as {
+      username: string
+      name: string
+      password: string
+      email: string
+    }
 
-    /*     mutate({ variables })
-      .then(() => {
-        toast.success(m.emailSuccess())
+    setLoading(true)
+    await signUp.email(variables, {
+      onSuccess: () => {
+        toast.success(m.emailSuccess(), { duration: Infinity })
+        setLoading(false)
         setModalOpen(false)
-      })
-      .catch((err) => {
-        toast.error(err.message)
-      }) */
+      },
+      onError: (ctx) => {
+        console.log(ctx.error)
+        toast.error(ctx.error.message)
+        setLoading(false)
+      }
+    })
   }
 
   return (
@@ -31,38 +44,26 @@ export default function RegisterBtn() {
       {modalOpen ? (
         <Modal setOpen={setModalOpen}>
           <form onSubmit={handleSubmit}>
-            <div className='bg-white px-4 pt-5 pb-4 gap-x-4 flex flex-col'>
+            <div className='px-4 pt-5 pb-4 gap-x-4 gap-y-1 flex flex-col'>
               <div className='flex gap-x-4'>
-                <div className='flex flex-col'>
-                  <label htmlFor='username' className='font-medium text-black'>
-                    {m.username()}:
-                  </label>
-                  <input type='text' name='username' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' />
-                </div>
-                <div className='flex flex-col'>
-                  <label htmlFor='email' className='font-medium text-black'>
-                    {m.email()}:
-                  </label>
-                  <input type='text' name='email' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' />
-                </div>
+                <Input name='username' required>
+                  {m.username()}
+                </Input>
+                <Input name='name' required>
+                  {m.displayName()}
+                </Input>
               </div>
-              <div className='flex flex-col'>
-                <label htmlFor='pfp' className='font-medium text-black'>
-                  {m.profilePic()}:
-                </label>
-                <input
-                  type='file'
-                  name='pfp'
-                  className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black'
-                  accept='image/*'
-                />
+              <Input name='email' type='email' required>
+                {m.email()}
+              </Input>
+              <Input name='password' type='password' required>
+                {m.password()}
+              </Input>
+              <div className='mx-auto'>
+                <Button type='submit' loading={loading} disabled={loading}>
+                  {m.register()}
+                </Button>
               </div>
-            </div>
-            <div className='bg-zinc-200 px-4 py-3 text-right gap-x-2 flex justify-end'>
-              <Button className='bg-zinc-500 hover:bg-zinc-600'>{m.close()}</Button>
-              {/*      <Button loading={loading} disabled={loading}>
-                {m.register()}
-              </Button> */}
             </div>
           </form>
         </Modal>

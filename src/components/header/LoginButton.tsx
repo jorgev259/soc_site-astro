@@ -38,10 +38,13 @@ function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetSta
     const variables = Object.fromEntries(formData)
 
     setLoading(true)
-    const { error } = await signIn.username({
-      username: variables.username as string,
-      password: variables.password as string
-    })
+    const { error } = await signIn.username(
+      {
+        username: variables.username as string,
+        password: variables.password as string
+      },
+      {}
+    )
     setLoading(false)
 
     if (error) {
