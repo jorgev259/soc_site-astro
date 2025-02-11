@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 
 import { languageTag } from '../paraglide/runtime'
 import Header from 'components/Header.astro'
+import Footer from 'components/Footer.astro'
 
 import 'styles/global.css'
 ---
@@ -29,6 +30,6 @@ import 'styles/global.css'
       <Toaster client:only='react' toastOptions={{ duration: 6000 }} />
       <slot />
     </main>
-    <footer class='bg-soc-green'>This is the footer</footer>
+    <Footer />
   </body>
 </html>
