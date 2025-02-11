@@ -1,35 +1,17 @@
-import { useState, type FormEvent, type SyntheticEvent } from 'react'
-
-import Button from 'components/Button'
-import * as m from 'paraglide/messages.js'
-import Modal from 'components/Modal'
-import apolloClient from '@/graphql/apolloClient'
+import { useEffect, useState, type FormEvent } from 'react'
 import toast from 'react-hot-toast'
 
-const loginMutation = gql(`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
-  }
-`)
+import * as m from 'paraglide/messages.js'
+import Button from 'components/Button'
+import Modal from 'components/Modal'
+import { forgetPassword, signIn } from 'utils/auth-client'
+import type { SetState } from 'types'
+
+type FormOptions = 'login' | 'forgor'
 
 export default function LoginBtn() {
+  const [currentForm, setForm] = useState<FormOptions>('login')
   const [modalOpen, setModalOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = (ev: FormEvent) => {
-    ev.preventDefault()
-    const formData = new FormData(ev.target)
-    const variables = Object.fromEntries(formData)
-
-    mutate({ variables })
-      .then((res) => {
-        // toast.success(m.emailSuccess())
-        setModalOpen(false)
-      })
-      .catch((err) => {
-        toast.error(err.message)
-      })
-  }
 
   return (
     <>
@@ -38,32 +20,123 @@ export default function LoginBtn() {
       </Button>
       {modalOpen ? (
         <Modal setOpen={setModalOpen}>
-          <form onSubmit={handleSubmit}>
-            <div className='bg-white px-4 pt-5 pb-4 gap-x-4 flex flex-col'>
-              <div className='flex gap-x-4'>
-                <div className='flex flex-col'>
-                  <label htmlFor='username' className='font-medium text-black'>
-                    {m.username()}:
-                  </label>
-                  <input type='text' name='username' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' />
-                </div>
-              </div>
-              <div className='flex flex-col'>
-                <label htmlFor='password' className='font-medium text-black'>
-                  {m.password()}:
-                </label>
-                <input type='password' name='password' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' />
-              </div>
-            </div>
-            <div className='bg-zinc-200 px-4 py-3 text-right gap-x-2 flex justify-end'>
-              <Button className='bg-zinc-500 hover:bg-zinc-600'>{m.close()}</Button>
-              <Button loading={loading} disabled={loading}>
-                {m.login()}
-              </Button>
-            </div>
-          </form>
+          {currentForm === 'login' ? <LoginForm setForm={setForm} setModalOpen={setModalOpen} /> : null}
+          {currentForm === 'forgor' ? <CreateForgorForm setForm={setForm} setModalOpen={setModalOpen} /> : null}
         </Modal>
       ) : null}
     </>
+  )
+}
+
+function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetState<boolean> }) {
+  const { setForm, setModalOpen } = props
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(ev: FormEvent<HTMLFormElement>) {
+    ev.preventDefault()
+    const formData = new FormData(ev.currentTarget)
+    const variables = Object.fromEntries(formData)
+
+    setLoading(true)
+    const { error } = await signIn.username({
+      username: variables.username as string,
+      password: variables.password as string
+    })
+    setLoading(false)
+
+    if (error) {
+      console.error(error)
+      toast.error(error.message || 'Unknown Error')
+      return
+    }
+
+    setModalOpen(false)
+    location.reload()
+  }
+
+  return (
+    <>
+      <form method='post' onSubmit={handleSubmit}>
+        <div className='flex gap-x-4'>
+          <div className='flex flex-col'>
+            <label htmlFor='username' className='font-medium text-black'>
+              {m.username()}:
+            </label>
+            <input type='text' name='username' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+          </div>
+          <div className='flex flex-col'>
+            <label htmlFor='password' className='font-medium text-black'>
+              {m.password()}:
+            </label>
+            <input type='password' name='password' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+          </div>
+        </div>
+        <div className='mx-auto'>
+          <Button loading={loading} disabled={loading}>
+            {m.login()}
+          </Button>
+        </div>
+      </form>
+
+      <div className='mx-auto'>
+        <Button
+          onClick={() => {
+            setForm('forgor')
+          }}
+        >
+          {m.recoverPassword()}
+        </Button>
+      </div>
+    </>
+  )
+}
+
+function CreateForgorForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetState<boolean> }) {
+  const { setForm, setModalOpen } = props
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      setForm('login')
+    }
+  }, [])
+
+  async function handleSubmit(ev: FormEvent<HTMLFormElement>) {
+    ev.preventDefault()
+    const formData = new FormData(ev.currentTarget)
+    const email = formData.get('email')
+
+    if (!email) return
+
+    setLoading(true)
+    const { error } = await forgetPassword({ email: email as string, redirectTo: '/forgor' })
+    setLoading(false)
+
+    if (error) {
+      console.error(error)
+      toast.error(error.message || 'Unknown Error')
+      return
+    }
+
+    toast.success(m.emailSuccess())
+    setModalOpen(false)
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className='w-[500px]'>
+        <div className='flex flex-col'>
+          <label htmlFor='email' className='font-medium text-black'>
+            {m.email()}:
+          </label>
+          <input type='email' name='email' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+        </div>
+        <div className='mx-auto'>
+          <Button loading={loading} disabled={loading}>
+            {m.recoverPassword()}
+          </Button>
+        </div>
+      </div>
+    </form>
   )
 }

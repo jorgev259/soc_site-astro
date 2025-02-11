@@ -3,7 +3,7 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 
 import eslintPluginAstro from 'eslint-plugin-astro'
 
-const neoConfig = neostandard({ ignores: resolveIgnoresFromGitignore(), noStyle: true, ts: true})
+const neoConfig = neostandard({ ignores: resolveIgnoresFromGitignore(), noStyle: true, ts: true })
 
 /** @type {import("eslint").Linter.Config} */
 export default [
@@ -15,6 +15,7 @@ export default [
       'no-undef': 'error'
     }
   },
+  { env: { browser: true } },
   ...eslintPluginAstro.configs.recommended,
-  eslintConfigPrettier,
+  eslintConfigPrettier
 ]

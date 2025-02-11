@@ -10,7 +10,8 @@ export default {
         dark: '#212529',
         'dark-hover': '#2b3035',
         gray: '#3f3f3f',
-        'gray-hover': '#4f4f4f'
+        'gray-hover': '#4f4f4f',
+        'soc-green': '#4b7667'
       }
     }
   },

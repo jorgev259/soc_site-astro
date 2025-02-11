@@ -1,8 +1,10 @@
-import type { PropsWithChildren } from 'react'
+import type { PropsWithChildren, JSX } from 'react'
 import clsx from 'clsx'
 import { BarsRotateFade } from 'react-svg-spinners'
 
-export default function Button(props: PropsWithChildren<{ className?: string; loading?: boolean }>) {
+export default function Button(
+  props: PropsWithChildren<{ className?: string; loading?: boolean }> & JSX.IntrinsicElements['button']
+) {
   const { children, className, loading = false, ...restProps } = props
   return (
     <button

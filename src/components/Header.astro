@@ -27,7 +27,7 @@ const { value: bannerPosition } = (await prismaClient.config.findUnique({ where:
         height={150}
       />
     </div>
-    <div class='relative px-20 size-full'>
+    <div class='relative px-20 size-full flex'>
       <a href='/'>
         <Image
           src={Astro.currentLocale === 'es' ? logoEs : logo}

@@ -1,0 +1,9 @@
+---
+import ForgorForm from 'components/ForgorForm'
+import BaseLayout from 'layouts/base.astro'
+const token = Astro.url.searchParams.get('token')
+
+if (!token) return Astro.redirect('/404')
+---
+
+<BaseLayout><ForgorForm token={token} client:only='react' /></BaseLayout>

@@ -28,5 +28,9 @@
   "managesubmissions": "Manage Submissions",
   "profilePic": "Profile picture",
   "emailSuccess": "An email with further instructions has been sent to the address linked to the account. Check your spam folder.",
-  "close": "Close"
+  "close": "Close",
+  "newPassword": "New password",
+  "newPasswordRetype": "Re-type new password",
+  "savePassword": "Save Password",
+  "passwordResetSuccesful": "Password reset succesfully"
 }

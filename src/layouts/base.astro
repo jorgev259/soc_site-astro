@@ -25,10 +25,10 @@ import 'styles/global.css'
   </head>
   <body class='flex flex-col min-h-full m-0 color-'>
     <Header />
-    <main class='flex-1'>
+    <main class='flex-1 bg-soc-green'>
       <Toaster client:only='react' toastOptions={{ duration: 6000 }} />
       <slot />
     </main>
-    <footer>This is the footer</footer>
+    <footer class='bg-soc-green'>This is the footer</footer>
   </body>
 </html>
