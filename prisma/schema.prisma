@@ -520,7 +520,7 @@ model users {
   updatedAt     DateTime @db.DateTime(0)
   image         String?  @db.VarChar(255)
 
-  roles          User_Role[]
+  roleList       User_Role[]
   albumHistories albumHistories[]
   comments       comments[]
   favorites      favorites[]

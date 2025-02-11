@@ -1,10 +1,14 @@
 ---
-const { class: className, href } = Astro.props
+const { class: className, href, perms = false } = Astro.props
+const { pages } = Astro.locals
+
+const show = !perms || pages.includes(href)
 ---
 
-<a
-  href={href}
-  class:list={['hover:bg-gray-hover py-1 text-left ps-4', className]}
->
-  <slot />
-</a>
+{
+  show ? (
+    <a href={href} class:list={['hover:bg-gray-hover py-1 text-left ps-4', className]}>
+      <slot />
+    </a>
+  ) : null
+}

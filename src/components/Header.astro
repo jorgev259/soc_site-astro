@@ -14,6 +14,7 @@ import prismaClient from 'utils/prisma-client.js'
 
 const { value: bannerId } = (await prismaClient.config.findUnique({ where: { name: 'banner' } })) ?? {}
 const { value: bannerPosition } = (await prismaClient.config.findUnique({ where: { name: 'banner-position' } })) ?? {}
+const { session } = Astro.locals
 ---
 
 <header class='relative'>
@@ -67,20 +68,33 @@ const { value: bannerPosition } = (await prismaClient.config.findUnique({ where:
         </Fragment>
       </Dropdown>
 
-      <!-- <a href='/requests'><NavButton>{m.requests()}</NavButton></a>
-      <a href='#'><NavButton>{m.submitalbum()}</NavButton></a> -->
-
-      <!-- <Dropdown>
-      {m.admingrounds()}
-      <Fragment slot='items'>
-        <DropdownItem href='/admin'>{m.managealbums()}</DropdownItem>
-        <DropdownItem href='/admin/user'>{m.manageusers()}</DropdownItem>
-        <DropdownItem href='/admin/request'>{m.managerequests()}</DropdownItem>
-        <DropdownItem href='/admin/submission'
-          >{m.managesubmissions()}</DropdownItem
-        >
-      </Fragment>
-    </Dropdown> -->
+      {
+        session ? (
+          <>
+            <a href='/requests'>
+              <NavButton>{m.requests()}</NavButton>
+            </a>
+            <NavButton>{m.submitalbum()}</NavButton>
+            <Dropdown>
+              {m.adminGrounds()}
+              <Fragment slot='items'>
+                <DropdownItem href='/admin' perms>
+                  {m.manageAlbums()}
+                </DropdownItem>
+                <DropdownItem href='/admin/user' perms>
+                  {m.manageUsers()}
+                </DropdownItem>
+                <DropdownItem href='/admin/request' perms>
+                  {m.manageRequests()}
+                </DropdownItem>
+                <DropdownItem href='/admin/submission' perms>
+                  {m.manageSubmissions()}
+                </DropdownItem>
+              </Fragment>
+            </Dropdown>
+          </>
+        ) : null
+      }
     </Toggler>
   </nav>
 </header>
