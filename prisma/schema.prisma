@@ -184,7 +184,7 @@ model albums {
   placeholder                                   String?                @db.Text
   headerColor                                   String?                @default("#ffffff") @db.VarChar(255)
   Album_Animation                               Album_Animation[]
-  Album_Artist                                  Album_Artist[]
+  artistList                                    Album_Artist[]
   Album_Category                                Album_Category[]
   Album_Classification                          Album_Classification[]
   Album_Game                                    Album_Game[]

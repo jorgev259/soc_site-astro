@@ -21,4 +21,4 @@ CREATE TABLE `account` (
 ALTER TABLE `account` ADD CONSTRAINT `account_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`username`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 INSERT INTO `account` (id,userId,accountId, providerId,createdAt, updatedAt) 
-SELECT username,username,username,"username",createdAt,updatedAt FROM `users`;
+SELECT username,username,username,"credential",createdAt,updatedAt FROM `users`;
