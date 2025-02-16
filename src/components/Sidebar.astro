@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets'
+
+import discord from 'img/socials/discord.png'
+import kofi from 'img/socials/ko-fi-donate-button.png'
+import yt from 'img/socials/yt.png'
+import twitter from 'img/socials/twitter.png'
+import SidebarSection from './sidebar/SidebarSection.astro'
+
+// import Highlight from './sidebar/Highlight.astro'
+
+const listClass =
+  'uppercase text-3xl font-semibold w-full text-center py-3 hover:bg-dark-hover hover:text-cyan-400 hover:underline'
+---
+
+<div class='w-3/12 max-w-[300px] bg-dark flex flex-col'>
+  <a href='#' class={listClass}>Last Added</a>
+  <a href='#' class={listClass}>Get Lucky</a>
+  <a href='#' class={listClass}>Random Pull</a>
+  <div class='px-6 flex flex-col gap-y-3'>
+    <SidebarSection class='flex flex-col gap-y-3'>
+      <div class='flex gap-x-2 justify-center'>
+        <a href='https://www.youtube.com/channel/UCb1Q0GuOa8p_7fY-pYnWCmQ' target='_blank' rel='noopener noreferrer'>
+          <Image class='rounded-md' src={yt} alt='youtube' />
+        </a>
+
+        <a href='https://twitter.com/SittingOnCloud' target='_blank' rel='noopener noreferrer'>
+          <Image class='rounded-md' src={twitter} alt='twitter' />
+        </a>
+      </div>
+      <div>
+        <a href='https://discord.gg/x23SFbE' target='_blank' rel='noopener noreferrer'>
+          <Image class='rounded-md' src={discord} alt='Join our Discord!' />
+        </a>
+      </div>
+      <div>
+        <a href='https://ko-fi.com/sittingonclouds' target='_blank' rel='noopener noreferrer'>
+          <Image class='rounded-md' src={kofi} alt='Support me on Ko-fi' />
+        </a>
+      </div>
+    </SidebarSection>
+    <!-- <Highlight /> -->
+  </div>
+</div>

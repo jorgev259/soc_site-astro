@@ -24,9 +24,9 @@ import 'styles/global.css'
 
     <link rel='alternate' type='application/rss+xml' title='Sitting on Clouds' href={new URL('rss.xml', Astro.site)} />
   </head>
-  <body class='flex flex-col min-h-full m-0 color-'>
+  <body class='flex flex-col min-h-full m-0'>
     <Header />
-    <main class='flex-1 bg-soc-green'>
+    <main class='flex flex-1 bg-soc-green'>
       <Toaster client:only='react' toastOptions={{ duration: 6000 }} />
       <slot />
     </main>

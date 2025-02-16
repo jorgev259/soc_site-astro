@@ -1,5 +1,11 @@
 ---
+import Sidebar from 'components/Sidebar.astro'
 import BaseLayout from 'layouts/base.astro'
 ---
 
-<BaseLayout />
+<BaseLayout>
+  <div class='flex flex-1 max-w-[2000px]'>
+    <div class='flex-1'>Page content goes here</div>
+    <Sidebar />
+  </div>
+</BaseLayout>
