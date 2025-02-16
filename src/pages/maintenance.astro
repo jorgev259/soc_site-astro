@@ -1,0 +1,20 @@
+---
+export const prerender = true
+import { Image } from 'astro:assets'
+
+import BaseLayout from '../layouts/base.astro'
+
+import GuraGif from '../img/assets/doggo-thumbs-up.gif'
+import discord from 'img/socials/discord.png'
+---
+
+<BaseLayout>
+  <div class='flex flex-1 flex-col bg-soc-green-dark py-6'>
+    <div class='text-md` text-center'>
+      We got our best dogs improving the site. Join <a class='text-blue-600 underline' href='https://discord.gg/x23SFbE'
+        >our Discord Server</a
+      > for updates
+    </div>
+    <Image src={GuraGif} alt='Gawr Gura roomba' class='size-80 mx-auto mt-4' />
+  </div>
+</BaseLayout>

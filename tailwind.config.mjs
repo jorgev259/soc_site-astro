@@ -12,6 +12,7 @@ export default {
         gray: '#3f3f3f',
         'gray-hover': '#4f4f4f',
         'soc-green': '#4b7667',
+        'soc-green-dark': 'rgba(17, 17, 17, 0.7)',
         'hover-link': '#00d4ff'
       }
     }
