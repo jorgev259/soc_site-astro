@@ -1,0 +1,8 @@
+---
+import Content from './highlight/content.astro'
+import Loading from './highlight/loading.astro'
+---
+
+<Content server:defer>
+  <Loading slot='fallback' />
+</Content>

@@ -25,6 +25,7 @@ export default defineConfig({
     icon({ iconDir: 'src/img/icons' }),
     react()
   ],
+  image: { domains: ['cdn.sittingonclouds.net'] },
   output: 'server',
   adapter: node({ mode: 'standalone' })
 })

@@ -11,7 +11,8 @@ export default {
         'dark-hover': '#2b3035',
         gray: '#3f3f3f',
         'gray-hover': '#4f4f4f',
-        'soc-green': '#4b7667'
+        'soc-green': '#4b7667',
+        'hover-link': '#00d4ff'
       }
     }
   },
