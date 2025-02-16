@@ -6,9 +6,10 @@ import discord from 'img/socials/discord.png'
 import kofi from 'img/socials/ko-fi-donate-button.png'
 import yt from 'img/socials/yt.png'
 import twitter from 'img/socials/twitter.png'
-import SidebarSection from './sidebar/SidebarSection.astro'
 
+import SidebarSection from './sidebar/SidebarSection.astro'
 import Highlight from './sidebar/Highlight.astro'
+import AlbumBox from './AlbumBox.astro'
 
 const listClass =
   'uppercase text-3xl font-semibold w-full text-center py-3 hover:bg-dark-hover hover:text-cyan-400 hover:underline'
@@ -40,6 +41,11 @@ const listClass =
         </a>
       </div>
     </SidebarSection>
-    <Highlight />
+    <Highlight server:defer>
+      <SidebarSection slot='fallback'>
+        <div class='uppercase text-center text-2xl/6 font-semibold'>{m.highlightAlbum()}</div>
+        <AlbumBox loading />
+      </SidebarSection>
+    </Highlight>
   </div>
 </div>
