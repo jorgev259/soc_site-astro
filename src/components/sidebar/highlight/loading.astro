@@ -1,9 +1,11 @@
 ---
+import * as m from 'paraglide/messages.js'
+
 import AlbumBox from 'components/AlbumBox.astro'
 import SidebarSection from '../SidebarSection.astro'
 ---
 
 <SidebarSection>
-  <div class='uppercase text-center text-2xl/6 font-semibold'>Highlight Soundtrack</div>
+  <div class='uppercase text-center text-2xl/6 font-semibold'>{m.highlightAlbum()}</div>
   <AlbumBox loading />
 </SidebarSection>

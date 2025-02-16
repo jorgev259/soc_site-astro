@@ -33,5 +33,9 @@
 	"newPasswordRetype": "Re-type new password",
 	"savePassword": "Save Password",
 	"passwordResetSuccesful": "Password reset succesfully",
-	"displayName": "Display name"
+	"displayName": "Display name",
+	"lastAddedSidebar": "Last Added",
+	"getLucky": "Get Lucky",
+	"randomPull": "Random Pull",
+	"highlightAlbum": "Highlight Soundtrack"
 }
