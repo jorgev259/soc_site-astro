@@ -37,5 +37,8 @@
 	"lastAddedSidebar": "Last Added",
 	"getLucky": "Get Lucky",
 	"randomPull": "Random Pull",
-	"highlightAlbum": "Highlight Soundtrack"
+	"highlightAlbum": "Highlight Soundtrack",
+	"ostCount": "Soundtrack Count",
+	"animOsts": "Animation Soundtracks",
+	"gameOsts": "Game Soundtracks"
 }

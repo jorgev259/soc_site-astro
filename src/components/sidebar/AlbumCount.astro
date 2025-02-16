@@ -1,0 +1,28 @@
+---
+import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages.js'
+
+import SidebarSection from './SidebarSection.astro'
+
+import { getAlbumCount } from '@prisma/client/sql'
+
+const albumCount = await prismaClient.albums.count({ where: { status: 'show' } })
+const categoryRows = await prismaClient.$queryRawTyped(getAlbumCount())
+
+const categories = categoryRows.reduce(
+  (acc, currentValue) => {
+    // @ts-ignore
+    acc[currentValue.categoryName] = currentValue.count
+    return acc
+  },
+  { Animation: 0, Game: 0 }
+)
+---
+
+<SidebarSection>
+  <div class='uppercase text-center text-2xl/6 font-semibold'>{m.ostCount()}: {albumCount}</div>
+  <div class='mt-2'>
+    <div class='text-center font-light'>{m.animOsts}: {categories.Animation}</div>
+    <div class='text-center font-light'>{m.gameOsts}: {categories.Game}</div>
+  </div>
+</SidebarSection>
