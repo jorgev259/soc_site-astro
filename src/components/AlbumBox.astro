@@ -1,0 +1,44 @@
+---
+import { Image } from 'astro:assets'
+
+type Props =
+  | { title: string; href: string; image: string; loading?: false }
+  | { title?: string; href?: string; image?: string; loading: true }
+
+const { props } = Astro
+const { title, href, image, loading = false } = props
+---
+
+<a
+  href={href}
+  class:list={['block w-full mt-2.5 rounded-md bg-dark ', loading ? 'cursor-default' : 'hover:bg-dark-hover group']}
+>
+  {
+    loading ? (
+      <div class='pt-2.5'>
+        <div class='rounded animate-pulse bg-gray size-40 mx-auto' />
+      </div>
+    ) : (
+      <Image
+        src={`https://cdn.sittingonclouds.net/${image}`}
+        alt={`${title} cover`}
+        inferSize
+        quality='low'
+        class='rounded-md scale-95 group-hover:scale-100 transition-transform'
+      />
+    )
+  }
+
+  {
+    loading ? (
+      <div class='animate-pulse p-2.5 px-4'>
+        <div class='space-y-3'>
+          <div class='h-2 rounded bg-gray' />
+          <div class='h-2 rounded bg-gray' />
+        </div>
+      </div>
+    ) : (
+      <div class='group-hover:text-hover-link group-hover:underline text-base font-bold p-1 text-center'>{title}</div>
+    )
+  }
+</a>
