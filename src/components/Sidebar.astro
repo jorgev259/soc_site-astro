@@ -12,6 +12,7 @@ import Highlight from './sidebar/Highlight.astro'
 import AlbumBox from './AlbumBox.astro'
 import AlbumCount from './sidebar/AlbumCount.astro'
 import CommentCarousel from './sidebar/CommentCarousel.astro'
+import SidebarAd from './sidebar/SidebarAd.astro'
 
 const listClass =
   'uppercase text-3xl font-semibold w-full text-center py-3 hover:bg-dark-hover hover:text-cyan-400 hover:underline'
@@ -55,5 +56,11 @@ const listClass =
     <AlbumCount server:defer>
       <SidebarSection slot='fallback' class='h-32 animate-pulse' />
     </AlbumCount>
+
+    <SidebarSection class='h-96 p-0.5'>
+      <iframe title='radio' src='https://radio.sittingonclouds.net/widget' class='size-full rounded-md'></iframe>
+    </SidebarSection>
+
+    <SidebarAd />
   </div>
 </div>

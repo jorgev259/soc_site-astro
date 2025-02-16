@@ -3,7 +3,7 @@ const { permissions } = Astro.locals
 const show = !permissions.includes('SKIP_ADS')
 ---
 
-{ show ? (
+{show ? (
   <>
     <footer class='bg-dark p-2'>
       <iframe
@@ -18,7 +18,7 @@ const show = !permissions.includes('SKIP_ADS')
           height: '220px',
           width: '100%'
         }}
-        scrolling='no'></iframe>
+      />
     </footer>
 
     <script>
