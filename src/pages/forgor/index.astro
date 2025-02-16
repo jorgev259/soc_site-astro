@@ -1,6 +1,7 @@
 ---
-import ForgorForm from 'components/ForgorForm'
+import ForgorForm from 'components/form/ForgorForm'
 import BaseLayout from 'layouts/base.astro'
+
 const token = Astro.url.searchParams.get('token')
 
 if (!token) return Astro.redirect('/404')

@@ -2,9 +2,10 @@ import { useState, type FormEvent } from 'react'
 import toast from 'react-hot-toast'
 
 import * as m from 'paraglide/messages.js'
-import Button from './Button'
-import Modal from './Modal'
 import { resetPassword } from 'utils/auth-client'
+
+import Button from 'components/Button'
+import Modal from 'components/Modal'
 
 export default function ForgorForm(props: { token: string }) {
   const { token } = props
