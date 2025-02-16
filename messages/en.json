@@ -40,5 +40,10 @@
 	"highlightAlbum": "Highlight Soundtrack",
 	"ostCount": "Soundtrack Count",
 	"animOsts": "Animation Soundtracks",
-	"gameOsts": "Game Soundtracks"
+	"gameOsts": "Game Soundtracks",
+	"recentReleases": "Recent Releases",
+	"moreGameReleases": "More Game Releases",
+	"moreAnimReleases": "more Animation releases",
+	"moreLastAdded": "more Last Added",
+	"lastAdded": "Last Added"
 }

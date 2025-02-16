@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets'
 
 type Props =
-  | { title: string; href: string; image: string; loading?: false }
+  | { title?: string | null; href: string; image: string; loading?: false }
   | { title?: string; href?: string; image?: string; loading: true }
 
 const { props } = Astro
@@ -20,7 +20,7 @@ const { title, href, image, loading = false } = props
       </div>
     ) : (
       <Image
-        src={`https://cdn.sittingonclouds.net/${image}`}
+        src={`https://cdn.sittingonclouds.net${image}`}
         alt={`${title} cover`}
         inferSize
         quality='low'

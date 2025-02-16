@@ -1,11 +1,64 @@
 ---
+import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages'
+
 import Sidebar from 'components/Sidebar.astro'
 import BaseLayout from 'layouts/base.astro'
+import AlbumBox from 'components/AlbumBox.astro'
+
+const recentAlbums = await prismaClient.albums.findMany({
+  select: { id: true, title: true },
+  take: 12,
+  orderBy: { releaseDate: 'desc' }
+})
+const lastAlbums = await prismaClient.albums.findMany({
+  select: { id: true, title: true },
+  take: 12,
+  orderBy: { createdAt: 'desc' }
+})
 ---
 
 <BaseLayout>
   <div class='flex flex-1 max-w-[2000px]'>
-    <div class='flex-1'>Page content goes here</div>
+    <div class='flex-1 px-2'>
+      <h1 class='uppercase font-medium tracking-wide text-5xl drop-shadow-2xl mt-5 mb-2 text-center'>
+        {m.recentReleases()}
+      </h1>
+      <div class='grid grid-cols-4 gap-x-1.5'>
+        {
+          recentAlbums.map((album) => (
+            <AlbumBox title={album.title} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+          ))
+        }
+      </div>
+      <div class='flex gap-x-2 py-4'>
+        <button
+          class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-1/2 hover:text-hover-link hover:underline'
+          >{m.moreGameReleases}</button
+        >
+        <button
+          class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-1/2 hover:text-hover-link hover:underline'
+          >{m.moreAnimReleases}</button
+        >
+      </div>
+      <hr />
+      <h1 class='uppercase font-medium tracking-wide text-5xl drop-shadow-2xl mt-5 mb-2 text-center'>
+        {m.lastAdded()}
+      </h1>
+      <div class='grid grid-cols-4 gap-x-1.5'>
+        {
+          lastAlbums.map((album) => (
+            <AlbumBox title={album.title} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+          ))
+        }
+      </div>
+      <div class='flex gap-x-2 py-4'>
+        <button
+          class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-full hover:text-hover-link hover:underline'
+          >{m.moreLastAdded}</button
+        >
+      </div>
+    </div>
     <Sidebar />
   </div>
 </BaseLayout>
