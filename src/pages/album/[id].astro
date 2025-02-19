@@ -7,6 +7,7 @@ import BaseLayout from 'layouts/base.astro'
 import TrackList from 'components/albumPage/TrackList'
 import DownloadBtn from 'components/albumPage/DownloadBtn.astro'
 import AlbumBox from 'components/AlbumBox.astro'
+import ReleaseDate from 'components/albumPage/releaseDate'
 
 import kofi from 'img/socials/ko-fi-donate-button.png'
 import discord from 'img/socials/discord.png'
@@ -73,7 +74,7 @@ const locale =
                 album.releaseDate ? (
                   <tr>
                     <th class='width-row'>{m.releaseDate()}</th>
-                    <td>{new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(album.releaseDate)}</td>
+                    <ReleaseDate client:only='react' releaseDate={album.releaseDate} />
                   </tr>
                 ) : null
               }
