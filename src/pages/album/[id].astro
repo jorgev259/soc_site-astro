@@ -37,7 +37,8 @@ if (!album) {
   return
 }
 
-const locale = navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language
+const locale =
+  navigator && navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language
 ---
 
 <style>

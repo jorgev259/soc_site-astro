@@ -1,11 +1,11 @@
 {
   "name": "soc_site-astro",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "scripts": {
     "start": "npm run dev",
-    "dev": "prisma generate && astro dev",
-    "build": "npm run paraglide:compile && astro build",
+    "dev": "prisma generate --sql && astro dev",
+    "build": "prisma generate --sql && npm run paraglide:compile && astro build",
     "preview": "astro preview",
     "paraglide:compile": "paraglide-js compile --project ./project.inlang --outdir ./src\\paraglide"
   },
