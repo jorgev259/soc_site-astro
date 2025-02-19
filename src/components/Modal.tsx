@@ -17,7 +17,7 @@ export default function Modal(props: PropsWithChildren<{ setOpen?: SetState<bool
 
   return (
     <div
-      className='fixed size-full flex bg-black bg-opacity-50 left-0 top-0 z-50 p-4 justify-center items-center'
+      className='fixed size-full flex bg-black/50 left-0 top-0 z-50 p-4 justify-center items-center'
       onClick={() => {
         if (setOpen) setOpen(false)
       }}
