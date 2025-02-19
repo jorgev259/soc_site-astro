@@ -10,7 +10,7 @@ import { languageTags } from './project.inlang/settings.json'
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://beta.sittingonclouds.net',
+  site: 'https://sittingonclouds.net',
   i18n: {
     locales: languageTags,
     defaultLocale: 'en',
