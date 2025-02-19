@@ -4,3 +4,8 @@
   color: white;
   font-family: 'Rubik', Sans-serif;
 }
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

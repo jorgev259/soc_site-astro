@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "scripts": {
     "start": "npm run dev",
-    "dev": "astro dev",
-    "build": "npm run paraglide:compile && prisma generate --sql && astro build",
+    "dev": "prisma generate && astro dev",
+    "build": "npm run paraglide:compile && astro build",
     "preview": "astro preview",
     "paraglide:compile": "paraglide-js compile --project ./project.inlang --outdir ./src\\paraglide"
   },

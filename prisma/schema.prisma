@@ -171,37 +171,37 @@ model albumHistories {
 }
 
 model albums {
-  id                                            Int                    @id @default(autoincrement())
-  title                                         String?                @db.VarChar(255)
-  subTitle                                      String?                @db.Text
-  releaseDate                                   DateTime?              @db.Date
-  label                                         String?                @db.VarChar(255)
-  vgmdb                                         String?                @db.VarChar(255)
-  createdAt                                     DateTime               @db.DateTime(0)
-  updatedAt                                     DateTime               @db.DateTime(0)
-  description                                   String?                @db.VarChar(255)
-  createdBy                                     String?                @db.VarChar(255)
-  status                                        String?                @db.VarChar(255)
-  placeholder                                   String?                @db.Text
-  headerColor                                   String?                @default("#ffffff") @db.VarChar(255)
-  Album_Animation                               Album_Animation[]
-  artistList                                    Album_Artist[]
-  Album_Category                                Album_Category[]
-  Album_Classification                          Album_Classification[]
-  Album_Game                                    Album_Game[]
-  Album_Platform                                Album_Platform[]
-  Album_Type                                    Album_Type[]
-  albumHistories                                albumHistories[]
-  availables                                    availables[]
-  comments                                      comments[]
-  discs                                         discs[]
-  downloads                                     downloads[]
-  favorites                                     favorites[]
-  linkCategories                                linkCategories[]
-  ratings                                       ratings[]
-  related_album_related_album_albumIdToalbums   related_album[]        @relation("related_album_albumIdToalbums")
-  related_album_related_album_relatedIdToalbums related_album[]        @relation("related_album_relatedIdToalbums")
-  stores                                        stores[]
+  id                 Int                    @id @default(autoincrement())
+  title              String?                @db.VarChar(255)
+  subTitle           String?                @db.Text
+  releaseDate        DateTime?              @db.Date
+  label              String?                @db.VarChar(255)
+  vgmdb              String?                @db.VarChar(255)
+  createdAt          DateTime               @db.DateTime(0)
+  updatedAt          DateTime               @db.DateTime(0)
+  description        String?                @db.VarChar(255)
+  createdBy          String?                @db.VarChar(255)
+  status             String?                @db.VarChar(255)
+  placeholder        String?                @db.Text
+  headerColor        String?                @default("#ffffff") @db.VarChar(255)
+  animList           Album_Animation[]
+  artistList         Album_Artist[]
+  categoryList       Album_Category[]
+  classificationList Album_Classification[]
+  gameList           Album_Game[]
+  platformList       Album_Platform[]
+  Album_Type         Album_Type[]
+  albumHistories     albumHistories[]
+  availables         availables[]
+  comments           comments[]
+  discs              discs[]
+  downloads          downloads[]
+  favorites          favorites[]
+  linkCategories     linkCategories[]
+  ratings            ratings[]
+  relatedAlbumList   related_album[]        @relation("related_album_albumIdToalbums")
+  relatedToAlbumList related_album[]        @relation("related_album_relatedIdToalbums")
+  stores             stores[]
 }
 
 model animation {
@@ -419,12 +419,12 @@ model ratings {
 }
 
 model related_album {
-  createdAt                              DateTime @db.DateTime(0)
-  updatedAt                              DateTime @db.DateTime(0)
-  albumId                                Int
-  relatedId                              Int
-  albums_related_album_albumIdToalbums   albums   @relation("related_album_albumIdToalbums", fields: [albumId], references: [id], onDelete: Cascade, map: "related_album_ibfk_1")
-  albums_related_album_relatedIdToalbums albums   @relation("related_album_relatedIdToalbums", fields: [relatedId], references: [id], onDelete: Cascade, map: "related_album_ibfk_2")
+  createdAt    DateTime @db.DateTime(0)
+  updatedAt    DateTime @db.DateTime(0)
+  albumId      Int
+  relatedId    Int
+  pageAlbum    albums   @relation("related_album_albumIdToalbums", fields: [albumId], references: [id], onDelete: Cascade, map: "related_album_ibfk_1")
+  relatedAlbum albums   @relation("related_album_relatedIdToalbums", fields: [relatedId], references: [id], onDelete: Cascade, map: "related_album_ibfk_2")
 
   @@id([albumId, relatedId])
   @@index([relatedId], map: "relatedId")

@@ -1,0 +1,338 @@
+---
+import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages'
+import { Image } from 'astro:assets'
+
+import BaseLayout from 'layouts/base.astro'
+import TrackList from 'components/albumPage/TrackList'
+import DownloadBtn from 'components/albumPage/DownloadBtn.astro'
+import AlbumBox from 'components/AlbumBox.astro'
+
+import kofi from 'img/socials/ko-fi-donate-button.png'
+import discord from 'img/socials/discord.png'
+import vgmdbLogo from 'img/assets/vgmdb-logo.png'
+import flyIcon from 'img/assets/fly-icon.png'
+import ouoIcon from 'img/assets/ouo-icon.png'
+
+const { id } = Astro.params
+const album = await prismaClient.albums.findUnique({
+  where: { id: Number(id) },
+  include: {
+    artistList: { select: { artist: true } },
+    categoryList: { select: { categoryName: true } },
+    classificationList: { select: { classificationName: true } },
+    platformList: { select: { platform: { select: { id: true, name: true } } } },
+    gameList: { select: { game: { select: { slug: true, name: true } } } },
+    animList: { select: { animation: { select: { id: true, title: true } } } },
+    stores: { select: { url: true, provider: true }, where: { NOT: { provider: 'SOON' } } },
+    discs: { select: { number: true, body: true } },
+    downloads: { select: { title: true, links: true } },
+    relatedAlbumList: { select: { relatedAlbum: { select: { id: true, title: true } } } }
+  }
+})
+
+if (!album) {
+  Astro.response.status = 404
+  Astro.response.statusText = 'Not found'
+  return
+}
+
+const locale = navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language
+---
+
+<style>
+  tr {
+    th {
+      display: ruby;
+    }
+  }
+</style>
+
+<BaseLayout>
+  <div class='flex flex-col flex-1 max-w-[2000px] px-6 py-3'>
+    <div class='flex gap-x-3'>
+      <div class='flex-1'>
+        <div class='size-full relative cursor-pointer'>
+          <Image
+            src={`https://cdn.sittingonclouds.net/album/${album.id}.png`}
+            alt={`${album.title} cover`}
+            class='rounded-md size-full object-contain absolute'
+            quality='mid'
+            inferSize
+          />
+        </div>
+      </div>
+      <div class='flex-1'>
+        <div class='bg-dark rounded-md py-4 px-6'>
+          <div class='font-medium text-4xl text-center'>{album.title}</div>
+          {album.subTitle ? <h6 style={{ whiteSpace: 'pre-wrap' }}>{album.subTitle}</h6> : null}
+          <table class='mt-4'>
+            <tbody>
+              {
+                album.releaseDate ? (
+                  <tr>
+                    <th class='width-row'>{m.releaseDate()}</th>
+                    <td>{new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(album.releaseDate)}</td>
+                  </tr>
+                ) : null
+              }
+
+              {
+                album.artistList.length > 0 && (
+                  <tr>
+                    <th>{m.artists()}</th>
+                    <td>{album.artistList.map(({ artist }) => artist.name).join(', ')}</td>
+                  </tr>
+                )
+              }
+
+              <tr>
+                <th>{m.classification()}</th>
+                <td>
+                  {
+                    [
+                      album.categoryList.map(({ categoryName }) => (m as any)[`${categoryName}Osts`]()).join(' & '),
+                      album.classificationList.map(({ classificationName }) => classificationName).join(', ')
+                    ]
+                      .filter((f) => f !== '')
+                      .join(' - ')
+                  }
+                </td>
+              </tr>
+              {
+                album.label && (
+                  <tr>
+                    <th>{m.publishedBy()}</th>
+                    <td>
+                      <a class='btn btn-link p-0' href={`/publisher/${album.label}`}>
+                        {album.label}
+                      </a>
+                    </td>
+                  </tr>
+                )
+              }
+              {
+                album.platformList.length > 0 && (
+                  <tr>
+                    <th>{m.platforms()}</th>
+                    <td>
+                      {album.platformList.map(({ platform }, i) => (
+                        <Fragment key={platform.id}>
+                          {id === '29' ? (
+                            <span class='btn p-0' style={{ color: 'white' }}>
+                              {platform.name}
+                            </span>
+                          ) : (
+                            <a class='btn btn-link p-0' href={`/platform/${id}`}>
+                              {platform.name}
+                            </a>
+                          )}
+                          {i !== album.platformList.length - 1 && ', '}
+                        </Fragment>
+                      ))}
+                    </td>
+                  </tr>
+                )
+              }
+              {
+                album.gameList.length > 0 && (
+                  <tr>
+                    <th>{m.games()}</th>
+                    <td>
+                      {album.gameList.map(({ game }, i) => (
+                        <Fragment key={game.slug}>
+                          <a class='btn btn-link p-0' href={`/game/${game.slug}`}>
+                            {game.name}
+                          </a>
+                          {i !== album.gameList.length - 1 && ', '}
+                        </Fragment>
+                      ))}
+                    </td>
+                  </tr>
+                )
+              }
+              {
+                album.animList.length > 0 && (
+                  <tr>
+                    <th>{m.animations()}</th>
+                    <td>
+                      {album.animList.map(({ animation }, i) => (
+                        <Fragment key={id}>
+                          <a class='btn btn-link p-0' href={`/anim/${id}`}>
+                            {animation.title}
+                          </a>
+                          {i !== album.animList.length - 1 && ', '}
+                        </Fragment>
+                      ))}
+                    </td>
+                  </tr>
+                )
+              }
+
+              <tr>
+                <th>{m.avgRating()}</th>
+                <td>
+                  <!-- <StarCounter albumId={album.id} /> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <UserButtons id={album.id} /> -->
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class='flex gap-x-3'>
+      <div class='flex-1 bg-dark rounded-md p-4'>
+        <h1 class='text-center uppercase text-4xl font-semibold'>
+          {m.tracklist()}
+        </h1>
+
+        <div class='px-3'>
+          <TrackList discs={album.discs} client:only='react' />
+        </div>
+      </div>
+      <div class='flex-1 bg-dark rounded-md p-3'>
+        {
+          album.vgmdb && (
+            <div class='mt-2 mb-3 ml-2 flex'>
+              <span class='text-xl'>{m.checkVGMDB()}:</span>
+              <a href={album.vgmdb} class='ml-2' target='_blank' rel='noopener noreferrer'>
+                <Image width={100} height={30} alt={'VGMdb'} src={vgmdbLogo} />
+              </a>
+            </div>
+          )
+        }
+        {
+          album.stores.length > 0 && (
+            <div class='row mt-2 px-3'>
+              <div class='bg-red-500 text-white text-4xl rounded-md px-3 py-4'>
+                <h1 class='text-center text-3xl uppercase font-semibold drop-shadow-lg'>{m.buyOriginal()}</h1>
+                <hr class='my-2.5' />
+                <div class='flex justify-center flex-wrap gap-4'>
+                  {album.stores.map(({ url, provider }, i) => (
+                    <a target='_blank' rel='noopener noreferrer' href={url}>
+                      <Image
+                        class='rounded-md'
+                        width={130}
+                        height={50}
+                        style={{ height: 'auto', width: '130px' }}
+                        alt={provider}
+                        src={`/img/provider/${provider}.jpg`}
+                      />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+        }
+        <hr />
+        <div>
+          {
+            album.downloads?.map((download) => {
+              const { links, title } = download
+
+              return (
+                <div class=''>
+                  <h2 class='text-center text-3xl'>{title}</h2>
+                  {links.map((link) => {
+                    const { id: linkId, url, url2, provider, directUrl } = link
+
+                    return (
+                      <Fragment key={linkId}>
+                        <div class='flex gap-2 my-2'>
+                          <div>
+                            <Image
+                              class='rounded'
+                              width={30}
+                              height={30}
+                              alt={provider}
+                              src={`/img/provider/${provider}.png`}
+                            />
+                          </div>
+                          {url2 && (
+                            <DownloadBtn href={url2} alt='fly' icon={flyIcon}>
+                              {m.flyInc()}
+                            </DownloadBtn>
+                          )}
+                          {url ? (
+                            <DownloadBtn href={url} alt='ouo' icon={ouoIcon}>
+                              {m.ouoIO()}
+                            </DownloadBtn>
+                          ) : null}
+                          {directUrl ? (
+                            <DownloadBtn href={directUrl} direct>
+                              {m.direct()}
+                            </DownloadBtn>
+                          ) : null}
+                        </div>
+                      </Fragment>
+                    )
+                  })}
+                  <hr />
+                </div>
+              )
+            })
+          }
+        </div>
+
+        <div>
+          <div>
+            <h4 class='text-2xl'>{m.donationCall()}</h4>
+            <div>
+              <span> {m.donationSteps()} </span>
+              <a href='https://discord.gg/AQc9vwGM' target='_blank' rel='noopener noreferrer'>Discord</a>
+            </div>
+          </div>
+          <div class='mt-1'>
+            <a target='_blank' rel='noopener noreferrer' href='https://ko-fi.com/sittingonclouds'>
+              <Image style={{ height: 'auto', width: '200px' }} alt='Support me on Ko-fi' src={kofi} />
+            </a>
+          </div>
+        </div>
+        <hr />
+        <div class='text-xl'>
+          <div class='flex items-center'>
+            <span>{m.brokenLinkContact()}</span>
+            <a class='' href='https://discord.gg/x23SFbE' target='_blank' rel='noopener noreferrer'>
+              <Image
+                alt='Join our Discord!'
+                class='rounded-md ml-2'
+                style={{
+                  height: 'auto',
+                  width: '130px'
+                }}
+                src={discord}
+              />
+            </a>
+          </div>
+          <div class='mt-2'>
+            <span>{m.mediafirePermission()}</span>
+            <a class='ml-1 text-link hover:underline' href='https://www.youtube.com/watch?v=d6-hcbEozAQ'>
+              {m.mediafirePermissionGuide()}
+            </a>
+          </div>
+        </div>
+        <hr />
+      </div>
+    </div>
+    <!-- Comment List here -->
+    <div class='mt-2 bg-dark uppercase text-4xl font-semibold rounded-md text-center py-4 px-1.5'>
+      {m.relatedAlbums()}
+    </div>
+    <div class='mt-2'>
+      <div class='grid grid-cols-4 gap-x-1.5'>
+        {
+          album.relatedAlbumList.map(({ relatedAlbum }) => (
+            <AlbumBox
+              title={relatedAlbum.title}
+              href={`/album/${relatedAlbum.id}`}
+              image={`/album/${relatedAlbum.id}.png`}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>
