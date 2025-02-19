@@ -27,5 +27,26 @@ export default defineConfig({
   ],
   image: { domains: ['cdn.sittingonclouds.net'] },
   output: 'server',
-  adapter: node({ mode: 'standalone' })
+  adapter: node({ mode: 'standalone' }),
+  redirects: {
+    '/album/list': { status: 307, destination: '/maintenance' },
+    '/last-added': { status: 307, destination: '/maintenance' },
+    '/anim': { status: 307, destination: '/maintenance' },
+    '/anim/[id]': { status: 307, destination: '/maintenance' },
+    '/anim/list': { status: 307, destination: '/maintenance' },
+    '/game': { status: 307, destination: '/maintenance' },
+    '/game/[slug]': { status: 307, destination: '/maintenance' },
+    '/game/list': { status: 307, destination: '/maintenance' },
+    '/platform/list': { status: 307, destination: '/maintenance' },
+    '/platform/[id]': { status: 307, destination: '/maintenance' },
+    '/profile/[username]': { status: 307, destination: '/maintenance' },
+    '/series/[slug]': { status: 307, destination: '/maintenance' },
+    '/series/list': { status: 307, destination: '/maintenance' },
+    '/studio/[slug]': { status: 307, destination: '/maintenance' },
+    '/studio/list': { status: 307, destination: '/maintenance' },
+    '/forgor': { status: 307, destination: '/maintenance' },
+    '/holy12': { status: 307, destination: '/maintenance' },
+    '/request': { status: 307, destination: '/maintenance' },
+    '/search': { status: 307, destination: '/maintenance' }
+  }
 })
