@@ -14,12 +14,13 @@ const disabled = direct && !permissions.includes('SKIP_ADS')
 
 <a
   class:list={[
-    'flex-1 rounded-md bg-btn-gray hover:bg-dark border-none border-2 border-link hover:border-solid flex justify-center items-center uppercase',
-    { 'border-gold hover:text-gold ': direct, 'bg-btn-disabled text-btn-gray': disabled }
+    direct ? 'border-gold hover:text-gold' : 'border-link hover:text-link',
+    disabled ? 'bg-btn-disabled text-btn-gray' : 'bg-btn-gray text-white',
+    ' flex justify-center items-center flex-1 rounded-md hover:bg-dark border-none border-2 hover:border-solid uppercase'
   ]}
   target='_blank'
   href={href}
 >
-  {icon ? <Image class='rounded' width={20} height={20} alt={alt ?? ''} src={icon} /> : null}
+  {icon ? <Image class='rounded-md' width={20} height={20} alt={alt ?? ''} src={icon} /> : null}
   <slot />
 </a>

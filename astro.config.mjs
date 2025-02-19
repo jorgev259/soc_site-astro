@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
-import tailwind from '@astrojs/tailwind'
+import tailwindcss from '@tailwindcss/vite'
 import node from '@astrojs/node'
 import react from '@astrojs/react'
 import paraglide from '@inlang/paraglide-astro'
@@ -20,11 +20,13 @@ export default defineConfig({
     }
   },
   integrations: [
-    tailwind(),
     paraglide({ project: './project.inlang', outdir: './src/paraglide' }),
     icon({ iconDir: 'src/img/icons' }),
     react()
   ],
+  vite: {
+    plugins: [tailwindcss()]
+  },
   image: { domains: ['cdn.sittingonclouds.net'] },
   output: 'server',
   adapter: node({ mode: 'standalone' }),

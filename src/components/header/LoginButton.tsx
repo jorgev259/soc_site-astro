@@ -65,13 +65,18 @@ function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetSta
             <label htmlFor='username' className='font-medium text-black'>
               {m.username()}:
             </label>
-            <input type='text' name='username' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+            <input type='text' name='username' className='bg-zinc-200 rounded-md p-2 mt-2 mb-3 text-black' required />
           </div>
           <div className='flex flex-col'>
             <label htmlFor='password' className='font-medium text-black'>
               {m.password()}:
             </label>
-            <input type='password' name='password' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+            <input
+              type='password'
+              name='password'
+              className='bg-zinc-200 rounded-md p-2 mt-2 mb-3 text-black'
+              required
+            />
           </div>
         </div>
         <div className='flex'>
@@ -132,7 +137,7 @@ function CreateForgorForm(props: { setForm: SetState<FormOptions>; setModalOpen:
           <label htmlFor='email' className='font-medium text-black'>
             {m.email()}:
           </label>
-          <input type='email' name='email' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+          <input type='email' name='email' className='bg-zinc-200 rounded-md p-2 mt-2 mb-3 text-black' required />
         </div>
         <div className='mx-auto'>
           <Button loading={loading} disabled={loading}>

@@ -40,13 +40,23 @@ export default function ForgorForm(props: { token: string }) {
             <label htmlFor='password' className='font-medium text-black'>
               {m.newPassword()}:
             </label>
-            <input type='password' name='password' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+            <input
+              type='password'
+              name='password'
+              className='bg-zinc-200 rounded-md p-2 mt-2 mb-3 text-black'
+              required
+            />
           </div>
           <div className='flex flex-col'>
             <label htmlFor='password2' className='font-medium text-black'>
               {m.newPasswordRetype()}:
             </label>
-            <input type='password' name='password2' className='bg-zinc-200 rounded p-2 mt-2 mb-3 text-black' required />
+            <input
+              type='password'
+              name='password2'
+              className='bg-zinc-200 rounded-md p-2 mt-2 mb-3 text-black'
+              required
+            />
           </div>
           <div className='mx-auto'>
             <Button type='submit' loading={loading} disabled={loading}>
