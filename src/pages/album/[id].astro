@@ -37,9 +37,7 @@ if (!album) {
   Astro.response.statusText = 'Not found'
   return
 }
-
-const locale =
-  navigator && navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language
+const { currentLocale } = Astro
 ---
 
 <style>
@@ -74,7 +72,7 @@ const locale =
                 album.releaseDate ? (
                   <tr>
                     <th class='width-row'>{m.releaseDate()}</th>
-                    <ReleaseDate client:only='react' releaseDate={album.releaseDate} />
+                    <td>{new Intl.DateTimeFormat(currentLocale, { dateStyle: 'medium' }).format(album.releaseDate)}</td>
                   </tr>
                 ) : null
               }
