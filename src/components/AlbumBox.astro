@@ -22,7 +22,8 @@ const { title, href, image, loading = false } = props
       <Image
         src={`https://cdn.sittingonclouds.net${image}`}
         alt={`${title} cover`}
-        inferSize
+        height={500}
+        width={500}
         quality='low'
         class='rounded-md scale-95 group-hover:scale-100 transition-transform'
       />

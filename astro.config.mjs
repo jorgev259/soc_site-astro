@@ -24,9 +24,7 @@ export default defineConfig({
     icon({ iconDir: 'src/img/icons' }),
     react()
   ],
-  vite: {
-    plugins: [tailwindcss()]
-  },
+  vite: { plugins: [tailwindcss()] },
   image: { domains: ['cdn.sittingonclouds.net'] },
   output: 'server',
   adapter: node({ mode: 'standalone' }),

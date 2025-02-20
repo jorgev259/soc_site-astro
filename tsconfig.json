@@ -5,9 +5,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "baseUrl": "src",
-    "paths": {
-      "@/graphql/*": ["graphql/*"]
-    }
+    "baseUrl": "src"
   }
 }

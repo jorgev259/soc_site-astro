@@ -1,1 +1,30 @@
+@import 'tailwindcss' source('../../src/');
 
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-md: 880px;
+
+  --color-dark: #212529;
+  --color-dark-hover: #2b3035;
+  --color-gold: #ffdb37;
+  --color-btn-gray: rgb(108, 117, 125);
+  --color-btn-disabled: rgba(108, 117, 125, 0.65);
+  --color-gray: #3f3f3f;
+  --color-gray-hover: #4f4f4f;
+  --color-soc-green: #4b7667;
+  --color-soc-green-dark: rgba(17, 17, 17, 0.7);
+  --color-link: rgb(110, 168, 254);
+  --color-hover-link: #00d4ff;
+}
+
+@layer base {
+  * {
+    color: white;
+    font-family: 'Rubik', Sans-serif;
+  }
+
+  hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
