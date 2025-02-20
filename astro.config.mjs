@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config'
+import { defineConfig, envField } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import node from '@astrojs/node'
 import react from '@astrojs/react'
@@ -10,6 +10,20 @@ import { languageTags } from './project.inlang/settings.json'
 
 // https://astro.build/config
 export default defineConfig({
+  env: {
+    schema: {
+      MAILSERVER: envField.string({ context: 'server', access: 'secret' }),
+      BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
+      DATABASE_URL: envField.string({ context: 'server', access: 'secret' }),
+      BETTER_AUTH_URL: envField.string({
+        context: 'server',
+        access: 'public',
+        optional: true,
+        default: 'http://localhost:4321'
+      })
+    },
+    validateSecrets: true
+  },
   site: 'https://sittingonclouds.net',
   i18n: {
     locales: languageTags,
