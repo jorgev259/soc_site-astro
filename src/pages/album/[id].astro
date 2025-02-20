@@ -7,7 +7,6 @@ import BaseLayout from 'layouts/base.astro'
 import TrackList from 'components/albumPage/TrackList'
 import DownloadBtn from 'components/albumPage/DownloadBtn.astro'
 import AlbumBox from 'components/AlbumBox.astro'
-import ReleaseDate from 'components/albumPage/releaseDate'
 
 import kofi from 'img/socials/ko-fi-donate-button.png'
 import discord from 'img/socials/discord.png'
@@ -263,7 +262,7 @@ const { currentLocale } = Astro
                             </DownloadBtn>
                           ) : null}
                           {directUrl ? (
-                            <DownloadBtn href={directUrl} direct>
+                            <DownloadBtn href={directUrl} direct server:defer>
                               {m.direct()}
                             </DownloadBtn>
                           ) : null}
