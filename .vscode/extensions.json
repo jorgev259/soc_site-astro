@@ -1,6 +1,9 @@
 {
   "recommendations": [
     "astro-build.astro-vscode",
-    "inlang.vs-code-extension"
+    "inlang.vs-code-extension",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss"
   ]
 }
