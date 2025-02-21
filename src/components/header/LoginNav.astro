@@ -6,7 +6,7 @@ import LogoutBtn from './LogoutButton'
 const session = Astro.locals.session
 ---
 
-<div class='ms-auto'>
+<div class='ms-auto hidden md:block'>
   {
     session ? (
       <LogoutBtn client:only='react' />

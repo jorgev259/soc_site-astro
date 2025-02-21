@@ -19,7 +19,7 @@ const lastAlbums = await prismaClient.albums.findMany({
 ---
 
 <BaseLayout>
-  <div class='flex flex-1 max-w-[2000px]'>
+  <div class='flex flex-col md:flex-row flex-1 max-w-[2000px]'>
     <div class='flex-1 px-2'>
       <h1 class='uppercase font-medium tracking-wide text-5xl drop-shadow-2xl mt-5 mb-2 text-center'>
         {m.recentReleases()}
