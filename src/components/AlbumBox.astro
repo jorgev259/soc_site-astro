@@ -11,12 +11,12 @@ const { title, href, image, loading = false } = props
 
 <a
   href={href}
-  class:list={['block w-full mt-2.5 rounded-md bg-dark ', loading ? 'cursor-default' : 'hover:bg-dark-hover group']}
+  class:list={['block w-full mt-2.5 rounded-xl bg-dark/85 ', loading ? 'cursor-default' : 'hover:bg-dark group']}
 >
   {
     loading ? (
       <div class='pt-2.5'>
-        <div class='rounded-md animate-pulse bg-gray size-40 mx-auto' />
+        <div class='rounded-xl animate-pulse bg-gray/85 size-40 mx-auto' />
       </div>
     ) : (
       <Image
@@ -25,7 +25,7 @@ const { title, href, image, loading = false } = props
         height={500}
         width={500}
         quality='low'
-        class='rounded-md scale-95 group-hover:scale-100 transition-transform'
+        class='rounded-md scale-95 group-hover:scale-98 transition-transform'
       />
     )
   }
@@ -39,7 +39,7 @@ const { title, href, image, loading = false } = props
         </div>
       </div>
     ) : (
-      <div class='group-hover:text-hover-link group-hover:underline text-base font-bold p-1 text-center'>{title}</div>
+      <div class='group-hover:text-hover-link group-hover:underline text-lg font-bold px-1 pb-1 text-center'>{title}</div>
     )
   }
 </a>
