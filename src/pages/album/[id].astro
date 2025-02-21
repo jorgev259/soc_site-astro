@@ -34,7 +34,6 @@ const album = await prismaClient.albums.findUnique({
 if (!album) {
   Astro.response.status = 404
   Astro.response.statusText = 'Not found'
-  return
 }
 const { currentLocale } = Astro
 ---
@@ -53,8 +52,8 @@ const { currentLocale } = Astro
       <div class='flex-1'>
         <div class='size-full relative cursor-pointer'>
           <Image
-            src={`https://cdn.sittingonclouds.net/album/${album.id}.png`}
-            alt={`${album.title} cover`}
+            src={`https://cdn.sittingonclouds.net/album/${album?.id}.png`}
+            alt={`${album?.title} cover`}
             class='rounded-md size-full object-contain absolute'
             quality='mid'
             width={2560}
@@ -64,24 +63,26 @@ const { currentLocale } = Astro
       </div>
       <div class='flex-1'>
         <div class='bg-dark rounded-md py-4 px-6'>
-          <div class='font-medium text-4xl text-center'>{album.title}</div>
-          {album.subTitle ? <h6 style={{ whiteSpace: 'pre-wrap' }}>{album.subTitle}</h6> : null}
+          <div class='font-medium text-4xl text-center'>{album?.title}</div>
+          {album?.subTitle ? <h6 style={{ whiteSpace: 'pre-wrap' }}>{album?.subTitle}</h6> : null}
           <table class='mt-4'>
             <tbody>
               {
-                album.releaseDate ? (
+                album?.releaseDate ? (
                   <tr>
                     <th class='width-row'>{m.releaseDate()}</th>
-                    <td>{new Intl.DateTimeFormat(currentLocale, { dateStyle: 'medium' }).format(album.releaseDate)}</td>
+                    <td>
+                      {new Intl.DateTimeFormat(currentLocale, { dateStyle: 'medium' }).format(album?.releaseDate)}
+                    </td>
                   </tr>
                 ) : null
               }
 
               {
-                album.artistList.length > 0 && (
+                (album?.artistList.length ?? 0) > 0 && (
                   <tr>
                     <th>{m.artists()}</th>
-                    <td>{album.artistList.map(({ artist }) => artist.name).join(', ')}</td>
+                    <td>{album?.artistList.map(({ artist }) => artist.name).join(', ')}</td>
                   </tr>
                 )
               }
@@ -91,8 +92,8 @@ const { currentLocale } = Astro
                 <td>
                   {
                     [
-                      album.categoryList.map(({ categoryName }) => (m as any)[`${categoryName}Osts`]()).join(' & '),
-                      album.classificationList.map(({ classificationName }) => classificationName).join(', ')
+                      album?.categoryList.map(({ categoryName }) => (m as any)[`${categoryName}Osts`]()).join(' & '),
+                      album?.classificationList.map(({ classificationName }) => classificationName).join(', ')
                     ]
                       .filter((f) => f !== '')
                       .join(' - ')
@@ -100,23 +101,23 @@ const { currentLocale } = Astro
                 </td>
               </tr>
               {
-                album.label && (
+                album?.label && (
                   <tr>
                     <th>{m.publishedBy()}</th>
                     <td>
-                      <a class='btn btn-link p-0' href={`/publisher/${album.label}`}>
-                        {album.label}
+                      <a class='btn btn-link p-0' href={`/publisher/${album?.label}`}>
+                        {album?.label}
                       </a>
                     </td>
                   </tr>
                 )
               }
               {
-                album.platformList.length > 0 && (
+                (album?.platformList.length ?? 0) > 0 && (
                   <tr>
                     <th>{m.platforms()}</th>
                     <td>
-                      {album.platformList.map(({ platform }, i) => (
+                      {album?.platformList.map(({ platform }, i) => (
                         <Fragment key={platform.id}>
                           {id === '29' ? (
                             <span class='btn p-0' style={{ color: 'white' }}>
@@ -127,7 +128,7 @@ const { currentLocale } = Astro
                               {platform.name}
                             </a>
                           )}
-                          {i !== album.platformList.length - 1 && ', '}
+                          {i !== album?.platformList.length - 1 && ', '}
                         </Fragment>
                       ))}
                     </td>
@@ -135,16 +136,16 @@ const { currentLocale } = Astro
                 )
               }
               {
-                album.gameList.length > 0 && (
+                (album?.gameList.length ?? 0) > 0 && (
                   <tr>
                     <th>{m.games()}</th>
                     <td>
-                      {album.gameList.map(({ game }, i) => (
+                      {album?.gameList.map(({ game }, i) => (
                         <Fragment key={game.slug}>
                           <a class='btn btn-link p-0' href={`/game/${game.slug}`}>
                             {game.name}
                           </a>
-                          {i !== album.gameList.length - 1 && ', '}
+                          {i !== album?.gameList.length - 1 && ', '}
                         </Fragment>
                       ))}
                     </td>
@@ -152,16 +153,16 @@ const { currentLocale } = Astro
                 )
               }
               {
-                album.animList.length > 0 && (
+                (album?.animList.length ?? 0) > 0 && (
                   <tr>
                     <th>{m.animations()}</th>
                     <td>
-                      {album.animList.map(({ animation }, i) => (
+                      {album?.animList.map(({ animation }, i) => (
                         <Fragment key={id}>
                           <a class='btn btn-link p-0' href={`/anim/${id}`}>
                             {animation.title}
                           </a>
-                          {i !== album.animList.length - 1 && ', '}
+                          {i !== album?.animList.length - 1 && ', '}
                         </Fragment>
                       ))}
                     </td>
@@ -172,12 +173,12 @@ const { currentLocale } = Astro
               <tr>
                 <th>{m.avgRating()}</th>
                 <td>
-                  <!-- <StarCounter albumId={album.id} /> -->
+                  <!-- <StarCounter albumId={album?.id} /> -->
                 </td>
               </tr>
             </tbody>
           </table>
-          <!-- <UserButtons id={album.id} /> -->
+          <!-- <UserButtons id={album?.id} /> -->
         </div>
       </div>
     </div>
@@ -189,28 +190,28 @@ const { currentLocale } = Astro
         </h1>
 
         <div class='px-3'>
-          <TrackList discs={album.discs} client:only='react' />
+          <TrackList discs={album?.discs ?? []} client:only='react' />
         </div>
       </div>
       <div class='flex-1 bg-dark rounded-md p-3'>
         {
-          album.vgmdb && (
+          album?.vgmdb && (
             <div class='mt-2 mb-3 ml-2 flex'>
               <span class='text-xl'>{m.checkVGMDB()}:</span>
-              <a href={album.vgmdb} class='ml-2' target='_blank' rel='noopener noreferrer'>
+              <a href={album?.vgmdb} class='ml-2' target='_blank' rel='noopener noreferrer'>
                 <Image width={100} height={30} alt={'VGMdb'} src={vgmdbLogo} />
               </a>
             </div>
           )
         }
         {
-          album.stores.length > 0 && (
+          (album?.stores.length ?? 0) > 0 && (
             <div class='row mt-2 px-3'>
               <div class='bg-red-500 text-white text-4xl rounded-md px-3 py-4'>
                 <h1 class='text-center text-3xl uppercase font-semibold drop-shadow-lg'>{m.buyOriginal()}</h1>
                 <hr class='my-2.5' />
                 <div class='flex justify-center flex-wrap gap-4'>
-                  {album.stores.map(({ url, provider }, i) => (
+                  {album?.stores.map(({ url, provider }, i) => (
                     <a target='_blank' rel='noopener noreferrer' href={url}>
                       <Image
                         class='rounded-md'
@@ -230,7 +231,7 @@ const { currentLocale } = Astro
         <hr />
         <div>
           {
-            album.downloads?.map((download) => {
+            album?.downloads?.map((download) => {
               const { links, title } = download
 
               return (
@@ -324,11 +325,11 @@ const { currentLocale } = Astro
     <div class='mt-2'>
       <div class='grid grid-cols-4 gap-x-1.5'>
         {
-          album.relatedAlbumList.map(({ relatedAlbum }) => (
+          album?.relatedAlbumList.map(({ relatedAlbum }) => (
             <AlbumBox
-              title={relatedAlbum.title}
-              href={`/album/${relatedAlbum.id}`}
-              image={`/album/${relatedAlbum.id}.png`}
+              title={relatedAlbum?.title}
+              href={`/album/${relatedAlbum?.id}`}
+              image={`/album/${relatedAlbum?.id}.png`}
             />
           ))
         }
