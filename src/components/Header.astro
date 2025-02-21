@@ -18,7 +18,7 @@ const { session } = Astro.locals
 ---
 
 <header class='relative'>
-  <div class='relative h-[150px] bg-top bg-no-repeat bg-cover'>
+  <div class='relative h-[150px] bg-top bg-no-repeat bg-cover justify-center'>
     <div class='absolute size-full'>
       <Picture
         class={`size-full object-cover object-${bannerPosition || 'top'}`}
@@ -28,11 +28,11 @@ const { session } = Astro.locals
         height={150}
       />
     </div>
-    <div class='relative px-20 size-full flex'>
+    <div class='relative md:px-20 size-full flex justify-center'>
       <a href='/'>
         <Image
           src={Astro.currentLocale === 'es' ? logoEs : logo}
-          class='h-full md:py-0.5 w-auto mx-auto md:mx-0'
+          class='h-full md:py-0.5 w-auto'
           alt='logo'
           height={150}
           width={265}
