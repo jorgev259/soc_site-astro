@@ -14,14 +14,7 @@ const comments = await prismaClient.comments.findMany({
 
 <SidebarSection>
   <Looper comments={comments} client:only='react'>
-    <Icon name='arrow-right' slot='arrowRight' class='group-hover:fill-black' height={30} width={15} fill='white' />
-    <Icon
-      name='arrow-right'
-      slot='arrowLeft'
-      class='group-hover:fill-black scale-x-[-1]'
-      height={30}
-      width={15}
-      fill='white'
-    />
+    <Icon name='arrow-right' slot='arrowLeft' class='scale-x-[-1]' height={30} width={15} />
+    <Icon name='arrow-right' slot='arrowRight' height={30} width={15} />
   </Looper>
 </SidebarSection>

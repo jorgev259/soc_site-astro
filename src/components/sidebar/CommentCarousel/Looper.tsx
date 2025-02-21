@@ -37,10 +37,7 @@ export default function Looper(props: Props) {
     <div className='text-md/6 font-extralight'>
       <div>{comment.text}</div>
       <div className='mt-1'>
-        -{' '}
-        <a href={`/album/${comment.albums?.id}`} className='hover:text-hover-link hover:underline'>
-          {comment.albums?.title}
-        </a>
+        - <a href={`/album/${comment.albums?.id}`}>{comment.albums?.title}</a>
       </div>
       {isMultiple ? (
         <div className='flex mt-2.5'>

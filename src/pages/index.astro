@@ -32,14 +32,8 @@ const lastAlbums = await prismaClient.albums.findMany({
         }
       </div>
       <div class='flex gap-x-2 py-4'>
-        <button
-          class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-1/2 hover:text-hover-link hover:underline'
-          >{m.moreGameReleases}</button
-        >
-        <button
-          class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-1/2 hover:text-hover-link hover:underline'
-          >{m.moreAnimReleases}</button
-        >
+        <a class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-1/2'>{m.moreGameReleases}</a>
+        <a class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-1/2'>{m.moreAnimReleases}</a>
       </div>
       <hr />
       <h1 class='uppercase font-medium tracking-wide text-5xl drop-shadow-2xl mt-5 mb-2 text-center'>
@@ -53,10 +47,7 @@ const lastAlbums = await prismaClient.albums.findMany({
         }
       </div>
       <div class='flex gap-x-2 py-4'>
-        <button
-          class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-full hover:text-hover-link hover:underline'
-          >{m.moreLastAdded}</button
-        >
+        <a class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-full'>{m.moreLastAdded}</a>
       </div>
     </div>
     <Sidebar />

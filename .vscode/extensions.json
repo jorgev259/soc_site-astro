@@ -4,6 +4,8 @@
     "inlang.vs-code-extension",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "prisma.prisma",
+    "csstools.postcss"
   ]
 }
