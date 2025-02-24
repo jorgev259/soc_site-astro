@@ -1,0 +1,30 @@
+---
+import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages'
+
+import BaseLayout from 'layouts/base.astro'
+import AlbumBox from 'components/AlbumBox.astro'
+
+const lastAlbums = await prismaClient.albums.findMany({
+  select: { id: true, title: true },
+  take: 40,
+  orderBy: { createdAt: 'desc' }
+})
+---
+
+<BaseLayout>
+  <div class='w-full min-h-100vh mx-auto max-w-[1440px]'>
+    <div class='px-2 mb-2'>
+      <h1 class='uppercase font-medium tracking-wide text-5xl drop-shadow-2xl mt-5 mb-2 text-center'>
+        {m.lastAdded()}
+      </h1>
+      <div class='grid grid-cols-4 gap-x-1.5'>
+        {
+          lastAlbums.map((album) => (
+            <AlbumBox title={album.title} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+          ))
+        }
+      </div>
+    </div>
+   </div>
+</BaseLayout>
