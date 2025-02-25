@@ -50,7 +50,7 @@ const { currentLocale } = Astro
   <div
     class={`w-full min-h-100vh bg-fixed bg-center bg-cover`}
     style={`
-    background-image: url('https://cdn.sittingonclouds.net/album?./${album?.id}.png');
+    background-image: url('https://cdn.sittingonclouds.net/album/${album?.id}.png');
   `}
   >
     <div class='bg-dark/75 w-full min-h-100vh'>
@@ -339,8 +339,8 @@ const { currentLocale } = Astro
               album?.relatedAlbumList.map(({ relatedAlbum }) => (
                 <AlbumBox
                   title={relatedAlbum?.title}
-                  href={`/album?./${relatedAlbum?.id}`}
-                  image={`/album?./${relatedAlbum?.id}.png`}
+                  href={`/album/${relatedAlbum?.id}`}
+                  image={`/album/${relatedAlbum?.id}.png`}
                 />
               ))
             }
