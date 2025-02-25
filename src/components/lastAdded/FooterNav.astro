@@ -1,0 +1,61 @@
+---
+import FooterNavItem from './FooterNavItem.astro'
+
+interface Props {
+  class?: String
+  fullPageList: number[]
+  page: number
+  pageLimit: number
+}
+
+const { class: className, fullPageList, page, pageLimit } = Astro.props
+const pageList: number[][] = [[]]
+
+fullPageList.forEach((n) => {
+  pageList[pageList.length - 1].push(n)
+  if (n % pageLimit === 0) pageList.push([])
+})
+
+const currentListIndex = pageList.findIndex((l) => l.includes(page))
+const currentList = pageList[currentListIndex]
+---
+
+<ul class:list={[className, 'bg-dark mb-0 py-2 justify-center']}>
+  {
+    currentListIndex > 0 && (
+      <>
+        <FooterNavItem href='/last-added/1' aria-label='First'>
+          <span aria-hidden='true'>&laquo;</span>
+        </FooterNavItem>
+        <FooterNavItem href={`/last-added/${currentList[0] - 1}`} aria-label={(currentList[0] - 1).toString()}>
+          <span aria-hidden='true'>&lt;</span>
+        </FooterNavItem>
+      </>
+    )
+  }
+  {
+    currentList.map((item) => (
+      <FooterNavItem
+        class:list={[{ ['cursor-auto text-white bg-gray-hover hover:no-underline']: item === page }]}
+        href={`/last-added/${item}`}
+      >
+        {item}
+      </FooterNavItem>
+    ))
+  }
+  {
+    currentListIndex !== pageList.length - 1 && (
+      <>
+        <FooterNavItem
+          href={`/last-added/${currentList[currentList.length - 1] + 1}`}
+          aria-label={(currentList[currentList.length - 1] + 1).toString()}
+        >
+          <span aria-hidden='true'>&gt;</span>
+        </FooterNavItem>
+        <FooterNavItem href={`/last-added/${fullPageList[fullPageList.length - 1]}`} aria-label='Last'>
+          <span aria-hidden='true'>&raquo;</span>
+        </FooterNavItem>
+      </>
+    )
+  }
+</ul>

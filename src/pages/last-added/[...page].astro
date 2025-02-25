@@ -4,12 +4,32 @@ import * as m from 'paraglide/messages'
 
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
+import FooterNav from 'components/lastAdded/FooterNav.astro'
+
+const page = parseInt(Astro.params.page ?? '1')
+const take = 40
+const limitMD = 12
+const limitXS = 5
+
+if (page < 1) {
+  return Astro.redirect('/last-added')
+}
 
 const lastAlbums = await prismaClient.albums.findMany({
+  where: { status: 'show' },
   select: { id: true, title: true },
-  take: 40,
+  take,
+  skip: take * (page - 1),
   orderBy: { createdAt: 'desc' }
 })
+const count = await prismaClient.albums.count({ where: { status: 'show' } })
+
+if (lastAlbums.length === 0) {
+  return Astro.redirect('/404')
+}
+
+const fullPageList = [...Array(Math.ceil(count / take))].map((v, i) => i + 1)
+const listProps = { fullPageList, page }
 ---
 
 <BaseLayout>
@@ -26,5 +46,9 @@ const lastAlbums = await prismaClient.albums.findMany({
         }
       </div>
     </div>
-   </div>
+    <nav class='bg-dark p-2'>
+      <FooterNav class='flex md:hidden' pageLimit={limitXS} {...listProps} client:visible />
+      <FooterNav class='hidden md:flex' pageLimit={limitMD} {...listProps} client:visible />
+    </nav>
+  </div>
 </BaseLayout>

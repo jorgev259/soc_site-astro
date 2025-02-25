@@ -9,8 +9,8 @@ import BaseLayout from '../layouts/base.astro'
     <div class='text-md` text-center'>
       <a class='text-blue-500 underline' href='https://twitter.com/i/status/1890946922908721317'>Boat Goes Binted</a>
     </div>
-    <video class='mt-4' controls autoplay style={{ height: '350px', width: 'auto' }}>
-      <source src='/public/video/boat-goes-binted.mp4' type='video/mp4' />
+    <video class='mt-4' controls autoplay style={{ height: '350px', width: 'auto' }} onloadstart='this.volume=0.15'>
+      <source src='/video/boat-goes-binted.mp4' type='video/mp4' />
     </video>
   </div>
 </BaseLayout>
