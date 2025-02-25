@@ -12,7 +12,7 @@ const limitMD = 12
 const limitXS = 5
 
 if (page < 1) {
-  return Astro.redirect('/last-added')
+  Astro.redirect('/last-added')
 }
 
 const lastAlbums = await prismaClient.albums.findMany({
@@ -25,7 +25,7 @@ const lastAlbums = await prismaClient.albums.findMany({
 const count = await prismaClient.albums.count({ where: { status: 'show' } })
 
 if (lastAlbums.length === 0) {
-  return Astro.redirect('/404')
+  Astro.redirect('/404')
 }
 
 const fullPageList = [...Array(Math.ceil(count / take))].map((v, i) => i + 1)
@@ -47,8 +47,8 @@ const listProps = { fullPageList, page }
       </div>
     </div>
     <nav class='bg-dark p-2'>
-      <FooterNav class='flex md:hidden' pageLimit={limitXS} {...listProps} client:visible />
-      <FooterNav class='hidden md:flex' pageLimit={limitMD} {...listProps} client:visible />
+      <FooterNav class='flex md:hidden' pageLimit={limitXS} {...listProps} />
+      <FooterNav class='hidden md:flex' pageLimit={limitMD} {...listProps} />
     </nav>
   </div>
 </BaseLayout>

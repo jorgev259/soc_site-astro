@@ -22,7 +22,7 @@ const currentList = pageList[currentListIndex]
 
 <ul class:list={[className, 'bg-dark mb-0 py-2 justify-center']}>
   {
-    currentListIndex > 0 && (
+    currentListIndex > 0 ? (
       <>
         <FooterNavItem href='/last-added/1' aria-label='First'>
           <span aria-hidden='true'>&laquo;</span>
@@ -31,7 +31,7 @@ const currentList = pageList[currentListIndex]
           <span aria-hidden='true'>&lt;</span>
         </FooterNavItem>
       </>
-    )
+    ) : null
   }
   {
     currentList.map((item) => (
@@ -44,7 +44,7 @@ const currentList = pageList[currentListIndex]
     ))
   }
   {
-    currentListIndex !== pageList.length - 1 && (
+    currentListIndex !== pageList.length - 1 ? (
       <>
         <FooterNavItem
           href={`/last-added/${currentList[currentList.length - 1] + 1}`}
@@ -56,6 +56,6 @@ const currentList = pageList[currentListIndex]
           <span aria-hidden='true'>&raquo;</span>
         </FooterNavItem>
       </>
-    )
+    ) : null
   }
 </ul>
