@@ -6,10 +6,10 @@ interface Props {
   alt?: string
   icon?: ImageMetadata
   direct?: boolean
+  hasDirect?: boolean
 }
-const { href, alt, icon, direct = false } = Astro.props
-const { permissions } = Astro.locals
-const disabled = direct && !permissions.includes('SKIP_ADS')
+const { href, alt, icon, direct = false, hasDirect = false } = Astro.props
+const disabled = direct && !hasDirect
 ---
 
 <a
