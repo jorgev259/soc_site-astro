@@ -5,7 +5,7 @@ import prismaClient from 'utils/prisma-client'
 export async function GET(context: APIContext) {
   const albums = await prismaClient.albums.findMany({
     where: { status: 'show' },
-    include: { artistList: { include: { artist: { select: { name: true } } } } },
+    include: { artists: { include: { artist: { select: { name: true } } } } },
     take: 15,
     orderBy: { createdAt: 'desc' }
   })
@@ -14,7 +14,7 @@ export async function GET(context: APIContext) {
     guid: `album/${album.id}`,
     title: album.title || 'Error: Missing title',
     pubDate: new Date(album.createdAt || ''),
-    description: album.subTitle || album.artistList.map((a) => a.artist.name).join(' - '),
+    description: album.subTitle || album.artists.map((a) => a.artist.name).join(' - '),
     link: `https://www.sittingonclouds.net/album/${album.id}`,
     customData: `<media:content
           type="image/png"

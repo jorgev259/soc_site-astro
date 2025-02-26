@@ -21,12 +21,12 @@ const hasDirect = permissions.includes('SKIP_ADS')
 const album = await prismaClient.albums.findUnique({
   where: { id: Number(id) },
   include: {
-    artistList: { select: { artist: true } },
-    categoryList: { select: { categoryName: true } },
-    classificationList: { select: { classificationName: true } },
-    platformList: { select: { platform: { select: { id: true, name: true } } } },
-    gameList: { select: { game: { select: { slug: true, name: true } } } },
-    animList: { select: { animation: { select: { id: true, title: true } } } },
+    artists: { select: { artist: true } },
+    categories: { select: { categoryName: true } },
+    classifications: { select: { classificationName: true } },
+    platforms: { select: { platform: { select: { id: true, name: true } } } },
+    games: { select: { game: { select: { slug: true, name: true } } } },
+    animations: { select: { animation: { select: { id: true, title: true } } } },
     stores: { select: { url: true, provider: true }, where: { NOT: { provider: 'SOON' } } },
     discs: { select: { number: true, body: true } },
     downloads: {
@@ -35,7 +35,7 @@ const album = await prismaClient.albums.findUnique({
         links: { select: { id: true, url: true, url2: true, provider: true, directUrl: hasDirect } }
       }
     },
-    relatedAlbumList: { select: { relatedAlbum: { select: { id: true, title: true } } } }
+    relatedAlbums: { select: { relatedAlbum: { select: { id: true, title: true } } } }
   }
 })
 
@@ -96,10 +96,10 @@ const { currentLocale } = Astro
                   }
 
                   {
-                    (album?.artistList.length ?? 0) > 0 && (
+                    (album?.artists.length ?? 0) > 0 && (
                       <tr>
                         <th>{m.artists()}</th>
-                        <td>{album?.artistList.map(({ artist }) => artist.name).join(', ')}</td>
+                        <td>{album?.artists.map(({ artist }) => artist.name).join(', ')}</td>
                       </tr>
                     )
                   }
@@ -109,10 +109,8 @@ const { currentLocale } = Astro
                     <td>
                       {
                         [
-                          album?.categoryList
-                            .map(({ categoryName }) => (m as any)[`${categoryName}Osts`]())
-                            .join(' & '),
-                          album?.classificationList.map(({ classificationName }) => classificationName).join(', ')
+                          album?.categories.map(({ categoryName }) => (m as any)[`${categoryName}Osts`]()).join(' & '),
+                          album?.classifications.map(({ classificationName }) => classificationName).join(', ')
                         ]
                           .filter((f) => f !== '')
                           .join(' - ')
@@ -132,11 +130,11 @@ const { currentLocale } = Astro
                     )
                   }
                   {
-                    (album?.platformList.length ?? 0) > 0 && (
+                    (album?.platforms.length ?? 0) > 0 && (
                       <tr>
                         <th>{m.platforms()}</th>
                         <td>
-                          {album?.platformList.map(({ platform }, i) => (
+                          {album?.platforms.map(({ platform }, i) => (
                             <Fragment key={platform.id}>
                               {id === '29' ? (
                                 <span class='btn p-0' style={{ color: 'white' }}>
@@ -147,7 +145,7 @@ const { currentLocale } = Astro
                                   {platform.name}
                                 </a>
                               )}
-                              {i !== album?.platformList.length - 1 && ', '}
+                              {i !== album?.platforms.length - 1 && ', '}
                             </Fragment>
                           ))}
                         </td>
@@ -155,16 +153,16 @@ const { currentLocale } = Astro
                     )
                   }
                   {
-                    (album?.gameList.length ?? 0) > 0 && (
+                    (album?.games.length ?? 0) > 0 && (
                       <tr>
                         <th>{m.games()}</th>
                         <td>
-                          {album?.gameList.map(({ game }, i) => (
+                          {album?.games.map(({ game }, i) => (
                             <Fragment key={game.slug}>
                               <a class='btn btn-link p-0' href={`/game/${game.slug}`}>
                                 {game.name}
                               </a>
-                              {i !== album?.gameList.length - 1 && ', '}
+                              {i !== album?.games.length - 1 && ', '}
                             </Fragment>
                           ))}
                         </td>
@@ -172,16 +170,16 @@ const { currentLocale } = Astro
                     )
                   }
                   {
-                    (album?.animList.length ?? 0) > 0 && (
+                    (album?.animations.length ?? 0) > 0 && (
                       <tr>
                         <th>{m.animations()}</th>
                         <td>
-                          {album?.animList.map(({ animation }, i) => (
+                          {album?.animations.map(({ animation }, i) => (
                             <Fragment key={id}>
                               <a class='btn btn-link p-0' href={`/anim/${id}`}>
                                 {animation.title}
                               </a>
-                              {i !== album?.animList.length - 1 && ', '}
+                              {i !== album?.animations.length - 1 && ', '}
                             </Fragment>
                           ))}
                         </td>
@@ -343,7 +341,7 @@ const { currentLocale } = Astro
         <div class='mt-2'>
           <div class='grid grid-cols-4 gap-x-1.5 justify-items-center'>
             {
-              album?.relatedAlbumList.map(({ relatedAlbum }) => (
+              album?.relatedAlbums.map(({ relatedAlbum }) => (
                 <AlbumBox
                   title={relatedAlbum?.title}
                   href={`/album/${relatedAlbum?.id}`}

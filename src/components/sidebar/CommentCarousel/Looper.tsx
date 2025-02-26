@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode 
 interface Props {
   comments: {
     text: string | null
-    albums: {
+    album: {
       id: number
       title: string | null
     } | null
@@ -37,7 +37,7 @@ export default function Looper(props: Props) {
     <div className='text-md/6 font-extralight'>
       <div>{comment.text}</div>
       <div className='mt-1'>
-        - <a href={`/album/${comment.albums?.id}`}>{comment.albums?.title}</a>
+        - <a href={`/album/${comment.album?.id}`}>{comment.album?.title}</a>
       </div>
       {isMultiple ? (
         <div className='flex mt-2.5'>

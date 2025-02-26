@@ -6,7 +6,7 @@ import SidebarSection from './SidebarSection.astro'
 import Looper from './CommentCarousel/Looper'
 
 const comments = await prismaClient.comments.findMany({
-  select: { text: true, albums: { select: { id: true, title: true } } },
+  select: { text: true, album: { select: { id: true, title: true } } },
   orderBy: { createdAt: 'desc' },
   take: 5
 })

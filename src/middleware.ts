@@ -14,10 +14,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.session = isAuthed.session
 
     const user = await prismaClient.users.findUnique({
-      select: { roleList: { select: { roles: { select: { permissions: true } } } } },
+      select: { roles: { select: { roles: { select: { permissions: true } } } } },
       where: { id: isAuthed.user.id }
     })
-    const permissions = (user?.roleList.map((r) => r.roles.permissions).flat() as string[]) ?? []
+    const permissions = (user?.roles.map((r) => r.roles.permissions).flat() as string[]) ?? []
     const pages = PAGES.filter((p) => p.perms.some((r) => permissions.includes(r))).map((p) => p.url)
 
     context.locals.permissions = permissions
