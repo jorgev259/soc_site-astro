@@ -1,6 +1,7 @@
 ---
 import prismaClient from 'utils/prisma-client'
 import * as m from 'paraglide/messages'
+import { AlbumStatus } from '@prisma/client'
 
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
@@ -16,13 +17,13 @@ if (page < 1) {
 }
 
 const lastAlbums = await prismaClient.albums.findMany({
-  where: { status: 'show' },
+  where: { status: AlbumStatus.SHOW },
   select: { id: true, title: true },
   take,
   skip: take * (page - 1),
   orderBy: { createdAt: 'desc' }
 })
-const count = await prismaClient.albums.count({ where: { status: 'show' } })
+const count = await prismaClient.albums.count({ where: { status: AlbumStatus.SHOW } })
 
 if (lastAlbums.length === 0) {
   Astro.redirect('/404')

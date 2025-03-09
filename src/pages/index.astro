@@ -1,17 +1,20 @@
 ---
 import prismaClient from 'utils/prisma-client'
 import * as m from 'paraglide/messages'
+import { AlbumStatus } from '@prisma/client'
 
 import Sidebar from 'components/Sidebar.astro'
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
 
 const recentAlbums = await prismaClient.albums.findMany({
+  where: { status: AlbumStatus.SHOW },
   select: { id: true, title: true },
   take: 12,
   orderBy: { releaseDate: 'desc' }
 })
 const lastAlbums = await prismaClient.albums.findMany({
+  where: { status: AlbumStatus.SHOW },
   select: { id: true, title: true },
   take: 12,
   orderBy: { createdAt: 'desc' }
