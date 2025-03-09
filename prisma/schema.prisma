@@ -62,15 +62,6 @@ model Album_Platform {
   @@id([albumId, platformId])
 }
 
-model Album_Type {
-  albumId Int
-  typeId  Int
-  album   albums @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "Album_Type_ibfk_1")
-  type    type   @relation(fields: [typeId], references: [id], onDelete: Cascade, map: "Album_Type_ibfk_2")
-
-  @@id([albumId, typeId])
-}
-
 model Game_Platform {
   gameSlug   String   @db.VarChar(255)
   platformId Int
@@ -127,6 +118,11 @@ model albumHistories {
   album       albums?  @relation(fields: [albumId], references: [id], map: "albumHistories_ibfk_2")
 }
 
+enum AlbumStatus {
+  SHOW   @map("Show")
+  HIDDEN @map("Hidden")
+}
+
 model albums {
   id              Int                    @id @default(autoincrement())
   title           String?                @db.VarChar(255)
@@ -134,22 +130,20 @@ model albums {
   releaseDate     DateTime?              @db.Date
   label           String?                @db.VarChar(255)
   vgmdb           String?                @db.VarChar(255)
-  createdAt       DateTime               @db.DateTime(0)
-  updatedAt       DateTime               @db.DateTime(0)
+  createdAt       DateTime               @default(now()) @db.DateTime(0)
+  updatedAt       DateTime               @default(now()) @db.DateTime(0)
+  publishedAt     DateTime               @default(now())
   description     String?                @db.VarChar(255)
   createdBy       String?                @db.VarChar(255)
-  status          String?                @db.VarChar(255)
-  placeholder     String?                @db.Text
-  headerColor     String?                @default("#ffffff") @db.VarChar(255)
+  status          AlbumStatus            @default(HIDDEN)
+  headerColor     String                 @default("#ffffff") @db.VarChar(255)
   animations      Album_Animation[]
   artists         Album_Artist[]
   categories      Album_Category[]
   classifications Album_Classification[]
   games           Album_Game[]
   platforms       Album_Platform[]
-  types           Album_Type[]
   histories       albumHistories[]
-  availables      availables[]
   comments        comments[]
   discs           discs[]
   downloads       downloads[]
@@ -176,21 +170,9 @@ model animation {
 }
 
 model artist {
-  slug      String         @id @db.VarChar(255)
-  name      String?        @db.VarChar(255)
-  createdAt DateTime       @db.DateTime(0)
-  updatedAt DateTime       @db.DateTime(0)
-  albums    Album_Artist[]
-}
-
-model availables {
-  id        Int      @id @default(autoincrement())
-  url       String?  @db.VarChar(255)
-  provider  String?  @db.VarChar(255)
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
-  albumId   Int?
-  album     albums?  @relation(fields: [albumId], references: [id], map: "availables_ibfk_1")
+  slug   String         @id @db.VarChar(255)
+  name   String?        @db.VarChar(255)
+  albums Album_Artist[]
 }
 
 model category {
@@ -227,24 +209,20 @@ model config {
 }
 
 model discs {
-  id        Int      @id @default(autoincrement())
-  number    Int?
-  body      String?  @db.Text
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
-  albumId   Int
-  album     albums?  @relation(fields: [albumId], references: [id], map: "discs_ibfk_1")
+  id      Int     @id @default(autoincrement())
+  number  Int?
+  body    String? @db.Text
+  albumId Int
+  album   albums? @relation(fields: [albumId], references: [id], map: "discs_ibfk_1")
 }
 
 model downloads {
-  id        Int      @id @default(autoincrement())
-  title     String?  @db.VarChar(255)
-  small     Boolean?
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
-  albumId   Int
-  album     albums?  @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "downloads_ibfk_1")
-  links     links[]
+  id      Int      @id @default(autoincrement())
+  title   String?  @db.VarChar(255)
+  small   Boolean?
+  albumId Int
+  album   albums?  @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "downloads_ibfk_1")
+  links   links[]
 }
 
 model favorites {
@@ -423,12 +401,6 @@ model submissions {
   requestId    Int?
   user         users?    @relation(fields: [userUsername], references: [id], map: "submissions_ibfk_1")
   request      requests? @relation(fields: [requestId], references: [id], map: "submissions_ibfk_2")
-}
-
-model type {
-  id     Int          @id @default(autoincrement())
-  name   String       @db.VarChar(255)
-  albums Album_Type[]
 }
 
 model users {

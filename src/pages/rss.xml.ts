@@ -1,10 +1,11 @@
 import rss, { type RSSFeedItem } from '@astrojs/rss'
+import { AlbumStatus } from '@prisma/client'
 import type { APIContext } from 'astro'
 import prismaClient from 'utils/prisma-client'
 
 export async function GET(context: APIContext) {
   const albums = await prismaClient.albums.findMany({
-    where: { status: 'show' },
+    where: { status: AlbumStatus.SHOW },
     include: { artists: { include: { artist: { select: { name: true } } } } },
     take: 15,
     orderBy: { createdAt: 'desc' }

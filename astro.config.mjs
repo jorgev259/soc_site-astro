@@ -20,7 +20,8 @@ export default defineConfig({
         access: 'public',
         optional: true,
         default: 'http://localhost:4321'
-      })
+      }),
+      WEBHOOK_URL: envField.string({ context: 'server', access: 'secret' })
     },
     validateSecrets: true
   },
@@ -44,7 +45,6 @@ export default defineConfig({
   adapter: node({ mode: 'standalone' }),
   redirects: {
     '/album/list': { status: 307, destination: '/maintenance' },
-    // '/last-added': { status: 307, destination: '/maintenance' },
     '/anim': { status: 307, destination: '/maintenance' },
     '/anim/[id]': { status: 307, destination: '/maintenance' },
     '/anim/list': { status: 307, destination: '/maintenance' },

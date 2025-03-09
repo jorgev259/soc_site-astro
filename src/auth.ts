@@ -1,16 +1,16 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { username } from 'better-auth/plugins'
+import { username, bearer } from 'better-auth/plugins'
 
 import prismaClient from './utils/prisma-client'
-import { sendEmail } from 'utils/email'
-import forgorTemplate from 'utils/forgorTemplate'
-import verifyTemplate from 'utils/verifyTemplate'
+import { sendEmail } from './utils/email'
+import forgorTemplate from './utils/forgorTemplate'
+import verifyTemplate from './utils/verifyTemplate'
 
 export const auth = betterAuth({
   database: prismaAdapter(prismaClient, { provider: 'mysql' }),
   user: { modelName: 'users' },
-  plugins: [username()],
+  plugins: [username(), bearer()],
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,

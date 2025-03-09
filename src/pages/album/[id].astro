@@ -2,6 +2,7 @@
 import prismaClient from 'utils/prisma-client'
 import * as m from 'paraglide/messages'
 import { Image } from 'astro:assets'
+import { AlbumStatus } from '@prisma/client'
 
 import BaseLayout from 'layouts/base.astro'
 import TrackList from 'components/albumPage/TrackList'
@@ -16,10 +17,13 @@ import ouoIcon from 'img/assets/ouo-icon.png'
 
 const { id } = Astro.params
 const { permissions } = Astro.locals
+
 const hasDirect = permissions.includes('SKIP_ADS')
+const hasUpdate = permissions.includes('UPDATE')
+const hiddenCondition = !hasUpdate ? { status: AlbumStatus.SHOW } : {}
 
 const album = await prismaClient.albums.findUnique({
-  where: { id: Number(id) },
+  where: { id: Number(id), ...hiddenCondition },
   include: {
     artists: { select: { artist: true } },
     categories: { select: { categoryName: true } },
