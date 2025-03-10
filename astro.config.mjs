@@ -61,5 +61,8 @@ export default defineConfig({
     '/holy12': { status: 307, destination: '/maintenance' },
     '/request': { status: 307, destination: '/maintenance' },
     '/search': { status: 307, destination: '/maintenance' }
+  },
+  security: {
+    checkOrigin: false
   }
 })
