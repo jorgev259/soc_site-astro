@@ -12,7 +12,7 @@ const CreateAlbum = s.object({
   cover: s.instance(File),
   title: s.optional(s.string()),
   subTitle: s.optional(s.string()),
-  releaseDate: s.optional(s.date()),
+  releaseDate: s.optional(s.string()),
   label: s.optional(s.string()),
   vgmdb: s.optional(s.string()),
   description: s.optional(s.string()),
