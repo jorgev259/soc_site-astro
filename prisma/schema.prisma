@@ -275,8 +275,6 @@ model links {
   directUrl  String?    @db.VarChar(255)
   provider   String?    @db.VarChar(255)
   custom     String?    @db.VarChar(255)
-  createdAt  DateTime   @db.DateTime(0)
-  updatedAt  DateTime   @db.DateTime(0)
   downloadId Int
   url2       String?    @db.VarChar(255)
   download   downloads? @relation(fields: [downloadId], references: [id], map: "links_ibfk_1")

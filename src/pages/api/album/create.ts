@@ -1,34 +1,12 @@
 import type { APIRoute } from 'astro'
 import * as s from 'superstruct'
-import { AlbumStatus } from '@prisma/client'
-
 import prismaClient from 'utils/prisma-client'
-import { Status, formToObject, slug } from 'utils/form'
+
+import { AlbumStatus } from '@prisma/client'
+import { Status, slug } from 'utils/form'
 import { writeImg, getImgColor } from 'utils/img'
 import { handleComplete } from 'integrations/requestCat'
-import { DownloadInput } from 'schemas/album'
-
-const CreateAlbum = s.object({
-  cover: s.instance(File),
-  title: s.optional(s.string()),
-  subTitle: s.optional(s.string()),
-  releaseDate: s.optional(s.string()),
-  label: s.optional(s.string()),
-  vgmdb: s.optional(s.string()),
-  description: s.optional(s.string()),
-  status: s.defaulted(s.enums(Object.values(AlbumStatus)), AlbumStatus.HIDDEN),
-  animations: s.defaulted(s.array(s.integer()), []),
-  artists: s.defaulted(s.array(s.string()), []),
-  categories: s.defaulted(s.array(s.string()), []),
-  classifications: s.defaulted(s.array(s.string()), []),
-  games: s.defaulted(s.array(s.string()), []),
-  platforms: s.defaulted(s.array(s.integer()), []),
-  discs: s.defaulted(s.array(s.object({ number: s.integer(), body: s.string() })), []),
-  downloads: s.defaulted(s.array(DownloadInput), []),
-  related: s.defaulted(s.array(s.number()), []),
-  stores: s.defaulted(s.array(s.object({ provider: s.string(), url: s.string() })), []),
-  request: s.optional(s.integer())
-})
+import { CreateAlbum } from 'schemas/album'
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const { session, permissions, user } = locals
@@ -39,7 +17,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
   let body
   try {
     const formData = await request.formData()
-    body = s.create(formToObject(formData), CreateAlbum)
+    const data = formData.get('data') as string
+    const cover = formData.get('cover')
+    const formObject = { cover, ...JSON.parse(data) }
+    body = s.create(formObject, CreateAlbum)
   } catch (err) {
     return Status(422, (err as Error).message)
   }
@@ -52,7 +33,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         data: {
           title: body.title,
           subTitle: body.subTitle,
-          releaseDate: body.releaseDate,
+          releaseDate: body.releaseDate ? new Date(body.releaseDate) : null,
           label: body.label,
           vgmdb: body.vgmdb,
           description: body.description,
@@ -89,14 +70,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
       await Promise.all([
         handleCover(),
-        tx.downloads.createMany({
-          data: body.downloads.map((d) => ({
-            title: d.title,
-            small: d.small,
-            albumId: albumRow.id,
-            links: { create: d.links }
-          }))
-        })
+        Promise.all(
+          body.downloads.map((d) =>
+            tx.downloads.create({
+              data: {
+                title: d.title,
+                small: d.small,
+                albumId: albumRow.id,
+                links: { create: d.links }
+              }
+            })
+          )
+        )
       ])
 
       return albumRow
@@ -106,6 +91,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     return Status(200, albumRow.id.toString())
   } catch (err) {
+    console.error(err)
     return Status(500, (err as Error).message)
   }
 }
