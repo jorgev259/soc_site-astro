@@ -3,7 +3,7 @@ import * as s from 'superstruct'
 import prismaClient from 'utils/prisma-client'
 
 import { AlbumStatus } from '@prisma/client'
-import { Status, formToObject, slug } from 'utils/form'
+import { Status, parseForm, slug } from 'utils/form'
 import { writeImg, getImgColor } from 'utils/img'
 import { handleComplete } from 'integrations/requestCat'
 import { CreateAlbum } from 'schemas/album'
@@ -16,11 +16,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   let body
   try {
-    const formData = await request.formData()
-    const formObject = formToObject(formData)
-    const { data, ...rest } = formObject
-
-    body = s.create({ ...JSON.parse(data), ...rest }, CreateAlbum)
+    const formData = await parseForm(request)
+    body = s.create(formData, AlbumSchema)
   } catch (err) {
     return Status(422, (err as Error).message)
   }
