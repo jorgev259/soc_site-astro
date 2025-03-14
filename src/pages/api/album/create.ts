@@ -17,7 +17,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   let body
   try {
     const formData = await parseForm(request)
-    body = s.create(formData, AlbumSchema)
+    body = s.create(formData, CreateAlbum)
   } catch (err) {
     return Status(422, (err as Error).message)
   }
