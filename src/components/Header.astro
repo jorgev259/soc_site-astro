@@ -11,6 +11,8 @@ import Toggler from './header/Toggler.astro'
 import NavButton from './header/NavButton.astro'
 import LoginNav from './header/LoginNav.astro'
 import prismaClient from 'utils/prisma-client.js'
+import { Icon } from 'astro-icon/components'
+import SearchBar from './search/SearchBar.astro'
 
 const { value: bannerId } = (await prismaClient.config.findUnique({ where: { name: 'banner' } })) ?? {}
 const { value: bannerPosition } = (await prismaClient.config.findUnique({ where: { name: 'banner-position' } })) ?? {}
@@ -42,7 +44,7 @@ const { session } = Astro.locals
       <LoginNav />
     </div>
   </div>
-  <nav class='relative w-full md:h-[55px] bg-dark z-40'>
+  <div class='relative w-full md:h-[55px] bg-dark z-40'>
     <Toggler>
       <a href='/'><NavButton>{m.home()}</NavButton></a>
       <a href='/last-added'><NavButton>{m.lastaddednav()}</NavButton></a>
@@ -95,6 +97,8 @@ const { session } = Astro.locals
           </>
         ) : null
       }
+
+      <SearchBar />
     </Toggler>
-  </nav>
+  </div>
 </header>

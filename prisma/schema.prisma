@@ -153,6 +153,8 @@ model albums {
   relatedAlbums   related_album[]        @relation("related_album_albumIdToalbums")
   relatedTo       related_album[]        @relation("related_album_relatedIdToalbums")
   stores          stores[]
+
+  @@fulltext([title, subTitle])
 }
 
 model animation {

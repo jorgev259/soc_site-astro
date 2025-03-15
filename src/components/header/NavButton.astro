@@ -1,8 +1,5 @@
 ---
-import Button from '../Button'
-import clsx from 'clsx'
-
-const { class: className } = Astro.props
+const { class: className, ...rest } = Astro.props
 ---
 
 <button
@@ -10,6 +7,7 @@ const { class: className } = Astro.props
     'w-full md:w-fit md:h-full bg-dark hover:bg-gray py-3.5 md:py-1 px-2 rounded-none text-left md:text-center',
     className
   ]}
+  {...rest}
 >
   <slot />
 </button>

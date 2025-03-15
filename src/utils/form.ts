@@ -21,3 +21,8 @@ export async function parseForm(request: Request) {
   const data = JSON.parse(dataInput)
   return { ...data, ...rest }
 }
+
+export function getRandom<T>(array: T[]): T {
+  const randomIndex = Math.floor(Math.random() * array.length)
+  return array[randomIndex]
+}

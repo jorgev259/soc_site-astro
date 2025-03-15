@@ -1,0 +1,72 @@
+---
+import type { Prisma } from '@prisma/client'
+import type { DefaultArgs } from '@prisma/client/runtime/library'
+import { Image } from 'astro:assets'
+
+import prismaClient from 'utils/prisma-client'
+
+interface Props {
+  query: string
+}
+
+const take = 20
+const { query } = Astro.props
+const findQuery: Prisma.albumsFindManyArgs = {
+  select: { title: true, releaseDate: true, id: true },
+  where: {
+    OR: [
+      {
+        title: {
+          search: query
+            .toLowerCase()
+            .split('_')
+            .map((w) => `+${w}`)
+            .join(' ')
+        }
+      },
+      {
+        subTitle: {
+          search: query
+            .toLowerCase()
+            .split('_')
+            .map((w) => `+${w}`)
+            .join(' ')
+        }
+      }
+    ]
+  },
+  orderBy: { publishedAt: 'desc' }
+}
+const countQuery: Prisma.albumsCountArgs<DefaultArgs> = {
+  where: findQuery.where
+}
+
+const [count, search] = await Promise.all([
+  prismaClient.albums.count(countQuery),
+  prismaClient.albums.findMany({ ...findQuery, take })
+])
+---
+
+<div class='text-xl'>Albums ({count}) {count > take ? `/ Showing first ${take} results` : null}</div>
+<div class='grid sm:grid-cols-1 md:grid-cols-3 mt-1.5 gap-4'>
+  {
+    search.map((album) => (
+      <a class='flex bg-gray h-40 group hover:no-underline' href={`/album/${album.id}`}>
+        <div class='h-full w-40 shrink-0'>
+          <Image
+            class='object-cover'
+            src={`https://cdn.sittingonclouds.net/album/${album.id}.png`}
+            alt={`${album.title} cover`}
+            quality='low'
+            height={160}
+            width={160}
+          />
+        </div>
+        <div class='flex flex-col p-2.5 justify-center text-left'>
+          <div class=' text-link group-hover:underline'>{album.title}</div>
+          <div class='mt-0.5'>{album.releaseDate?.toISOString().split('T')[0]}</div>
+        </div>
+      </a>
+    ))
+  }
+</div>

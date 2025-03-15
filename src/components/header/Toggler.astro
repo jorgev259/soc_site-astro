@@ -2,17 +2,11 @@
 import { Icon } from 'astro-icon/components'
 ---
 
-<nav-toggler
-  class='flex flex-col md:flex-row max-[990px]:justify-center min-[990px]:ps-20 size-full'
->
+<nav-toggler class='flex flex-col md:flex-row max-[990px]:justify-center min-[990px]:px-12 size-full'>
   <div class='md:hidden h-[52px]'>
-    <Icon
-      id='nav-toggler'
-      class='py-3.5 px-3.5 h-full w-auto fill-white cursor-pointer'
-      name='hamburger'
-    />
+    <Icon id='nav-toggler' class='py-3.5 px-3.5 h-full w-auto fill-white cursor-pointer' name='hamburger' />
   </div>
-  <div class='nav-items hidden md:block'>
+  <div class='nav-items hidden md:flex w-full'>
     <slot />
   </div>
 </nav-toggler>

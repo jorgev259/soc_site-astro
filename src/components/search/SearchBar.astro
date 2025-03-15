@@ -1,0 +1,52 @@
+---
+import { Icon } from 'astro-icon/components'
+import NavButton from 'components/header/NavButton.astro'
+import { getRandom } from 'utils/form'
+
+const placeholders = ['Tekken', 'Kingdom Hearts', 'The World Ends with You', 'Persona', 'Splatoon']
+const placeholder = getRandom(placeholders)
+---
+
+<NavButton id='search-open' class='px-3.5 ml-auto' style={{ width: '55px', height: '55px' }}>
+  <Icon name='search' class='size-full' />
+</NavButton>
+<div id='search-bar' class='absolute bg-gray-hover/90 left-0 w-full h-full hidden text-white px-12 text-xl'>
+  <form id='search-form' class='grow pe-4'>
+    <input class='h-full w-full' type='text' placeholder={placeholder} required name='query' />
+  </form>
+  <NavButton id='search-close' class='shrink-0' style={{ width: '55px', height: '55px', backgroundColor: 'unset' }}>
+    <Icon name='close' class='size-full stroke-white' />
+  </NavButton>
+</div>
+
+<script>
+  const openButton = document.getElementById('search-open')
+  const searchBar = document.getElementById('search-bar')
+  const searchForm = document.getElementById('search-form') as HTMLFormElement
+  const closeButton = document.getElementById('search-close')
+
+  openButton?.addEventListener('click', () => {
+    searchBar?.classList.add('flex')
+    searchBar?.classList.remove('hidden')
+
+    openButton?.classList.add('hidden')
+    openButton?.classList.remove('block')
+  })
+
+  closeButton?.addEventListener('click', () => {
+    searchBar?.classList.add('hidden')
+    searchBar?.classList.remove('flex')
+
+    openButton?.classList.add('block')
+    openButton?.classList.remove('hidden')
+  })
+
+  searchForm?.addEventListener('submit', (ev: Event) => {
+    ev.preventDefault()
+    const formData = new FormData(searchForm)
+    const url = new URL('/search', window.location.origin)
+    url.searchParams.append('q', formData.get('query') as string)
+
+    window.location.href = url.toString()
+  })
+</script>
