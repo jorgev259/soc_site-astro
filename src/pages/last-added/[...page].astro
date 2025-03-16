@@ -39,7 +39,7 @@ const listProps = { fullPageList, page }
       <h1 class='uppercase font-medium tracking-wide text-5xl drop-shadow-2xl mt-5 mb-2 text-center'>
         {m.lastAdded()}
       </h1>
-      <div class='grid grid-cols-4 gap-x-1.5'>
+      <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5'>
         {
           lastAlbums.map((album) => (
             <AlbumBox title={album.title} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />

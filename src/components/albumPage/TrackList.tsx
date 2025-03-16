@@ -33,13 +33,13 @@ export default function TrackList(props: Props) {
       </div>
       <div className=''>
         <div className='col'>
-          <div className={clsx('border p-3 border-t-0', { 'border-t-2': discs.length === 1 })}>
+          <div className={clsx('border rounded-sm p-3 border-t-0', { 'border-t-2': discs.length === 1 })}>
             <table className='gap-y-4' cellPadding='6'>
               <tbody>
                 {discs.length > 0 &&
                   discs[current].body?.split('\n').map((track, i) => (
                     <tr key={i}>
-                      <td>{i + 1} </td>
+                      <td className='pr-1'>{(i + 1).toString().padStart(2, '0')}.</td>
                       <td>{track}</td>
                     </tr>
                   ))}

@@ -73,10 +73,10 @@ const { currentLocale } = Astro
               <Image
                 src={`https://cdn.sittingonclouds.net/album/${album?.id}.png`}
                 alt={`${album?.title} cover`}
-                class='rounded-sm size-full object-contain h-96'
+                class='rounded-sm size-full object-contain h-fit min-h-96 px-10'
                 quality='mid'
-                width={384}
-                height={384}
+                width={500}
+                height={500}
               />
             </div>
           </div>
@@ -100,21 +100,23 @@ const { currentLocale } = Astro
                   }
 
                   {
-                    (album?.artists.length ?? 0) > 0 && (
+                    (album?.artistList.length ?? 0) > 0 && (
                       <tr>
-                        <th>{m.artists()}</th>
-                        <td>{album?.artists.map(({ artist }) => artist.name).join(', ')}</td>
+                        <th class="mr-2">{m.artists()}</th>
+                        <td>{album?.artistList.map(({ artist }) => artist.name).join(', ')}</td>
                       </tr>
                     )
                   }
 
                   <tr>
-                    <th>{m.classification()}</th>
+                    <th class="mr-2">{m.classification()}</th>
                     <td>
                       {
                         [
-                          album?.categories.map(({ categoryName }) => (m as any)[`${categoryName}Osts`]()).join(' & '),
-                          album?.classifications.map(({ classificationName }) => classificationName).join(', ')
+                          album?.categoryList
+                            .map(({ categoryName }) => (m as any)[`${categoryName}Osts`]())
+                            .join(' & '),
+                          album?.classificationList.map(({ classificationName }) => classificationName).join(', ')
                         ]
                           .filter((f) => f !== '')
                           .join(' - ')
@@ -124,7 +126,7 @@ const { currentLocale } = Astro
                   {
                     album?.label && (
                       <tr>
-                        <th>{m.publishedBy()}</th>
+                        <th class="mr-2">{m.publishedBy()}</th>
                         <td>
                           <a class='btn btn-link p-0' href={`/publisher/${album?.label}`}>
                             {album?.label}
@@ -134,11 +136,11 @@ const { currentLocale } = Astro
                     )
                   }
                   {
-                    (album?.platforms.length ?? 0) > 0 && (
+                    (album?.platformList.length ?? 0) > 0 && (
                       <tr>
-                        <th>{m.platforms()}</th>
+                        <th class="mr-2">{m.platforms()}</th>
                         <td>
-                          {album?.platforms.map(({ platform }, i) => (
+                          {album?.platformList.map(({ platform }, i) => (
                             <Fragment key={platform.id}>
                               {id === '29' ? (
                                 <span class='btn p-0' style={{ color: 'white' }}>
@@ -149,7 +151,7 @@ const { currentLocale } = Astro
                                   {platform.name}
                                 </a>
                               )}
-                              {i !== album?.platforms.length - 1 && ', '}
+                              {i !== album?.platformList.length - 1 && ', '}
                             </Fragment>
                           ))}
                         </td>
@@ -157,16 +159,16 @@ const { currentLocale } = Astro
                     )
                   }
                   {
-                    (album?.games.length ?? 0) > 0 && (
+                    (album?.gameList.length ?? 0) > 0 && (
                       <tr>
-                        <th>{m.games()}</th>
+                        <th class="mr-2">{m.games()}</th>
                         <td>
-                          {album?.games.map(({ game }, i) => (
+                          {album?.gameList.map(({ game }, i) => (
                             <Fragment key={game.slug}>
                               <a class='btn btn-link p-0' href={`/game/${game.slug}`}>
                                 {game.name}
                               </a>
-                              {i !== album?.games.length - 1 && ', '}
+                              {i !== album?.gameList.length - 1 && ', '}
                             </Fragment>
                           ))}
                         </td>
@@ -174,16 +176,16 @@ const { currentLocale } = Astro
                     )
                   }
                   {
-                    (album?.animations.length ?? 0) > 0 && (
+                    (album?.animList.length ?? 0) > 0 && (
                       <tr>
-                        <th>{m.animations()}</th>
+                        <th class="mr-2">{m.animations()}</th>
                         <td>
-                          {album?.animations.map(({ animation }, i) => (
+                          {album?.animList.map(({ animation }, i) => (
                             <Fragment key={id}>
                               <a class='btn btn-link p-0' href={`/anim/${id}`}>
                                 {animation.title}
                               </a>
-                              {i !== album?.animations.length - 1 && ', '}
+                              {i !== album?.animList.length - 1 && ', '}
                             </Fragment>
                           ))}
                         </td>
@@ -192,13 +194,23 @@ const { currentLocale } = Astro
                   }
 
                   <tr>
-                    <th>{m.avgRating()}</th>
+                    <th class="mr-2">{m.avgRating()}</th>
                     <td>
                       <!-- <StarCounter album?.Id={album?.id} /> -->
                     </td>
                   </tr>
                 </tbody>
               </table>
+              {
+                album?.vgmdb && (
+                  <div class='mt-2 mb-3 ml-2 flex'>
+                    <span class='text-lg'>{m.checkVGMDB()}:</span>
+                    <a href={album?.vgmdb} class='ml-2' target='_blank' rel='noopener noreferrer'>
+                      <Image width={100} height={30} alt={'VGMdb'} src={vgmdbLogo} />
+                    </a>
+                  </div>
+                )
+              }
               <!-- <UserButtons id={album?.id} /> -->
             </div>
           </div>
