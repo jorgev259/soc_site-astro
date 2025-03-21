@@ -442,7 +442,7 @@ model session {
 model verification {
   id         String   @id
   identifier String
-  value      String
+  value      String   @db.Text
   expiresAt  DateTime
   createdAt  DateTime
   updatedAt  DateTime

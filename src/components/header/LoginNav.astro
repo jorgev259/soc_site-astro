@@ -1,15 +1,37 @@
 ---
+import * as m from 'paraglide/messages'
+import prismaClient from 'utils/prisma-client'
+import clsx from 'clsx'
+
 import RegisterBtn from './RegisterButton'
 import LoginBtn from './LoginButton'
 import LogoutBtn from './LogoutButton'
+import Button from 'components/Button'
 
-const session = Astro.locals.session
+const { permissions, session, user } = Astro.locals
+const isDonator = permissions.includes('SKIP_ADS')
+
+const discordAcc = user
+  ? await prismaClient.account.findFirst({
+      where: { providerId: 'discord', userId: user.id }
+    })
+  : null
 ---
 
 <div class='px-2 flex gap-x-2 justify-end absolute w-full md:ms-auto md:block md:w-auto md:static'>
   {
     session ? (
-      <LogoutBtn client:only='react' />
+      <>
+        {!discordAcc ? (
+          <Button id='link-discord' className='rounded-t-none'>
+            {m.linkDiscord()}
+          </Button>
+        ) : null}
+        <a href='/profile'>
+          <Button className={clsx(['rounded-t-none', { '!bg-amber-400': isDonator }])}>{m.profile()}</Button>
+        </a>
+        <LogoutBtn client:only='react' />
+      </>
     ) : (
       <>
         <LoginBtn client:only='react' />
@@ -18,3 +40,12 @@ const session = Astro.locals.session
     )
   }
 </div>
+
+<script>
+  import { linkSocial } from 'utils/auth-client'
+
+  const discordBtn = document.getElementById('link-discord')
+  discordBtn?.addEventListener('click', () => {
+    linkSocial({ provider: 'discord', callbackURL: window.location.href })
+  })
+</script>

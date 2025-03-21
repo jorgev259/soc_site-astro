@@ -21,7 +21,11 @@ export default defineConfig({
         optional: true,
         default: 'http://localhost:4321'
       }),
-      WEBHOOK_URL: envField.string({ context: 'server', access: 'secret' })
+      WEBHOOK_URL: envField.string({ context: 'server', access: 'secret' }),
+      DISCORD_OAUTH_ID: envField.string({ context: 'server', access: 'public' }),
+      DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
+      DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'public' }),
+      DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'public' })
     },
     validateSecrets: true
   },
@@ -53,6 +57,7 @@ export default defineConfig({
     '/game/list': { status: 307, destination: '/maintenance' },
     '/platform/list': { status: 307, destination: '/maintenance' },
     '/platform/[id]': { status: 307, destination: '/maintenance' },
+    '/profile': { status: 307, destination: '/maintenance' },
     '/profile/[username]': { status: 307, destination: '/maintenance' },
     '/series/[slug]': { status: 307, destination: '/maintenance' },
     '/series/list': { status: 307, destination: '/maintenance' },

@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { username, bearer } from 'better-auth/plugins'
+import { DISCORD_OAUTH_ID, DISCORD_OAUTH_SECRET } from 'astro:env/server'
 
 import prismaClient from './utils/prisma-client'
 import { sendEmail } from './utils/email'
@@ -11,6 +12,19 @@ export const auth = betterAuth({
   database: prismaAdapter(prismaClient, { provider: 'mysql' }),
   user: { modelName: 'users' },
   plugins: [username(), bearer()],
+  account: {
+    accountLinking: {
+      enabled: true,
+      allowDifferentEmails: true
+    }
+  },
+  socialProviders: {
+    discord: {
+      clientId: DISCORD_OAUTH_ID,
+      clientSecret: DISCORD_OAUTH_SECRET,
+      scope: ['identify', 'email', 'guilds.members.read']
+    }
+  },
   emailVerification: {
     sendOnSignUp: true,
     autoSignInAfterVerification: true,

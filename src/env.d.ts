@@ -6,5 +6,6 @@ declare namespace App {
     session: import('better-auth').Session | null
     permissions: string[]
     pages: string[]
+    roles: string[]
   }
 }

@@ -1,0 +1,46 @@
+---
+import * as m from 'paraglide/messages'
+import { DISCORD_DONATOR_ID } from 'astro:env/server'
+import prismaClient from 'utils/prisma-client'
+
+const { session, user, roles } = Astro.locals
+
+async function getMessage() {
+  if (!user || !session) {
+    return m.loggedInPage()
+  }
+
+  if (roles.includes('Donator')) {
+    return m.alreadyDonator()
+  }
+
+  const discordAcc = await prismaClient.account.findFirst({
+    where: { providerId: 'discord', userId: session.userId }
+  })
+
+  if (!discordAcc) {
+    return m.discordNeeded()
+  }
+
+  const memberInfoRes = await fetch(`https://discord.com/api/users/@me/guilds/535484312124915714/member`, {
+    headers: {
+      Authorization: `Bearer ${discordAcc.accessToken}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+
+  const memberInfo: { roles: string[] } = await memberInfoRes.json()
+  const isDiscordDonator = memberInfo.roles.includes(DISCORD_DONATOR_ID)
+
+  if (!isDiscordDonator) {
+    return m.discordRoleNeeded()
+  }
+
+  await prismaClient.user_Role.create({ data: { userUsername: user.id, roleName: 'Donator' } })
+  return m.addedDonator()
+}
+
+const message = await getMessage()
+---
+
+<div>{message}</div>

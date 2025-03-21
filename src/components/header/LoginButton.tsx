@@ -79,13 +79,20 @@ function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetSta
             />
           </div>
         </div>
-        <div className='flex'>
-          <Button loading={loading} disabled={loading} className='mx-auto px-6'>
+        <div className='flex justify-center gap-x-2'>
+          <Button loading={loading} disabled={loading} className='px-6' type='submit'>
             {m.login()}
+          </Button>
+          <Button
+            onClick={(ev) => {
+              ev.preventDefault()
+              signIn.social({ provider: 'discord', callbackURL: window.location.href })
+            }}
+          >
+            {m.loginDiscord()}
           </Button>
         </div>
       </form>
-
       <div className='mx-auto'>
         <Button
           onClick={() => {
