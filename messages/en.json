@@ -74,6 +74,6 @@
   "discordNeeded": "You need to link your Discord account to access this page",
   "discordRoleNeeded": "You need the Donator Discord role to access this page",
   "addedDonator": "Added donator benefits to your account!",
-  "errorDonatorCheck": "Something went wrong when checking your Discord donator status. Please try again later.",
+  "errorDonatorCheck": "Something went wrong when checking your Discord donator status. Please try again later. {error}",
   "discordRateLimit": "{message} Retry after {retry_after} seconds."
 }

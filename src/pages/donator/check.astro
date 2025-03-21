@@ -33,7 +33,7 @@ async function getMessage() {
     const { message, retry_after }: { message: string; retry_after: number } = await memberInfoRes.json()
     return m.discordRateLimit({ message, retry_after })
   } else if (memberInfoRes.status != 200) {
-    return m.errorDonatorCheck
+    return m.errorDonatorCheck({ error: await memberInfoRes.json() })
   }
 
   const memberInfo: { roles: string[] } = await memberInfoRes.json()
