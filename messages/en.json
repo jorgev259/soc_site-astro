@@ -73,5 +73,7 @@
   "alreadyDonator": "You are already a donator!",
   "discordNeeded": "You need to link your Discord account to access this page",
   "discordRoleNeeded": "You need the Donator Discord role to access this page",
-  "addedDonator": "Added donator benefits to your account!"
+  "addedDonator": "Added donator benefits to your account!",
+  "errorDonatorCheck": "Something went wrong when checking your Discord donator status. Please try again later.",
+  "discordRateLimit": "{message} Retry after {retry_after} seconds."
 }

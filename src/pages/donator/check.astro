@@ -29,6 +29,13 @@ async function getMessage() {
     }
   })
 
+  if (memberInfoRes.status == 429) {
+    const { message, retry_after }: { message: string; retry_after: number } = await memberInfoRes.json()
+    return m.discordRateLimit({ message, retry_after })
+  } else if (memberInfoRes.status != 200) {
+    return m.errorDonatorCheck
+  }
+
   const memberInfo: { roles: string[] } = await memberInfoRes.json()
   const isDiscordDonator = memberInfo.roles.includes(DISCORD_DONATOR_ID)
 
