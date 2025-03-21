@@ -1,6 +1,6 @@
 ---
 import * as m from 'paraglide/messages'
-import { DISCORD_DONATOR_ID } from 'astro:env/server'
+import { DISCORD_DONATOR_ID, DISCORD_GUILD_ID } from 'astro:env/server'
 import prismaClient from 'utils/prisma-client'
 
 const { session, user, roles } = Astro.locals
@@ -22,7 +22,7 @@ async function getMessage() {
     return m.discordNeeded()
   }
 
-  const memberInfoRes = await fetch(`https://discord.com/api/users/@me/guilds/535484312124915714/member`, {
+  const memberInfoRes = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`, {
     headers: {
       Authorization: `Bearer ${discordAcc.accessToken}`,
       'Content-Type': 'application/x-www-form-urlencoded'
