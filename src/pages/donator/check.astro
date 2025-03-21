@@ -3,6 +3,8 @@ import * as m from 'paraglide/messages'
 import { DISCORD_DONATOR_ID, DISCORD_GUILD_ID } from 'astro:env/server'
 import prismaClient from 'utils/prisma-client'
 
+import BaseLayout from 'layouts/base.astro'
+
 const { session, user, roles } = Astro.locals
 
 async function getMessage() {
@@ -50,4 +52,6 @@ async function getMessage() {
 const message = await getMessage()
 ---
 
-<div>{message}</div>
+<BaseLayout>
+  <div class='justify-center py-4 flex w-full'>{message}</div>
+</BaseLayout>
