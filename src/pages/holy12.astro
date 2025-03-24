@@ -1,27 +1,11 @@
 ---
 import * as m from 'paraglide/messages'
-import prismaClient from 'utils/prisma-client'
+
+import { getRandom } from 'utils/form'
+import { getRandomAlbum } from 'utils/queries'
 
 import Base from 'layouts/base.astro'
-import { getRandom } from 'utils/form'
 import AlbumBox from 'components/AlbumBox.astro'
-
-async function getRandomAlbum(): Promise<{ id: number; title: string }> {
-  const res: { id: number; title: string }[] = await prismaClient.$queryRawUnsafe(`
-    SELECT r1.id as id, r1.title as title
-    FROM albums AS r1 JOIN (
-	    SELECT (
-		    RAND() * (
-			    SELECT MAX(id) FROM albums
-		    )
-	    ) AS id
-    )  AS r2
-    WHERE r1.id >= r2.id
-    ORDER BY r1.id ASC
-    LIMIT 1;`)
-
-  return res[0]
-}
 
 const titles = [m.holy12_0(), m.holy12_1(), m.holy12_2(), m.holy12_3(), m.holy12_4(), m.holy12_5()]
 const title = getRandom(titles)

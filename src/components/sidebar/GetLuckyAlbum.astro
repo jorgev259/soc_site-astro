@@ -1,0 +1,14 @@
+---
+interface Props {
+  class: string
+}
+
+import * as m from '../../paraglide/messages.js'
+
+import { getRandomAlbum } from 'utils/queries'
+
+const album = await getRandomAlbum()
+const { class: className } = Astro.props
+---
+
+<a href={`/album/${album.id}`} class={className}>{m.getLucky()}</a>
