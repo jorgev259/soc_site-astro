@@ -75,5 +75,11 @@
   "discordRoleNeeded": "You need the Donator Discord role to access this page",
   "addedDonator": "Added donator benefits to your account!",
   "errorDonatorCheck": "Something went wrong when checking your Discord donator status. Please try again later. {error}",
-  "discordRateLimit": "{message} Retry after {retry_after} seconds."
+  "discordRateLimit": "{message} Retry after {retry_after} seconds.",
+  "holy12_0": "Cloud's secret mixtape",
+  "holy12_1": "Best romantic dinner BGM",
+  "holy12_2": "12 clicks till midnight",
+  "holy12_3": "We let our technicians pick these",
+  "holy12_4": "It's noisy outside, take one of these",
+  "holy12_5": "Silksong is hidden behind one of these"
 }

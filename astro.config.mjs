@@ -62,7 +62,6 @@ export default defineConfig({
     '/series/list': { status: 307, destination: '/maintenance' },
     '/studio/[slug]': { status: 307, destination: '/maintenance' },
     '/studio/list': { status: 307, destination: '/maintenance' },
-    '/holy12': { status: 307, destination: '/maintenance' },
     '/request': { status: 307, destination: '/maintenance' }
   },
   security: {
