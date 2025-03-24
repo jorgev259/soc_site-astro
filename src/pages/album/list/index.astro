@@ -1,0 +1,52 @@
+---
+import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages'
+import { AlbumStatus } from '@prisma/client'
+
+import Sidebar from 'components/Sidebar.astro'
+import BaseLayout from 'layouts/base.astro'
+import AlbumBox from 'components/AlbumBox.astro'
+import LetterSection from 'components/albumList/letterSection.astro'
+
+const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRaw`
+    SELECT DISTINCT UPPER(LEFT(title, 1)) AS letter, COUNT(*) AS count
+    FROM albums
+    WHERE status = 'SHOW'
+    GROUP BY letter
+    ORDER BY letter;
+  `
+---
+
+<BaseLayout>
+  <div class='flex flex-col md:flex-row flex-1 max-w-[2000px]'>
+    <div class='flex-1 px-5 bg-dark'>
+      <div class='flex flex-wrap gap-4 justify-center my-3'>
+        {
+          letters.map((l) => (
+            <div class='bg-btn-gray rounded-md size-14 uppercase font-semibold text-4xl text-white hover:bg-gray-hover'>
+              <a
+                href={`#${l.letter}`}
+                class='flex justify-center items-center size-full hover:no-underline hover:text-white'
+              >
+                {l.letter}
+              </a>
+            </div>
+          ))
+        }
+      </div>
+      <div class='flex flex-col gap-y-6'>
+        {
+          letters.map((l) => (
+            <div id={l.letter}>
+              <div class='flex uppercase border-y-2 text-4xl justify-center border-white py-1.5'>{l.letter}</div>
+              <div class='my-4'>
+                <LetterSection letter={l.letter} />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <Sidebar />
+  </div>
+</BaseLayout>
