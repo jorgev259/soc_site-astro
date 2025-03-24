@@ -1,11 +1,8 @@
 ---
 import prismaClient from 'utils/prisma-client'
-import * as m from 'paraglide/messages'
-import { AlbumStatus } from '@prisma/client'
 
-import Sidebar from 'components/Sidebar.astro'
 import BaseLayout from 'layouts/base.astro'
-import AlbumBox from 'components/AlbumBox.astro'
+import Sidebar from 'components/Sidebar.astro'
 import LetterSection from 'components/albumList/letterSection.astro'
 
 const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRaw`
@@ -40,7 +37,15 @@ const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRa
             <div id={l.letter}>
               <div class='flex uppercase border-y-2 text-4xl justify-center border-white py-1.5'>{l.letter}</div>
               <div class='my-4'>
-                <LetterSection letter={l.letter} />
+                <LetterSection letter={l.letter} server:defer>
+                  <Fragment slot="fallback">
+                    <div class='flex flex-col gap-y-2'>
+                    {Array.from({ length: Number(l.count) }).map(() => (
+                      <div class='animate-pulse h-3.5 w-lg bg-gray/85' />
+                    ))}
+                    </div>
+                  </Fragment>
+                </LetterSection>
               </div>
             </div>
           ))
