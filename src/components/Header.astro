@@ -1,6 +1,7 @@
 ---
 import { Image, Picture } from 'astro:assets'
 import * as m from '../paraglide/messages.js'
+import prismaClient from 'utils/prisma-client.js'
 
 import logo from 'img/logos/winter.png'
 import logoEs from 'img/logos/default_es.png'
@@ -10,12 +11,16 @@ import DropdownItem from './header/DropdownItem.astro'
 import Toggler from './header/Toggler.astro'
 import NavButton from './header/NavButton.astro'
 import LoginNav from './header/LoginNav.astro'
-import prismaClient from 'utils/prisma-client.js'
-import { Icon } from 'astro-icon/components'
 import SearchBar from './search/SearchBar.astro'
 
-const { value: bannerId } = (await prismaClient.config.findUnique({ where: { name: 'banner' } })) ?? {}
-const { value: bannerPosition } = (await prismaClient.config.findUnique({ where: { name: 'banner-position' } })) ?? {}
+const [bannerConfig, bannerPositionConfig] = await Promise.all([
+  prismaClient.config.findUnique({ where: { name: 'banner' }, select: { value: true } }),
+  prismaClient.config.findUnique({ where: { name: 'banner-position' }, select: { value: true } })
+])
+
+const bannerId = bannerConfig?.value || ''
+const bannerPosition = bannerPositionConfig?.value || 'top'
+
 const { session } = Astro.locals
 ---
 
@@ -53,18 +58,18 @@ const { session } = Astro.locals
       <Dropdown>
         {m.games()}
         <Fragment slot='items'>
-          <DropdownItem href='/game'>{m.albums()}</DropdownItem>
+          <DropdownItem href='/game/latest'>{m.latestReleases()}</DropdownItem>
+          <DropdownItem href='/game/list'>{m.gamelist()}</DropdownItem>
           <DropdownItem href='/series'>{m.series()}</DropdownItem>
           <DropdownItem href='/publisher/list'>{m.publishers()}</DropdownItem>
           <DropdownItem href='/platforms/list'>{m.platforms()}</DropdownItem>
-          <DropdownItem href='/game/list'>{m.gamelist()}</DropdownItem>
         </Fragment>
       </Dropdown>
 
       <Dropdown>
         {m.animation()}
         <Fragment slot='items'>
-          <DropdownItem href='/anim'>{m.albums()}</DropdownItem>
+          <DropdownItem href='/anim/latest'>{m.latestReleases()}</DropdownItem>
           <DropdownItem href='/anim/list'>{m.animationlist()}</DropdownItem>
           <DropdownItem href='/studio/list'>{m.studios()}</DropdownItem>
         </Fragment>

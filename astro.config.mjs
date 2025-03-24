@@ -48,10 +48,8 @@ export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   redirects: {
-    '/anim': { status: 307, destination: '/maintenance' },
     '/anim/[id]': { status: 307, destination: '/maintenance' },
     '/anim/list': { status: 307, destination: '/maintenance' },
-    '/game': { status: 307, destination: '/maintenance' },
     '/game/[slug]': { status: 307, destination: '/maintenance' },
     '/game/list': { status: 307, destination: '/maintenance' },
     '/platform/list': { status: 307, destination: '/maintenance' },

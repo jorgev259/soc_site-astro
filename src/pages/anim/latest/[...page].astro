@@ -11,11 +11,11 @@ const limitMD = 12
 const limitXS = 5
 
 const albums = await prismaClient.albums.findMany({
-  where: { status: AlbumStatus.SHOW },
+  where: { status: AlbumStatus.SHOW, categories: { some: { categoryName: 'Animation' } } },
   select: { id: true, title: true },
   take,
   skip: take * (page - 1),
-  orderBy: { publishedAt: 'desc' }
+  orderBy: [{ releaseDate: 'desc' }, { publishedAt: 'desc' }, { createdAt: 'desc' }]
 })
 const count = await prismaClient.albums.count({ where: { status: AlbumStatus.SHOW } })
 
@@ -24,5 +24,5 @@ const listProps = { fullPageList, page, albums, limitMD, limitXS }
 ---
 
 <PaginatedAlbumList {...listProps}>
-  {m.lastAdded()}
+  {m.latestAnimReleases()}
 </PaginatedAlbumList>
