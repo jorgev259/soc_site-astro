@@ -11,31 +11,20 @@ interface Props {
 
 const take = 20
 const { query } = Astro.props
+
+const queryString = query
+  .toLowerCase()
+  .split('_')
+  .map((w) => `+${w}`)
+  .join(' ')
 const findQuery: Prisma.albumsFindManyArgs = {
   select: { title: true, releaseDate: true, id: true },
   where: {
-    OR: [
-      {
-        title: {
-          search: query
-            .toLowerCase()
-            .split('_')
-            .map((w) => `+${w}`)
-            .join(' ')
-        }
-      },
-      {
-        subTitle: {
-          search: query
-            .toLowerCase()
-            .split('_')
-            .map((w) => `+${w}`)
-            .join(' ')
-        }
-      }
-    ]
+    OR: [{ title: { search: queryString } }, { subTitle: { search: queryString } }]
   },
-  orderBy: { publishedAt: 'desc' }
+  orderBy: {
+    _relevance: { fields: ['title', 'subTitle'], sort: 'desc', search: query.toLowerCase() }
+  }
 }
 const countQuery: Prisma.albumsCountArgs<DefaultArgs> = {
   where: findQuery.where
