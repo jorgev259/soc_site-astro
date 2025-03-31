@@ -68,25 +68,25 @@ const { currentLocale } = Astro
     <div class='bg-dark/75 w-full min-h-100vh'>
       <div class='flex flex-col flex-1 max-w-[1440px] mx-auto p-3'>
         <div class='flex flex-wrap md:flex-nowrap gap-x-3'>
-          <div class='flex-1 md:flex-5/12'>
+          <div class='flex-1 flex-wrap md:flex-5/12'>
             <div class='size-full relative cursor-pointer'>
               <Image
                 src={`https://cdn.sittingonclouds.net/album/${album?.id}.png`}
                 alt={`${album?.title} cover`}
-                class='rounded-sm size-full object-contain h-fit min-h-96 px-10'
+                class='rounded-sm size-full object-contain h-fit mb-2 md:min-h-96 px-10'
                 quality='mid'
                 width={500}
                 height={500}
               />
             </div>
           </div>
-          <div class='flex-1 md:flex-7/12'>
+          <div class='flex-1 flex-wrap md:flex-7/12'>
             <div class='bg-dark/85 rounded-xl py-4 px-6'>
               <div class='font-medium text-4xl text-center'>{album?.title}</div>
               <div class='text-center'>
                 {album?.subTitle ? <h6 style={{ whiteSpace: 'pre-wrap ' }}>{album?.subTitle}</h6> : null}
               </div>
-              <table class='mt-4'>
+              <table class='mt-4 border-spacing-y-4 border-separate w-full'>
                 <tbody>
                   {
                     album?.releaseDate ? (
@@ -227,7 +227,7 @@ const { currentLocale } = Astro
             </div>
           </div>
           <div class='flex-1 bg-dark/85 rounded-xl p-3'>
-            {
+            <!-- {
               album?.vgmdb && (
                 <div class='mt-2 mb-3 ml-2 flex'>
                   <span class='text-xl'>{m.checkVGMDB()}:</span>
@@ -236,7 +236,7 @@ const { currentLocale } = Astro
                   </a>
                 </div>
               )
-            }
+            } -->
             {
               (album?.stores.length ?? 0) > 0 && (
                 <div class='row mt-2 px-3'>
@@ -355,7 +355,7 @@ const { currentLocale } = Astro
           {m.relatedAlbums()}
         </div>
         <div class='mt-2'>
-          <div class='grid grid-cols-4 gap-x-1.5 justify-items-center'>
+          <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5 justify-items-center'>
             {
               album?.relatedAlbums.map(({ relatedAlbum }) => (
                 <AlbumBox
