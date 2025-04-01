@@ -5,6 +5,7 @@ import prismaClient from 'utils/prisma-client.js'
 
 import logo from 'img/logos/winter.png'
 import logoEs from 'img/logos/default_es.png'
+import offScript from 'img/assets/ian-zhang-offscript.gif'
 
 import Dropdown from './header/Dropdown.astro'
 import DropdownItem from './header/DropdownItem.astro'
@@ -13,33 +14,33 @@ import NavButton from './header/NavButton.astro'
 import LoginNav from './header/LoginNav.astro'
 import SearchBar from './search/SearchBar.astro'
 
-const [bannerConfig, bannerPositionConfig] = await Promise.all([
+/* const [bannerConfig, bannerPositionConfig] = await Promise.all([
   prismaClient.config.findUnique({ where: { name: 'banner' }, select: { value: true } }),
   prismaClient.config.findUnique({ where: { name: 'banner-position' }, select: { value: true } })
 ])
 
 const bannerId = bannerConfig?.value || ''
-const bannerPosition = bannerPositionConfig?.value || 'top'
+const bannerPosition = bannerPositionConfig?.value || 'top' */
 
 const { session } = Astro.locals
 ---
 
 <header class='relative'>
   <div class='relative h-[150px] bg-top bg-no-repeat bg-cover justify-center'>
-    <div class='absolute size-full'>
-      <Picture
+    <div class='absolute size-full bg-white'>
+      <!-- <Picture
         class={`size-full object-cover object-${bannerPosition || 'top'}`}
         src={`https://cdn.sittingonclouds.net/live/${bannerId}.png`}
         alt=''
         width={2560}
         height={150}
-      />
+      /> -->
     </div>
     <div class='relative md:px-20 size-full flex justify-center'>
-      <a href='/'>
+      <a href='https://www.youtube.com/shorts/nOQT7tPUnTA'>
         <Image
-          src={Astro.currentLocale === 'es' ? logoEs : logo}
-          class='h-full md:py-0.5 w-auto'
+          src={offScript}
+          class='h-full md:py-0.5 w-auto animate-bounce'
           alt='logo'
           height={150}
           width={265}
