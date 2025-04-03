@@ -5,18 +5,18 @@ import { AlbumStatus } from '@prisma/client'
 
 import PaginatedAlbumList from 'layouts/PaginatedAlbumList.astro'
 
-const page = Math.min(1, parseInt(Astro.params.page ?? '1'))
-const take = 40
+const page = Math.max(1, parseInt(Astro.params.page ?? '1'));
+const take = 50
 const limitMD = 12
 const limitXS = 5
 
 const albums = await prismaClient.albums.findMany({
   where: { status: AlbumStatus.SHOW },
-  select: { id: true, title: true },
+  select: { id: true, title: true, publishedAt: true },
   take,
   skip: take * (page - 1),
   orderBy: { publishedAt: 'desc' }
-})
+});
 const count = await prismaClient.albums.count({ where: { status: AlbumStatus.SHOW } })
 
 const fullPageList = [...Array(Math.ceil(count / take))].map((v, i) => i + 1)
