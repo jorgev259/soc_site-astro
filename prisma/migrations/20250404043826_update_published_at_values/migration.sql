@@ -1,0 +1,1 @@
+UPDATE `albums` SET `publishedAt` = `createdAt`;
