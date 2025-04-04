@@ -72,7 +72,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
             tx.downloads.create({
               data: {
                 title: d.title,
-                small: d.small,
                 albumId: albumRow.id,
                 links: { create: d.links }
               }

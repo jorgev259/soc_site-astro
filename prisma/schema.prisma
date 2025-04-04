@@ -219,11 +219,10 @@ model discs {
 }
 
 model downloads {
-  id      Int      @id @default(autoincrement())
-  title   String?  @db.VarChar(255)
-  small   Boolean?
+  id      Int     @id @default(autoincrement())
+  title   String? @db.VarChar(255)
   albumId Int
-  album   albums?  @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "downloads_ibfk_1")
+  album   albums? @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "downloads_ibfk_1")
   links   links[]
 }
 

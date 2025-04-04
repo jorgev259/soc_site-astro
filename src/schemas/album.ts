@@ -11,7 +11,6 @@ const LinkInput = s.object({
 
 export const DownloadInput = s.object({
   title: s.string(),
-  small: s.defaulted(s.boolean(), false),
   links: s.defaulted(s.array(LinkInput), [])
 })
 
