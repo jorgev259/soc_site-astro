@@ -1,23 +1,21 @@
 import type { APIRoute } from 'astro'
 import * as s from 'superstruct'
 import prismaClient from 'utils/prisma-client'
-
 import { AlbumStatus } from '@prisma/client'
+
 import { Status, parseForm, slug } from 'utils/form'
-import { writeImg, getImgColor } from 'utils/img'
+import { handleCover } from 'utils/img'
 import { handleComplete } from 'integrations/requestCat'
-import { CreateAlbum } from 'schemas/album'
+import { AlbumBase } from 'schemas/album'
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { session, permissions, user } = locals
-
-  if (!session || !user) return Status(401)
-  if (!permissions.includes('CREATE')) return Status(403)
+  const { permissions, user } = locals
+  if (!user || !permissions.includes('CREATE')) return Status(403)
 
   let body
   try {
-    const formData = await parseForm(request)
-    body = s.create(formData, CreateAlbum)
+    const formData = await parseForm(await request.formData())
+    body = s.create(formData, AlbumBase)
   } catch (err) {
     return Status(422, (err as Error).message)
   }
@@ -58,15 +56,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         include: { artists: { include: { artist: { select: { name: true } } } } }
       })
 
-      const handleCover = async () => {
-        const coverPath = await writeImg(body.cover, 'album', albumRow.id)
-        const headerColor = await getImgColor(coverPath)
-        await tx.albums.update({ where: { id: albumRow.id }, data: { headerColor } })
-        albumRow.headerColor = headerColor
-      }
-
       await Promise.all([
-        handleCover(),
+        handleCover(body.cover, 'album', albumRow.id, tx),
         Promise.all(
           body.downloads.map((d) =>
             tx.downloads.create({

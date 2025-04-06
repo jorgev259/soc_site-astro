@@ -1,0 +1,215 @@
+---
+import { AlbumStatus } from '@prisma/client'
+import prismaClient from 'utils/prisma-client'
+
+import Base from 'layouts/base.astro'
+import DiscSection from 'components/adminAlbum/DiscSection'
+import DownloadSections from 'components/adminAlbum/DownloadSections'
+import AsyncMultiSelect from 'components/form/AsyncMultiSelect'
+import { Input, InputArea, InputLabel, InputSelect } from 'components/form/Input'
+import Button from 'components/Button'
+import MultiSelectWrapper from 'components/form/MultiSelectWrapper'
+import StoresSection from 'components/adminAlbum/StoresSection'
+
+const { user, permissions } = Astro.locals
+if (!user || !permissions.includes('UPDATE')) return Astro.redirect('/404')
+
+const albumId = parseInt(Astro.params.id as string)
+const album = await prismaClient.albums.findUnique({
+  where: { id: albumId },
+  include: {
+    categories: true,
+    classifications: true,
+    platforms: { select: { platform: { select: { id: true, name: true } } } },
+    games: { select: { game: { select: { slug: true, name: true } } } },
+    animations: { select: { animation: { select: { id: true, title: true } } } },
+    artists: { select: { artist: { select: { name: true } } } },
+    relatedAlbums: {
+      select: {
+        relatedAlbum: { select: { id: true, title: true } }
+      }
+    },
+    stores: { select: { provider: true, url: true } },
+    downloads: { select: { title: true }, include: { links: true } },
+    discs: true
+  }
+})
+
+if (!album) {
+  return Astro.redirect('/404')
+}
+---
+
+<style>
+  hr {
+    margin-block: calc(var(--spacing) * 2);
+  }
+</style>
+
+<script>
+  import toast from 'react-hot-toast'
+
+  document.getElementById('editAlbum')?.addEventListener('submit', async (e: SubmitEvent) => {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+
+    document.getElementById('editAlbumSubmit')?.classList.add('loading')
+    const response = await fetch('/api/album/edit', { method: 'POST', body: formData })
+    document.getElementById('editAlbumSubmit')?.classList.remove('loading')
+
+    if (response.ok) {
+      toast.success('Album updated successfully')
+    } else {
+      toast.error(response.statusText)
+    }
+  })
+</script>
+
+<Base>
+  <div class='flex flex-col w-full'>
+    <div class='w-full min-h-100vh mx-auto max-w-[1140px]'>
+      <form id='editAlbum' class='my-4 p-4 bg-dark rounded-md mx-2 flex gap-y-2 flex-col'>
+        <input hidden readonly name='albumId' value={album.id} type='number' />
+        <div class='grid grid-cols-4 gap-x-4 gap-y-1'>
+          <Input dark defaultValue={album.title} name='title' label='Title' className='col-span-2' />
+          <Input dark defaultValue={album.subTitle} name='subTitle' label='Subtitle' className='col-span-2' />
+
+          <Input dark defaultValue={album.description} name='description' label='Description' className='col-span-3' />
+          <Input dark name='cover' label='Cover image' type='file' />
+
+          <InputSelect dark name='status' label='Status' value={album.status}>
+            <option value={AlbumStatus.HIDDEN}>Hidden</option>
+            <option value={AlbumStatus.SHOW}>Show</option>
+          </InputSelect>
+          <Input
+            dark
+            defaultValue={album.releaseDate?.toISOString().slice(0, 10)}
+            name='releaseDate'
+            type='date'
+            label='Release Date'
+          />
+          <Input dark defaultValue={album.label} name='label' label='Label' />
+          <Input dark defaultValue={album.vgmdb} name='vgmdb' label='VGMDB' />
+
+          <InputArea
+            dark
+            defaultValue={album.artists.map((a) => a.artist.name).join(', ')}
+            name='artists'
+            label='Artists'
+            className='col-span-3'
+          />
+          <div class='flex flex-col'>
+            <InputLabel dark name='classifications'>Classifications</InputLabel>
+            <MultiSelectWrapper
+              client:only='react'
+              name='classifications'
+              options={[
+                { value: 'Arrangement', label: 'Arrangement' },
+                { value: 'Drama', label: 'Drama' },
+                { value: 'GameRip', label: 'GameRip' },
+                { value: 'Live Event', label: 'Live Event' },
+                { value: 'Original Soundtrack', label: 'Original Soundtrack' },
+                { value: 'Vocal', label: 'Vocal' }
+              ]}
+              defaultSelected={album.classifications?.map(({ classificationName }) => ({
+                value: classificationName,
+                label: classificationName
+              })) || []}
+              labelledBy='classifications'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='categories'>Categories</InputLabel>
+            <MultiSelectWrapper
+              client:only='react'
+              options={[
+                { value: 'Game', label: 'Game' },
+                { value: 'Animation', label: 'Animation' }
+              ]}
+              name='categories'
+              defaultSelected={album.categories?.map(({ categoryName }) => ({
+                value: categoryName,
+                label: categoryName
+              })) || []}
+              labelledBy='categories'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='platforms'>Platforms</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='platforms'
+              url='/api/platform/find'
+              nameColumn='name'
+              defaultSelected={album.platforms?.map((p) => ({
+                value: p.platform.id,
+                label: p.platform.name as string
+              })) || []}
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+
+          <div class='flex flex-col'>
+            <InputLabel dark name='games'>Games</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='games'
+              url='/api/game/find'
+              valueColumn='slug'
+              nameColumn='name'
+              defaultSelected={album.games?.map((g) => ({
+                value: g.game.slug,
+                label: g.game.name as string
+              })) || []}
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='animations'>Animations</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='animations'
+              url='/api/anim/find'
+              nameColumn='title'
+              defaultSelected={album.animations?.map((g) => ({
+                value: g.animation.id,
+                label: g.animation.title as string
+              })) || []}
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='related'>Related albums</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='related'
+              url='/api/album/find'
+              nameColumn='title'
+              defaultSelected={album.relatedAlbums?.map((g) => ({
+                value: g.relatedAlbum.id,
+                label: g.relatedAlbum.title as string
+              })) || []}
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+        </div>
+        <hr />
+        <StoresSection client:only='react' defaultValue={album.stores} />
+        <hr />
+        <div class='flex flex-col gap-y-4'>
+          <DiscSection client:only='react' defaultValue={album.discs} />
+        </div>
+        <hr />
+        <div class='flex flex-col gap-y-4'>
+          <DownloadSections client:only='react' defaultValue={album.downloads} />
+        </div>
+        <hr />
+        <div class=''>
+          <Button type='submit' id='editAlbumSubmit'>Save changes</Button>
+        </div>
+      </form>
+    </div>
+  </div>
+</Base>

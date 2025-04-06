@@ -42,4 +42,19 @@
     color: var(--color-hover-link);
     text-decoration-line: underline;
   }
+
+  option {
+    color: var(--color-dark);
+  }
+
+  .rmsc .select-item .item-renderer span,
+  .rmsc .dropdown-heading-value span {
+    color: var(--color-dark);
+  }
+
+  .rmsc svg.gray,
+  .rmsc svg.gray line {
+    fill: var(--color-dark);
+    color: var(--color-dark);
+  }
 }

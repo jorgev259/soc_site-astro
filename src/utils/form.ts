@@ -1,9 +1,10 @@
 import slugify from 'slugify'
+import { decode } from 'decode-formdata'
 
 export const Status = (status: number, statusText?: string) => new Response(null, { status, statusText })
 export const slug = (text: string) => slugify(text, { lower: true, strict: true })
 
-function formToObject(formData: FormData) {
+export function formToObject(formData: FormData) {
   const object: Record<string, any> = {}
   for (const entry of formData.entries()) {
     const [key, value] = entry
@@ -13,13 +14,13 @@ function formToObject(formData: FormData) {
   return object
 }
 
-export async function parseForm(request: Request) {
-  const formData = await request.formData()
-  const formObject = formToObject(formData)
-  const { data: dataInput, ...rest } = formObject
+export async function parseForm(formData: FormData) {
+  const formObject = decode(formData, {
+    arrays: ['animations', 'classifications', 'categories', 'platforms', 'related', 'games', 'downloads', 'discs'],
+    dates: ['releaseDate']
+  })
 
-  const data = JSON.parse(dataInput)
-  return { ...data, ...rest }
+  return formObject
 }
 
 export function getRandom<T>(array: T[]): T {

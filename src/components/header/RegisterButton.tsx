@@ -1,10 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import toast from 'react-hot-toast'
-
 import * as m from 'paraglide/messages.js'
+
 import Button from 'components/Button'
 import Modal from 'components/Modal'
-import Input from 'components/form/Input'
+import { Input } from 'components/form/Input'
+
 import { signUp } from 'utils/auth-client'
 
 export default function RegisterBtn() {
@@ -46,19 +47,11 @@ export default function RegisterBtn() {
           <form onSubmit={handleSubmit}>
             <div className='px-4 pt-5 pb-4 gap-x-4 gap-y-1 flex flex-col'>
               <div className='flex gap-x-4'>
-                <Input name='username' required>
-                  {m.username()}
-                </Input>
-                <Input name='name' required>
-                  {m.displayName()}
-                </Input>
+                <Input name='username' required label={m.username()} />
+                <Input name='name' required label={m.displayName()} />
               </div>
-              <Input name='email' type='email' required>
-                {m.email()}
-              </Input>
-              <Input name='password' type='password' required>
-                {m.password()}
-              </Input>
+              <Input name='email' type='email' required label={m.email()} />
+              <Input name='password' type='password' required label={m.password()} />
               <div className='mx-auto'>
                 <Button type='submit' loading={loading} disabled={loading}>
                   {m.register()}

@@ -1,6 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import sharp from 'sharp'
+import type { PrismaClient } from '@prisma/client/extension'
 
 function colorToHex(color: number) {
   const hexadecimal = color.toString(16)
@@ -16,9 +17,25 @@ export async function writeImg(file: File, folder: string, id: number | string) 
   const fullPath = path.join(pathString, `${id}.png`)
 
   const fileArray = Buffer.from(await file.arrayBuffer())
-  await fs.writeFile(fullPath, fileArray)
+  await fs.mkdir(pathString, { recursive: true })
 
+  if (await fs.stat(fullPath).catch(() => false)) {
+    await fs.rm(fullPath)
+  }
+
+  await fs.writeFile(fullPath, fileArray)
   return fullPath
+}
+
+export async function handleImg(file: File, folder: string, id: number | string) {
+  const coverPath = await writeImg(file, folder, id)
+  const headerColor = await getImgColor(coverPath)
+  return headerColor
+}
+
+export async function handleCover(file: File, folder: string, id: number | string, tx: PrismaClient) {
+  const headerColor = await handleImg(file, folder, id)
+  await tx.albums.update({ where: { id: id }, data: { headerColor } })
 }
 
 export async function getImgColor(filePath: string) {
