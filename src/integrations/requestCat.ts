@@ -1,7 +1,6 @@
 import { Prisma } from '@prisma/client'
 import axios from 'axios'
 import prismaClient from 'utils/prisma-client'
-import { getImage } from 'astro:assets'
 
 import { WEBHOOK_URL } from 'astro:env/server'
 
@@ -13,28 +12,10 @@ type AlbumArtistNames = Prisma.albumsGetPayload<typeof albumArtistNames>
 async function postWebhook(album: AlbumArtistNames, userText = '') {
   const url = `https://www.sittingonclouds.net/album/${album.id}`
   const content = `${url}${userText}`
-  const artistNames = album.artists.map((a) => a.artist.name)
-  const coverImage = await getImage({
-    src: `https://cdn.sittingonclouds.net/album/${album.id}.png`,
-    height: 150,
-    width: 150
-  })
-  const embeds = [
-    {
-      title: album.title,
-      type: 'rich',
-      description: album.subTitle || artistNames.join(' - '),
-      url,
-      color: parseInt(album.headerColor.substring(1), 16),
-      thumbnail: { url: `https://www.sittingonclouds.net${coverImage.src}` }
-    }
-  ]
+  const payload = { content }
 
-  const payload = { content, embeds }
   await axios.post(WEBHOOK_URL, payload)
 }
-
-export const requestPOST = (operation: string, body: any) => axios.post(`http://localhost:7001/${operation}`, body)
 
 export async function handleComplete(album: AlbumArtistNames, requestId?: number) {
   if (requestId) {
@@ -44,7 +25,7 @@ export async function handleComplete(album: AlbumArtistNames, requestId?: number
     })
     if (!request || request.state === 'complete') return
 
-    await requestPOST('complete', { requestId: request.id })
+    await fetch('http://localhost:7001/complete', { method: 'POST', body: JSON.stringify({ requestId: request.id }) })
 
     const userText =
       request.userID || request.user
