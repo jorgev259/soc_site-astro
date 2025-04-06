@@ -30,8 +30,10 @@ const album = await prismaClient.albums.findUnique({
       }
     },
     stores: { select: { provider: true, url: true } },
-    downloads: { select: { title: true }, include: { links: true } },
-    discs: true
+    downloads: {
+      select: { title: true, links: { select: { provider: true, url: true, url2: true, directUrl: true } } }
+    },
+    discs: { select: { number: true, body: true } }
   }
 })
 

@@ -7,12 +7,10 @@ import { Input, InputSelect } from 'components/form/Input'
 import { DownloadProvider } from 'utils/consts'
 
 type Download = Prisma.downloadsGetPayload<{
-  select: { title: true }
-  include: { links: { select: { provider: true; directUrl: true; url: true; url2: true } } }
+  select: { title: true; links: { select: { provider: true; url: true; url2: true; directUrl: true } } }
 }>
 
 const defaultLink = { provider: DownloadProvider.MEDIAFIRE, url: null, url2: null, directUrl: null }
-//@ts-ignore
 const defaultSection: Download = { title: '', links: [defaultLink] }
 
 interface Props {
