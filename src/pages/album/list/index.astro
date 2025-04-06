@@ -4,6 +4,7 @@ import prismaClient from 'utils/prisma-client'
 import BaseLayout from 'layouts/base.astro'
 import Sidebar from 'components/Sidebar.astro'
 import LetterSection from 'components/albumList/letterSection.astro'
+import DefaultSEO from 'components/DefaultSEO.astro'
 
 const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRaw`
     SELECT DISTINCT UPPER(LEFT(title, 1)) AS letter, COUNT(*) AS count
@@ -14,6 +15,7 @@ const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRa
   `
 ---
 
+<DefaultSEO />
 <BaseLayout>
   <div class='flex flex-col md:flex-row flex-1 max-w-[2000px]'>
     <div class='flex-1 px-5 bg-dark'>
@@ -38,11 +40,11 @@ const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRa
               <div class='flex uppercase border-y-2 text-4xl justify-center border-white py-1.5'>{l.letter}</div>
               <div class='my-4'>
                 <LetterSection letter={l.letter} server:defer>
-                  <Fragment slot="fallback">
+                  <Fragment slot='fallback'>
                     <div class='flex flex-col gap-y-2'>
-                    {Array.from({ length: Number(l.count) }).map(() => (
-                      <div class='animate-pulse h-3.5 w-lg bg-gray/85' />
-                    ))}
+                      {Array.from({ length: Number(l.count) }).map(() => (
+                        <div class='animate-pulse h-3.5 w-lg bg-gray/85' />
+                      ))}
                     </div>
                   </Fragment>
                 </LetterSection>

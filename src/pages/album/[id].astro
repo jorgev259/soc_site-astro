@@ -1,8 +1,9 @@
 ---
 import prismaClient from 'utils/prisma-client'
 import * as m from 'paraglide/messages'
-import { Image } from 'astro:assets'
+import { getImage, Image } from 'astro:assets'
 import { AlbumStatus } from '@prisma/client'
+import { SEO } from 'astro-seo'
 
 import BaseLayout from 'layouts/base.astro'
 import TrackList from 'components/albumPage/TrackList'
@@ -47,7 +48,15 @@ if (!album) {
   Astro.response.status = 404
   Astro.response.statusText = 'Not found'
 }
+
 const { currentLocale } = Astro
+const coverImage = await getImage({
+  src: `https://cdn.sittingonclouds.net/album/${album?.id}.png`,
+  height: 150,
+  width: 150
+})
+
+console.log(coverImage)
 ---
 
 <style>
@@ -58,6 +67,27 @@ const { currentLocale } = Astro
   }
 </style>
 
+<SEO
+  slot='head'
+  titleDefault='Sitting on Clouds'
+  title={album?.title ?? undefined}
+  description='Largest Video Game & Animation Soundtrack サウンドトラック Archive'
+  openGraph={{
+    basic: {
+      title: album?.title ?? '',
+      type: 'website',
+      image: `https://www.sittingonclouds.net${coverImage.src}`,
+      url: Astro.url.pathname
+    },
+    optional: {
+      description: album?.subTitle || album?.artists.map((a) => a.artist.name).join(' - '),
+      siteName: 'Sitting on Clouds'
+    }
+  }}
+  extend={{
+    meta: [{ name: 'theme-color', content: album?.headerColor }]
+  }}
+/>
 <BaseLayout>
   <div
     class={`w-full min-h-100vh bg-fixed bg-center bg-cover`}

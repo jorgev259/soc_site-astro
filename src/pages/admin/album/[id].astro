@@ -10,6 +10,7 @@ import { Input, InputArea, InputLabel, InputSelect } from 'components/form/Input
 import Button from 'components/Button'
 import MultiSelectWrapper from 'components/form/MultiSelectWrapper'
 import StoresSection from 'components/adminAlbum/StoresSection'
+import DefaultSEO from 'components/DefaultSEO.astro'
 
 const { user, permissions } = Astro.locals
 if (!user || !permissions.includes('UPDATE')) return Astro.redirect('/404')
@@ -67,6 +68,7 @@ if (!album) {
   })
 </script>
 
+<DefaultSEO />
 <Base>
   <div class='flex flex-col w-full'>
     <div class='w-full min-h-100vh mx-auto max-w-[1140px]'>

@@ -10,10 +10,6 @@ import 'styles/global.css'
 
 <html lang={languageTag()} dir={Astro.locals.paraglide.dir} class='h-full'>
   <head>
-    <title>Sitting on Clouds</title>
-    <meta property='og:type' content='website' />
-    <meta property='og:site_name' content='Sitting on Clouds' />
-
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
     <link
@@ -21,12 +17,7 @@ import 'styles/global.css'
       rel='stylesheet'
     />
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-
-    <meta name='theme-color' content='#ffffff' />
-    <meta property='og:url' content='/' />
-    <meta property='og:title' content='Sitting on Clouds — High Quality soundtrack library' />
-    <meta property='og:description' content='Largest Video Game & Animation Soundtrack サウンドトラック Archive' />
-    <meta property='og:image' content='/img/assets/clouds_thumb.png' />
+    <slot name='head' />
     <meta name='generator' content={Astro.generator} />
     <meta charset='utf-8' />
 

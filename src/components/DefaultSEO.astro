@@ -1,0 +1,25 @@
+---
+import { SEO } from 'astro-seo'
+---
+
+<SEO
+  slot='head'
+  titleDefault='Sitting on Clouds'
+  title='Sitting on Clouds'
+  description='Largest Video Game & Animation Soundtrack サウンドトラック Archive'
+  openGraph={{
+    basic: {
+      title: 'Sitting on Clouds — High Quality soundtrack library',
+      type: 'website',
+      image: '/img/assets/clouds_thumb.png',
+      url: Astro.site
+    },
+    optional: {
+      description: 'Largest Video Game & Animation Soundtrack サウンドトラック Archive',
+      siteName: 'Sitting on Clouds'
+    }
+  }}
+  extend={{
+    meta: [{ name: 'theme-color', content: '#ffffff' }]
+  }}
+/>
