@@ -22,7 +22,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   try {
     const albumRow = await prismaClient.$transaction(async (tx) => {
-      const artistRows = body.artists.map((name: string) => ({ slug: slug(name), name }))
+      const artistRows = body.artists
+        ?.split(',')
+        .map((name: string) => ({ slug: slug(name.trim()), name: name.trim() }))
 
       const albumRow = await tx.albums.create({
         data: {
@@ -36,7 +38,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           status: body.status,
           animations: { create: body.animations.map((id) => ({ animation: { connect: { id } } })) },
           artists: {
-            create: artistRows.map((a) => ({
+            create: artistRows?.map((a) => ({
               artist: {
                 connectOrCreate: {
                   create: a,

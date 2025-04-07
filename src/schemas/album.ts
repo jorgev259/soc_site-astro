@@ -28,7 +28,7 @@ export const AlbumBase = s.object({
   description: s.optional(s.string()),
   status: s.defaulted(s.enums(Object.values(AlbumStatus)), AlbumStatus.HIDDEN),
   animations: s.defaulted(s.array(coerceInt), []),
-  artists: s.defaulted(s.array(s.string()), []),
+  artists: s.defaulted(s.optional(s.string()), ''),
   categories: s.defaulted(s.array(s.string()), []),
   classifications: s.defaulted(s.array(s.string()), []),
   games: s.defaulted(s.array(s.string()), []),
@@ -40,7 +40,4 @@ export const AlbumBase = s.object({
   request: s.optional(coerceInt)
 })
 
-export const EditAlbum = s.assign(
-  s.partial(AlbumBase),
-  s.object({ albumId: coerceInt, artists: s.optional(s.string()) })
-)
+export const EditAlbum = s.assign(s.partial(AlbumBase), s.object({ albumId: coerceInt }))
