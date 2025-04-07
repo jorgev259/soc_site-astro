@@ -64,7 +64,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       })
 
       await Promise.all([
-        cover ? handleCover(cover, 'album', albumId, tx) : undefined,
+        cover && cover.size > 0 ? handleCover(cover, 'album', albumId, tx) : undefined,
         downloads
           ? Promise.all(
               downloads.map((d) =>
