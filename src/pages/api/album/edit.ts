@@ -66,13 +66,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
       await Promise.all([
         cover ? handleCover(cover, 'album', albumId, tx) : undefined,
         downloads
-          ? tx.downloads.createMany({
-              data: downloads.map((d) => ({
-                title: d.title,
-                albumId: albumId,
-                links: { create: d.links }
-              }))
-            })
+          ? Promise.all(
+              downloads.map((d) =>
+                tx.downloads.create({
+                  data: {
+                    title: d.title,
+                    albumId: albumId,
+                    links: { create: d.links }
+                  }
+                })
+              )
+            )
           : undefined
       ])
     })
