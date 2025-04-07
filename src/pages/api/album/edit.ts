@@ -59,7 +59,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
           games: { deleteMany: {}, create: games?.map((slug) => ({ game: { connect: { slug } } })) },
           platforms: { deleteMany: {}, create: platforms?.map((id) => ({ platform: { connect: { id } } })) },
           discs: { deleteMany: {}, createMany: { data: body.discs ?? [] } },
-          relatedAlbums: { deleteMany: {}, create: related?.map((id) => ({ relatedAlbum: { connect: { id } } })) }
+          relatedAlbums: { deleteMany: {}, create: related?.map((id) => ({ relatedAlbum: { connect: { id } } })) },
+          downloads: { deleteMany: {} }
         }
       })
 
