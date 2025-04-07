@@ -199,8 +199,8 @@ model comments {
   updatedAt DateTime @db.DateTime(0)
   albumId   Int?
   username  String?  @db.VarChar(255)
-  album     albums?  @relation(fields: [albumId], references: [id], map: "comments_ibfk_1")
-  user      users?   @relation(fields: [username], references: [id], map: "comments_ibfk_2")
+  album     albums?  @relation(fields: [albumId], references: [id], map: "comments_ibfk_1", onDelete: Cascade)
+  user      users?   @relation(fields: [username], references: [id], map: "comments_ibfk_2", onDelete: SetNull)
 }
 
 model config {
@@ -215,7 +215,7 @@ model discs {
   number  Int?
   body    String? @db.Text
   albumId Int
-  album   albums? @relation(fields: [albumId], references: [id], map: "discs_ibfk_1")
+  album   albums? @relation(fields: [albumId], references: [id], map: "discs_ibfk_1", onDelete: Cascade)
 }
 
 model downloads {
@@ -232,7 +232,7 @@ model favorites {
   updatedAt DateTime @db.DateTime(0)
   albumId   Int
   username  String?  @db.VarChar(255)
-  album     albums?  @relation(fields: [albumId], references: [id], map: "favorites_ibfk_1")
+  album     albums?  @relation(fields: [albumId], references: [id], map: "favorites_ibfk_1", onDelete: Cascade)
   users     users?   @relation(fields: [username], references: [id], map: "favorites_ibfk_2")
 }
 
@@ -277,7 +277,7 @@ model links {
   provider   String?    @db.VarChar(255)
   downloadId Int
   url2       String?    @db.VarChar(255)
-  download   downloads? @relation(fields: [downloadId], references: [id], map: "links_ibfk_1")
+  download   downloads? @relation(fields: [downloadId], references: [id], map: "links_ibfk_1", onDelete: Cascade)
 }
 
 model logs {
@@ -321,7 +321,7 @@ model ratings {
   updatedAt DateTime @db.DateTime(0)
   albumId   Int
   username  String   @db.VarChar(255)
-  album     albums?  @relation(fields: [albumId], references: [id], map: "ratings_ibfk_1")
+  album     albums?  @relation(fields: [albumId], references: [id], map: "ratings_ibfk_1", onDelete: Cascade)
   user      users?   @relation(fields: [username], references: [id], map: "ratings_ibfk_2")
 }
 
