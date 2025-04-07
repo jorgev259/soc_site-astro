@@ -81,7 +81,7 @@ if (!album) {
           <Input dark defaultValue={album.description} name='description' label='Description' className='col-span-3' />
           <Input dark name='cover' label='Cover image' type='file' />
 
-          <InputSelect dark name='status' label='Status' value={album.status}>
+          <InputSelect dark name='status' label='Status' defaultValue={album.status}>
             <option value={AlbumStatus.HIDDEN}>Hidden</option>
             <option value={AlbumStatus.SHOW}>Show</option>
           </InputSelect>

@@ -86,6 +86,14 @@ const coverImage = await getImage({
     meta: [{ name: 'theme-color', content: album?.headerColor }]
   }}
 />
+
+{album?.status === AlbumStatus.HIDDEN ? (
+  <script>
+    import toast from 'react-hot-toast'
+    toast('This page is currently hidden', { duration: Infinity })
+  </script>
+) : null}
+
 <BaseLayout>
   <div
     class={`w-full min-h-100vh bg-fixed bg-center bg-cover`}
