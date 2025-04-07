@@ -369,13 +369,11 @@ model series {
 }
 
 model stores {
-  id        Int      @id @default(autoincrement())
-  url       String?  @db.VarChar(255)
-  provider  String?  @db.VarChar(255)
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
-  albumId   Int?
-  album     albums?  @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "stores_ibfk_1")
+  id       Int     @id @default(autoincrement())
+  url      String? @db.VarChar(255)
+  provider String? @db.VarChar(255)
+  albumId  Int?
+  album    albums? @relation(fields: [albumId], references: [id], onDelete: Cascade, map: "stores_ibfk_1")
 }
 
 model studio {

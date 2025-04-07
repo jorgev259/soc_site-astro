@@ -53,6 +53,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           platforms: { create: body.platforms.map((id) => ({ platform: { connect: { id } } })) },
           // albumHistories
           discs: { createMany: { data: body.discs } },
+          stores: { createMany: { data: body.stores } },
           relatedAlbums: { create: body.related.map((id) => ({ relatedAlbum: { connect: { id } } })) }
         },
         include: { artists: { include: { artist: { select: { name: true } } } } }

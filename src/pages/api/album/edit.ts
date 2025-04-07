@@ -60,7 +60,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
           platforms: { deleteMany: {}, create: platforms?.map((id) => ({ platform: { connect: { id } } })) },
           discs: { deleteMany: {}, createMany: { data: body.discs ?? [] } },
           relatedAlbums: { deleteMany: {}, create: related?.map((id) => ({ relatedAlbum: { connect: { id } } })) },
-          downloads: { deleteMany: {} }
+          downloads: { deleteMany: {} },
+          stores: stores ? { deleteMany: {}, createMany: { data: stores } } : undefined
         }
       })
 
