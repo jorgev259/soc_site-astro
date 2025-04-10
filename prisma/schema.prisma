@@ -130,7 +130,7 @@ model albums {
   releaseDate     DateTime?              @db.Date
   label           String?                @db.VarChar(255)
   vgmdb           String?                @db.VarChar(255)
-  createdAt       DateTime               @default(now()) @db.DateTime(0)
+  createdAt       DateTime?              @default(now()) @db.DateTime(0)
   updatedAt       DateTime               @default(now()) @db.DateTime(0)
   publishedAt     DateTime               @default(now())
   description     String?                @db.VarChar(255)
