@@ -17,7 +17,7 @@ fullPageList.forEach((n) => {
 })
 
 const currentListIndex = pageList.findIndex((l) => l.includes(page))
-const currentList = pageList[currentListIndex]
+const currentList = pageList[currentListIndex] ?? []
 ---
 
 <ul class:list={[className, 'bg-dark mb-0 py-2 justify-center']}>

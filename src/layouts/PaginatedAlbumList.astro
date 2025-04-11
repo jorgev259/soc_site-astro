@@ -13,16 +13,12 @@ import DefaultSEO from 'components/DefaultSEO.astro'
 import FooterNav from 'components/lastAdded/FooterNav.astro'
 
 const { albums, limitMD, limitXS, ...listProps } = Astro.props
-
-if (albums.length === 0) {
-  Astro.redirect('/404')
-}
 ---
 
 <DefaultSEO />
 <Base>
   <div class='flex flex-col w-full'>
-    <div class='w-full min-h-100vh mx-auto max-w-[1140px]'>
+    <div class='w-full mx-auto max-w-[1140px] grow-1'>
       <div class='px-2 mb-2'>
         <h1 class='uppercase font-medium tracking-wide text-5xl drop-shadow-2xl mt-5 mb-2 text-center'>
           <slot />
