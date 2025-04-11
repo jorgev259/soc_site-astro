@@ -19,12 +19,16 @@ import ouoIcon from 'img/assets/ouo-icon.png'
 const { id } = Astro.params
 const { permissions } = Astro.locals
 
+if (!id) return Astro.redirect("/404");
+const albumId = parseInt(id)
+if(!albumId) return Astro.redirect("/404");
+
 const hasDirect = permissions.includes('SKIP_ADS')
 const hasUpdate = permissions.includes('UPDATE')
 const hiddenCondition = !hasUpdate ? { status: AlbumStatus.SHOW } : {}
 
 const album = await prismaClient.albums.findUnique({
-  where: { id: Number(id), ...hiddenCondition },
+  where: { id: albumId, ...hiddenCondition },
   include: {
     artists: { select: { artist: true } },
     categories: { select: { categoryName: true } },
@@ -44,10 +48,7 @@ const album = await prismaClient.albums.findUnique({
   }
 })
 
-if (!album) {
-  Astro.response.status = 404
-  Astro.response.statusText = 'Not found'
-}
+if (!album) return Astro.redirect("/404");
 
 const { currentLocale } = Astro
 const coverImage = await getImage({
@@ -150,6 +151,7 @@ const coverImage = await getImage({
                       {
                         [
                           album?.categories
+                          // @ts-expect-error
                             .map(({ categoryName }) => m[`${categoryName}Osts` as keyof typeof m]())
                             .join(' & '),
                           album?.classifications.map(({ classificationName }) => classificationName).join(', ')
