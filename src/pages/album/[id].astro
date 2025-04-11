@@ -287,7 +287,7 @@ const coverImage = await getImage({
                             width={130}
                             height={50}
                             style={{ height: 'auto', width: '130px' }}
-                            alt={provider}
+                            alt={provider ?? 'Store icon'}
                             src={`/img/provider/${provider}.jpg`}
                           />
                         </a>
@@ -317,7 +317,7 @@ const coverImage = await getImage({
                                   class='rounded-md'
                                   width={30}
                                   height={30}
-                                  alt={provider}
+                                  alt={provider ?? 'Provider'}
                                   src={`/img/provider/${provider}.png`}
                                 />
                               </div>

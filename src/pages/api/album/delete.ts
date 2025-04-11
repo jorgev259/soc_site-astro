@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   let body
   try {
-    const formData = await parseForm(request)
+    const formData = await parseForm(await request.formData())
     body = s.create(formData, DeleteAlbum)
     await prismaClient.albums.findUniqueOrThrow({ where: { id: body.albumId }, select: { id: true } })
   } catch (err) {
