@@ -54,14 +54,21 @@ export function InputArea(props: CustomInputProps & Omit<ComponentProps<'textare
 }
 
 export function InputSelect(props: CustomInputProps & ComponentProps<'select'>) {
-  const { name, className, dark = false, label, ...attrs } = props
+  const { name, className, dark = false, label, children, ...attrs } = props
 
   return (
     <div className='flex flex-col'>
       <InputLabel dark={dark} name={name}>
         {label}
       </InputLabel>
-      <select name={name} className='bg-zinc-200 rounded-md p-2 mt-2 h-full mb-3 text-black' {...attrs} />
+      <select
+        autoComplete='off'
+        name={name}
+        className='bg-zinc-200 rounded-md p-2 mt-2 h-full mb-3 text-black'
+        {...attrs}
+      >
+        {children}
+      </select>
     </div>
   )
 }
