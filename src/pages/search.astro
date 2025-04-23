@@ -3,6 +3,8 @@ import AlbumSearch from 'components/search/AlbumSearch.astro'
 import BaseLayout from 'layouts/base.astro'
 
 const query = Astro.url.searchParams.get('q')
+const page = Astro.url.searchParams.get('page') || "1"
+
 if (!query) return Astro.redirect(404)
 ---
 
@@ -11,7 +13,7 @@ if (!query) return Astro.redirect(404)
     <div class='flex max-w-[1200px] mx-auto justify-center px-8 py-3 flex-col'>
       <div class='py-4 px-4 bg-gray text-3xl text- w-full font-normal mt-2'>Search results for: {query}</div>
       <div class='mt-5'>
-        <AlbumSearch query={query} />
+        <AlbumSearch query={query} page={parseInt(page)} />
       </div>
     </div>
   </div>
