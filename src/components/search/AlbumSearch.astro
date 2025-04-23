@@ -40,18 +40,20 @@ const [count, search] = await Promise.all([
 ])
 ---
 
-<div class='text-xl flex gap-x-2'>
+<div class='text-xl flex gap-x-4'>
   <div>
     Albums ({count}) {
       count > take ? (
-        <span> / Showing {page === 1 ? `first ${take}` : `${(page - 1) * take}-${page * take}`} results</span>
+        <span> / Showing {page === 1 ? `first ${take}` : `${(page - 1) * take}-${Math.min(page * take, count)}`} results</span>
       ) : null
     }
   </div>
-  <div>
-    {Array.from({ length: Math.ceil(count / take) }, (_, i) => (
-      <a href={`/search?q=${query}&page=${i + 1}`}>{i + 1}</a>
-    ))}
+  <div class='flex gap-x-2'>
+    {
+      Array.from({ length: Math.ceil(count / take) }, (_, i) =>
+        page === i + 1 ? <span>{i + 1}</span> : <a href={`/search?q=${query}&page=${i + 1}`}>{i + 1}</a>
+      )
+    }
   </div>
 </div>
 <div class='grid sm:grid-cols-1 md:grid-cols-3 mt-1.5 gap-4'>
