@@ -27,7 +27,7 @@ const currentList = pageList[currentListIndex] ?? []
         <FooterNavItem href='/last-added/1' aria-label='First'>
           <span aria-hidden='true'>&laquo;</span>
         </FooterNavItem>
-        <FooterNavItem href={`/last-added/${currentList[0] - 1}`} aria-label={(currentList[0] - 1).toString()}>
+        <FooterNavItem href={`/last-added/${page - 1}`} aria-label={(page - 1).toString()}>
           <span aria-hidden='true'>&lt;</span>
         </FooterNavItem>
       </>
@@ -46,10 +46,7 @@ const currentList = pageList[currentListIndex] ?? []
   {
     currentListIndex !== pageList.length - 1 ? (
       <>
-        <FooterNavItem
-          href={`/last-added/${currentList[currentList.length - 1] + 1}`}
-          aria-label={(currentList[currentList.length - 1] + 1).toString()}
-        >
+        <FooterNavItem href={`/last-added/${page + 1}`} aria-label={(page + 1).toString()}>
           <span aria-hidden='true'>&gt;</span>
         </FooterNavItem>
         <FooterNavItem href={`/last-added/${fullPageList[fullPageList.length - 1]}`} aria-label='Last'>
