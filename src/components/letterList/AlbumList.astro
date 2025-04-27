@@ -13,12 +13,10 @@ const albums = await prismaClient.albums.findMany({
 })
 ---
 
-<div class='flex flex-col gap-y-1'>
-  {
-    albums.map((a) => (
-      <a class='text-left' href={`/album/${a.id}`}>
-        {a.title}
-      </a>
-    ))
-  }
-</div>
+{
+  albums.map((a) => (
+    <a class='text-left hover:bg-btn-gray/30 rounded-md p-2' href={`/album/${a.id}`}>
+      {a.title}
+    </a>
+  ))
+}

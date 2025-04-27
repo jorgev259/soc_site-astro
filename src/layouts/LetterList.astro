@@ -1,0 +1,37 @@
+---
+interface Props {
+  letters: { letter: string; count: BigInt }[]
+}
+
+import BaseLayout from 'layouts/base.astro'
+import Sidebar from 'components/Sidebar.astro'
+import DefaultSEO from 'components/DefaultSEO.astro'
+
+const { letters } = Astro.props
+---
+
+<DefaultSEO />
+<BaseLayout>
+  <div class='flex flex-col md:flex-row flex-1 max-w-[2000px]'>
+    <div class='flex-1 px-5 bg-dark'>
+      <div class='flex flex-wrap gap-4 justify-center my-3'>
+        {
+          letters.map((l) => (
+            <div class='bg-btn-gray rounded-md size-14 uppercase font-semibold text-4xl text-white hover:bg-gray-hover'>
+              <a
+                href={`#${l.letter}`}
+                class='flex justify-center items-center size-full hover:no-underline hover:text-white'
+              >
+                {l.letter}
+              </a>
+            </div>
+          ))
+        }
+      </div>
+      <div class='flex flex-col gap-y-6'>
+        <slot />
+      </div>
+    </div>
+    <Sidebar />
+  </div>
+</BaseLayout>
