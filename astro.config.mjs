@@ -50,7 +50,6 @@ export default defineConfig({
   redirects: {
     '/en/[...params]': '/[...params]',
     '/anim/[id]': { status: 307, destination: '/maintenance' },
-    '/anim/list': { status: 307, destination: '/maintenance' },
     '/game/[slug]': { status: 307, destination: '/maintenance' },
     '/platform/list': { status: 307, destination: '/maintenance' },
     '/platform/[id]': { status: 307, destination: '/maintenance' },

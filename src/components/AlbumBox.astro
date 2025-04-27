@@ -2,16 +2,20 @@
 import { Image } from 'astro:assets'
 
 type Props =
-  | { title?: string | null; href: string; image: string; loading?: false }
-  | { title?: string; href?: string; image?: string; loading: true }
+  | { title?: string | null; href: string; image: string; loading?: false; class?: string }
+  | { title?: string; href?: string; image?: string; loading: true; class?: string }
 
 const { props } = Astro
-const { title, href, image, loading = false } = props
+const { title, href, image, loading = false, class: className } = props
 ---
 
 <a
   href={href}
-  class:list={['block w-full mt-2.5 rounded-xl bg-dark/85 ', loading ? 'cursor-default' : 'hover:bg-dark group']}
+  class:list={[
+    'block w-full mt-2.5 rounded-xl bg-dark/85 ',
+    loading ? 'cursor-default' : 'hover:bg-dark group',
+    className
+  ]}
 >
   {
     loading ? (
@@ -39,7 +43,9 @@ const { title, href, image, loading = false } = props
         </div>
       </div>
     ) : (
-      <div class='group-hover:text-hover-link group-hover:underline text-lg font-bold px-1 pb-1 text-center'>{title}</div>
+      <div class='group-hover:text-hover-link group-hover:underline text-lg font-bold px-1 pb-1 text-center'>
+        {title}
+      </div>
     )
   }
 </a>

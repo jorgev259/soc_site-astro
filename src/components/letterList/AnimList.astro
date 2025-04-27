@@ -1,0 +1,20 @@
+---
+import AlbumBox from 'components/AlbumBox.astro'
+import prismaClient from 'utils/prisma-client'
+
+interface Props {
+  letter: string
+}
+
+const { letter } = Astro.props
+const anims = await prismaClient.animation.findMany({
+  where: { title: { startsWith: letter } },
+  select: { id: true, title: true }
+})
+---
+
+{
+  anims.map((a) => (
+    <AlbumBox class='!bg-btn-dark !mt-0' title={a.title} href={`/anim/${a.id}`} image={`/anim/${a.id}.png`} />
+  ))
+}

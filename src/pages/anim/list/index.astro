@@ -1,0 +1,35 @@
+---
+import prismaClient from 'utils/prisma-client'
+
+import LetterList from 'layouts/LetterList.astro'
+import AnimList from 'components/letterList/AnimList.astro'
+
+const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRaw`
+  SELECT DISTINCT UPPER(LEFT(animation.title, 1)) AS letter, COUNT(*) AS count
+  FROM Album_Animation, albums, animation
+  WHERE Album_Animation.albumId = albums.id
+  AND Album_Animation.animationId = animation.id
+  AND albums.status = "Show"
+  GROUP BY letter
+  ORDER BY letter;
+`
+---
+
+<LetterList letters={letters}>
+  {
+    letters.map((l) => (
+      <div id={l.letter}>
+        <div class='flex uppercase border-y-2 text-4xl justify-center border-white py-1.5'>{l.letter}</div>
+        <div class='py-4 grid sm:grid-cols-1 md:grid-cols-6 gap-1 justify-items-center'>
+          <AnimList letter={l.letter} server:defer>
+            <Fragment slot='fallback'>
+              {Array.from({ length: Number(l.count) }).map(() => (
+                <div class='animate-pulse h-96 rounded-md w-full bg-gray/85' />
+              ))}
+            </Fragment>
+          </AnimList>
+        </div>
+      </div>
+    ))
+  }
+</LetterList>
