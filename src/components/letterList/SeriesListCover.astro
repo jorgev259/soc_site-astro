@@ -16,7 +16,7 @@ const albums = await prismaClient.series.findMany({
 
 {
   albums.map((a) => (
-    <a class='group text-left rounded-md p-2' href={`/album/${a.slug}`}>
+    <a class='group text-left rounded-md p-2' href={`/series/${a.slug}`}>
       <Image
         src={`https://cdn.sittingonclouds.net/series/${a.slug}.png`}
         alt={a.slug}

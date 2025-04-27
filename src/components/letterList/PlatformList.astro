@@ -14,7 +14,7 @@ const games = await prismaClient.platform.findMany({
 
 {
   games.map((a) => (
-    <a class='text-left hover:bg-btn-gray/30 rounded-md p-2' href={`/game/${a.id}`}>
+    <a class='text-left hover:bg-btn-gray/30 rounded-md p-2' href={`/platform/${a.id}`}>
       {a.name}
     </a>
   ))
