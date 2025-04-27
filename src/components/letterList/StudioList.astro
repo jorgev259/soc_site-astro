@@ -1,0 +1,21 @@
+---
+import prismaClient from 'utils/prisma-client'
+
+interface Props {
+  letter: string
+}
+
+const { letter } = Astro.props
+const games = await prismaClient.studio.findMany({
+  where: { name: { startsWith: letter } },
+  select: { slug: true, name: true }
+})
+---
+
+{
+  games.map((a) => (
+    <a class='text-left hover:bg-btn-gray/30 rounded-md p-2' href={`/studio/${a.slug}`}>
+      {a.name}
+    </a>
+  ))
+}

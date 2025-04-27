@@ -56,7 +56,6 @@ export default defineConfig({
     '/profile/[username]': { status: 307, destination: '/maintenance' },
     '/series/[slug]': { status: 307, destination: '/maintenance' },
     '/studio/[slug]': { status: 307, destination: '/maintenance' },
-    '/studio/list': { status: 307, destination: '/maintenance' },
     '/request': { status: 307, destination: '/maintenance' }
   },
   security: {
