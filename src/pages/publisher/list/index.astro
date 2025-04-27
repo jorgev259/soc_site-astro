@@ -1,0 +1,35 @@
+---
+import prismaClient from 'utils/prisma-client'
+
+import LetterList from 'layouts/LetterList.astro'
+import GameList from 'components/letterList/GameList.astro'
+import PublisherList from 'components/letterList/PublisherList.astro'
+
+const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRaw`
+  SELECT DISTINCT UPPER(LEFT(publisher.name, 1)) AS letter, COUNT(*) AS count
+  FROM Publisher_Game, publisher, game
+  WHERE Publisher_Game.publisherId = publisher.id
+  AND Publisher_Game.gameSlug = game.slug
+  GROUP BY letter
+  ORDER BY letter;
+`
+---
+
+<LetterList letters={letters}>
+  {
+    letters.map((l) => (
+      <div id={l.letter}>
+        <div class='flex uppercase border-y-2 text-4xl justify-center border-white py-1.5'>{l.letter}</div>
+        <div class='py-4 grid sm:grid-cols-1 md:grid-cols-4 gap-1'>
+          <PublisherList letter={l.letter} server:defer>
+            <Fragment slot='fallback'>
+              {Array.from({ length: Number(l.count) }).map(() => (
+                <div class='animate-pulse h-6 w-full bg-gray/85' />
+              ))}
+            </Fragment>
+          </PublisherList>
+        </div>
+      </div>
+    ))
+  }
+</LetterList>
