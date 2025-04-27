@@ -51,7 +51,6 @@ export default defineConfig({
     '/en/[...params]': '/[...params]',
     '/anim/[id]': { status: 307, destination: '/maintenance' },
     '/game/[slug]': { status: 307, destination: '/maintenance' },
-    '/platform/list': { status: 307, destination: '/maintenance' },
     '/platform/[id]': { status: 307, destination: '/maintenance' },
     '/profile': { status: 307, destination: '/maintenance' },
     '/profile/[username]': { status: 307, destination: '/maintenance' },
