@@ -1,0 +1,39 @@
+---
+import prismaClient from 'utils/prisma-client'
+
+import LetterList from 'layouts/LetterList.astro'
+import AnimList from 'components/letterList/AnimList.astro'
+import SeriesList from 'components/letterList/SeriesList.astro'
+import SeriesListCover from 'components/letterList/SeriesListCover.astro'
+
+const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRaw`
+  SELECT DISTINCT UPPER(LEFT(series.name, 1)) AS letter, COUNT(*) AS count
+  FROM Series_Game, series, game
+  WHERE Series_Game.gameSlug = game.slug
+  AND Series_Game.seriesSlug = series.slug
+  GROUP BY letter
+  ORDER BY letter;
+`
+---
+
+<LetterList letters={letters} sidebar={false}>
+  <div class='flex mt-4'>
+    <div class='w-80'>
+      {
+        letters.map((l) => (
+          <div id={l.letter}>
+            <div class='flex uppercase text-4xl justify-center py-1.5'>{l.letter}</div>
+            <div class='w-full flex flex-col items-center'>
+              <SeriesList letter={l.letter} />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class='w-full'>
+      <div class='grid grid-cols-3'>
+        {letters.map((l) => <SeriesListCover letter={l.letter} />)}
+      </div>
+    </div>
+  </div>
+</LetterList>

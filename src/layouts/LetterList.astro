@@ -1,13 +1,14 @@
 ---
 interface Props {
   letters: { letter: string; count: BigInt }[]
+  sidebar?: boolean
 }
 
 import BaseLayout from 'layouts/base.astro'
 import Sidebar from 'components/Sidebar.astro'
 import DefaultSEO from 'components/DefaultSEO.astro'
 
-const { letters } = Astro.props
+const { letters, sidebar = true } = Astro.props
 ---
 
 <DefaultSEO />
@@ -32,6 +33,6 @@ const { letters } = Astro.props
         <slot />
       </div>
     </div>
-    <Sidebar />
+    {sidebar ? <Sidebar /> : null}
   </div>
 </BaseLayout>
