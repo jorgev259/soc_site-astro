@@ -1,0 +1,186 @@
+---
+import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages'
+import { getImage, Image } from 'astro:assets'
+import { SEO } from 'astro-seo'
+
+import BaseLayout from 'layouts/base.astro'
+
+import AlbumBox from 'components/AlbumBox.astro'
+import releaseDate from 'utils/releaseDate'
+
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/404')
+
+const series = await prismaClient.series.findUnique({
+  where: { slug },
+  select: {
+    name: true,
+    headerColor: true,
+    games: {
+      select: {
+        game: {
+          select: {
+            slug: true,
+            releaseDate: true,
+            name: true,
+            albums: {
+              select: {
+                album: { select: { id: true, title: true, games: { select: { gameSlug: true, game: true } } } }
+              }
+            }
+          }
+        }
+      },
+      orderBy: { game: { releaseDate: 'asc' } }
+    }
+  }
+})
+
+if (!series) return Astro.redirect('/404')
+
+const variousAlbums: { id: number; title: string | null }[] = []
+const singleAlbumsObj: {
+  [key: string]: {
+    albums: { id: number; title: string | null }[]
+    game: {
+      slug: string
+      name: string | null
+      createdAt: Date
+      updatedAt: Date
+      placeholder: string | null
+      headerColor: string | null
+      releaseDate: Date | null
+    }
+  }
+} = {}
+const checkedAlbums = new Set<number>()
+
+series.games.forEach((g) => {
+  g.game.albums.forEach(({ album }) => {
+    if (checkedAlbums.has(album.id)) return
+    else checkedAlbums.add(album.id)
+
+    if (album.games.length > 1) {
+      variousAlbums.push(album)
+    } else {
+      const game = album.games[0]
+      if (!singleAlbumsObj[game.gameSlug]) {
+        singleAlbumsObj[game.gameSlug] = { albums: [], game: game.game }
+      }
+      singleAlbumsObj[game.gameSlug].albums.push(album)
+    }
+  })
+})
+
+const singleAlbums = Object.values(singleAlbumsObj).sort((a, b) => {
+  if (!a.game.releaseDate || !b.game.releaseDate) return 0
+  return b.game.releaseDate.getTime() - a.game.releaseDate.getTime()
+})
+const firstGame = series.games[0]?.game
+const lastGame = series.games[series.games.length - 1]?.game
+const coverImage = await getImage({
+  src: `https://cdn.sittingonclouds.net/game/${slug}.png`,
+  height: 150,
+  width: 150
+})
+---
+
+<SEO
+  slot='head'
+  titleDefault='Sitting on Clouds'
+  title={series.name ?? undefined}
+  description='Largest Video Game & Animation Soundtrack サウンドトラック Archive'
+  openGraph={{
+    basic: {
+      title: series.name ?? '',
+      type: 'website',
+      image: `https://www.sittingonclouds.net${coverImage.src}`,
+      url: Astro.url.pathname
+    },
+    optional: {
+      siteName: 'Sitting on Clouds'
+    }
+  }}
+  extend={{
+    meta: [{ name: 'theme-color', content: series.headerColor ?? '#121212' }]
+  }}
+/>
+
+<BaseLayout>
+  <div class='flex flex-col flex-1 max-w-[1440px] mx-auto p-3'>
+    <div class='flex flex-col md:flex-row flex-wrap md:flex-nowrap gap-x-3 gap-y-2'>
+      <div class='flex-1 flex-wrap md:flex-5/12'>
+        <div class='size-full relative cursor-pointer bg-dark rounded-xl p-2'>
+          <Image
+            src={`https://cdn.sittingonclouds.net/series/${slug}.png`}
+            alt={`${series.name} logo`}
+            class='rounded-sm'
+            quality='mid'
+            width={500}
+            height={500}
+          />
+        </div>
+      </div>
+      <div class='flex-1 flex-wrap md:flex-7/12'>
+        <div class='bg-dark rounded-xl py-4 px-6'>
+          <div class='font-medium text-4xl text-center'>{series.name}</div>
+          <table class='border-spacing-y-4 border-separate w-full'>
+            <tbody>
+              {
+                firstGame.releaseDate ? (
+                  <tr>
+                    <th class='width-row'>{m.firstRelease()}:</th>
+                    <td>
+                      {releaseDate(firstGame.releaseDate)} - <a href={`/game/${firstGame.slug}`}>{firstGame.name}</a>
+                    </td>
+                  </tr>
+                ) : null
+              }
+              {
+                lastGame.releaseDate ? (
+                  <tr>
+                    <th class='width-row'>{m.newestRelease()}:</th>
+                    <td>
+                      {releaseDate(lastGame.releaseDate)} - <a href={`/game/${lastGame.slug}`}>{lastGame.name}</a>
+                    </td>
+                  </tr>
+                ) : null
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class='flex flex-col gap-y-3'>
+      <div class='w-full'>
+        <div class='w-full bg-dark text-2xl px-4 py-2 rounded-t-md'>{m.variousGames()}</div>
+        <div class='grid grid-cols-3 md:grid-cols-5 gap-x-2 bg-gray px-4 pb-2 rounded-b-md'>
+          {
+            variousAlbums.map((album) => (
+              <AlbumBox title={album.title ?? ''} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+            ))
+          }
+        </div>
+      </div>
+      <div class='w-full flex flex-col gap-y-3'>
+        {
+          singleAlbums.map((s) => (
+            <div class='w-full'>
+              <div class='w-full bg-dark text-2xl px-4 py-2 rounded-t-md flex gap-x-9'>
+                <span>{s.game.releaseDate?.getFullYear()}</span>
+                <span>{s.game.name}</span>
+              </div>
+              <div class='grid grid-cols-3 md:grid-cols-5 gap-x-2 bg-gray px-4 pb-2 rounded-b-md'>
+                {s.albums.map((album) => (
+                  <AlbumBox title={album.title ?? ''} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>
