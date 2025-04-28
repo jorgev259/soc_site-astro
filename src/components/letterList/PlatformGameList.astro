@@ -1,0 +1,23 @@
+---
+import { AlbumStatus } from '@prisma/client'
+import prismaClient from 'utils/prisma-client'
+
+interface Props {
+  letter: string
+  platformId: number
+}
+
+const { letter, platformId } = Astro.props
+const albums = await prismaClient.game.findMany({
+  where: { name: { startsWith: letter }, platforms: { some: { platformId } } },
+  select: { slug: true, name: true }
+})
+---
+
+{
+  albums.map((a) => (
+    <a class='text-left hover:bg-btn-gray/30 rounded-md p-2' href={`/game/${a.slug}`}>
+      {a.name}
+    </a>
+  ))
+}

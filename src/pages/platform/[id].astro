@@ -1,0 +1,45 @@
+---
+import prismaClient from 'utils/prisma-client'
+
+import LetterList from 'layouts/LetterList.astro'
+import PlatformGameList from 'components/letterList/PlatformGameList.astro'
+import { AlbumStatus } from '@prisma/client'
+
+const { id } = Astro.params
+
+if (!id) return Astro.redirect('/404')
+const platformId = parseInt(id)
+if (!platformId) return Astro.redirect('/404')
+
+const platform = await prismaClient.platform.findUnique({ where: { id: platformId }, select: { name: true } })
+if (!platform) return Astro.redirect('/404')
+
+const letters: { letter: string; count: BigInt }[] = await prismaClient.$queryRaw`
+  SELECT DISTINCT UPPER(LEFT(game.name, 1)) AS letter, COUNT(*) AS count
+  FROM game, platform, Game_Platform
+  WHERE game.slug = Game_Platform.gameSlug
+  AND platform.id = Game_Platform.platformId
+  AND platform.id = ${platformId}
+  GROUP BY letter
+  ORDER BY letter;
+`
+---
+
+<LetterList letters={letters}>
+  {
+    letters.map((l) => (
+      <div id={l.letter}>
+        <div class='flex uppercase border-y-2 text-4xl justify-center border-white py-1.5'>{l.letter}</div>
+        <div class='flex flex-col gap-2 py-4'>
+          <PlatformGameList platformId={platformId} letter={l.letter} server:defer>
+            <Fragment slot='fallback'>
+              {Array.from({ length: Number(l.count) }).map(() => (
+                <div class='animate-pulse h-8 w-full bg-gray/85' />
+              ))}
+            </Fragment>
+          </PlatformGameList>
+        </div>
+      </div>
+    ))
+  }
+</LetterList>

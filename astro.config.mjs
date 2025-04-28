@@ -49,7 +49,6 @@ export default defineConfig({
   adapter: node({ mode: 'standalone' }),
   redirects: {
     '/en/[...params]': '/[...params]',
-    '/platform/[id]': { status: 307, destination: '/maintenance' },
     '/profile': { status: 307, destination: '/maintenance' },
     '/profile/[username]': { status: 307, destination: '/maintenance' },
     '/series/[slug]': { status: 307, destination: '/maintenance' },
