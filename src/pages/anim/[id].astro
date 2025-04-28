@@ -1,0 +1,126 @@
+---
+import { SEO } from 'astro-seo'
+import * as m from 'paraglide/messages'
+import prismaClient from 'utils/prisma-client'
+import { getImage } from 'astro:assets'
+import { Image } from 'astro:assets'
+
+import BaseLayout from 'layouts/base.astro'
+import AlbumBox from 'components/AlbumBox.astro'
+import releaseDate from 'utils/releaseDate'
+
+const { id } = Astro.params
+
+if (!id) return Astro.redirect('/404')
+const animId = parseInt(id)
+if (!animId) return Astro.redirect('/404')
+
+const anim = await prismaClient.animation.findUnique({
+  where: { id: animId },
+  select: {
+    title: true,
+    subTitle: true,
+    releaseDate: true,
+    headerColor: true,
+    studios: { select: { studioSlug: true, studio: { select: { name: true } } } },
+    albums: { select: { album: { select: { title: true, id: true } } } }
+  }
+})
+
+if (!anim) return Astro.redirect('/404')
+
+const coverImage = await getImage({
+  src: `https://cdn.sittingonclouds.net/anim/${animId}.png`,
+  height: 150,
+  width: 150
+})
+const { currentLocale } = Astro
+---
+
+<SEO
+  slot='head'
+  titleDefault='Sitting on Clouds'
+  title={anim.title ?? undefined}
+  description='Largest Video Game & Animation Soundtrack サウンドトラック Archive'
+  openGraph={{
+    basic: {
+      title: anim.title ?? '',
+      type: 'website',
+      image: `https://www.sittingonclouds.net${coverImage.src}`,
+      url: Astro.url.pathname
+    },
+    optional: {
+      description:
+        anim.subTitle && anim.studios.length > 0
+          ? `${anim.subTitle} / ${anim.studios.map((a) => a.studio.name).join(' - ')}`
+          : anim.subTitle || anim.studios.map((a) => a.studio.name).join(' - '),
+      siteName: 'Sitting on Clouds'
+    }
+  }}
+  extend={{
+    meta: [{ name: 'theme-color', content: anim.headerColor ?? '#ffffff' }]
+  }}
+/>
+
+<BaseLayout>
+  <div
+    class={`w-full min-h-100vh bg-fixed bg-center bg-cover`}
+    style={`background-image: url('https://cdn.sittingonclouds.net/anim/${animId}.png');`}
+  >
+    <div class='bg-gray/70 w-full min-h-full'>
+      <div class='flex flex-col md:flex-row gap-x-4 max-w-[1000px] mx-auto p-3 min-h-full'>
+        <div class='flex flex-col gap-y-2 w-full md:w-[430px] bg-dark rounded-md size-full py-2 px-3'>
+          <div>
+            <Image
+              src={`https://cdn.sittingonclouds.net/anim/${animId}.png`}
+              alt={`${anim.title} cover`}
+              class='rounded-sm size-full object-contain h-fit'
+              quality='mid'
+              width={500}
+              height={500}
+            />
+          </div>
+          <div class='font-medium text-3xl text-center'>{anim.title}</div>
+          {anim.subTitle ? <div class='font-medium text-xl text-center'>{anim.subTitle}</div> : null}
+          <div class='table'>
+            {
+              anim.releaseDate ? (
+                <div class='table-row'>
+                  <div class='table-cell text-md font-medium'>{m.releaseDate()}</div>
+                  <div class='table-cell text-md'>{releaseDate(anim.releaseDate)}</div>
+                </div>
+              ) : null
+            }
+            {
+              anim.studios.length > 0 ? (
+                <>
+                  <div class='table-row'>
+                    <div class='table-cell text-md font-medium'>{m.studios()}</div>
+                    <div class='table-cell text-md'>
+                      <a href={`/studio/${anim.studios[0].studioSlug}`}>{anim.studios[0].studio.name}</a>
+                    </div>
+                  </div>
+                  {anim.studios.slice(1).map((a) => (
+                    <div class='table-row'>
+                      <div class='table-cell text-md font-medium' />
+                      <div class='table-cell text-md'>
+                        <a href={`/studio/${a.studioSlug}`}>{a.studio.name}</a>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : null
+            }
+          </div>
+        </div>
+        <div class='grid w-full grid-cols-2 md:grid-cols-4 gap-x-2.5'>
+          {
+            anim.albums.map((a) => (
+              <AlbumBox href={`/album/${a.album.id}`} image={`/album/${a.album.id}.png`} title={a.album.title} />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
