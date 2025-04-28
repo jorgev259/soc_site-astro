@@ -1,0 +1,58 @@
+---
+import prismaClient from 'utils/prisma-client'
+
+import DefaultSEO from 'components/DefaultSEO.astro'
+import BaseLayout from 'layouts/base.astro'
+import Sidebar from 'components/Sidebar.astro'
+import AlbumBox from 'components/AlbumBox.astro'
+
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/404')
+
+const studio = await prismaClient.studio.findUnique({
+  where: { slug },
+  select: {
+    name: true,
+    animations: {
+      select: {
+        animation: {
+          select: {
+            albums: {
+              select: { albumId: true, album: { select: { title: true, publishedAt: true } } }
+            }
+          }
+        }
+      }
+    }
+  }
+})
+
+if (!studio) return Astro.redirect('/404')
+
+const albumsMap = new Map<number, { title: string | null; publishedAt: Date }>()
+studio.animations.forEach((a) => {
+  a.animation.albums.forEach(({ albumId, album }) => {
+    albumsMap.set(albumId, album)
+  })
+})
+
+const albums = Array.from(albumsMap.entries())
+  .map(([id, data]) => ({ id, ...data }))
+  .sort((a, b) => a.publishedAt.getTime() - b.publishedAt.getTime())
+  .reverse()
+---
+
+<DefaultSEO />
+<BaseLayout>
+  <div class='flex flex-col md:flex-row flex-1 max-w-[2000px]'>
+    <div class='flex-1 px-5 bg-dark'>
+      <div class='p-2 text-center text-3xl text-white border-white border-b-1 border-t-1'>
+        {studio.name}
+      </div>
+      <div class='grid grid-cols-2 md:grid-cols-4 gap-x-2.5'>
+        {albums.map((a) => <AlbumBox href={`/album/${a.id}`} image={`/album/${a.id}.png`} title={a.title} />)}
+      </div>
+    </div>
+    <Sidebar />
+  </div>
+</BaseLayout>
