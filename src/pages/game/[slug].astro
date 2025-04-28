@@ -1,0 +1,146 @@
+---
+import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages'
+import { getImage, Image } from 'astro:assets'
+import { SEO } from 'astro-seo'
+
+import BaseLayout from 'layouts/base.astro'
+
+import AlbumBox from 'components/AlbumBox.astro'
+import releaseDate from 'utils/releaseDate'
+
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/404')
+
+const game = await prismaClient.game.findUnique({
+  where: { slug },
+  select: {
+    name: true,
+    releaseDate: true,
+    publishers: { select: { publisher: { select: { name: true, id: true } } } },
+    platforms: { select: { platform: { select: { name: true, id: true } } } },
+    series: { select: { series: { select: { name: true, slug: true } } } },
+    headerColor: true,
+    albums: {
+      select: { game: true, album: { select: { games: true, id: true, title: true, publishedAt: true } } },
+      orderBy: { album: { publishedAt: 'desc' } }
+    }
+  }
+})
+
+if (!game) return Astro.redirect('/404')
+
+const { currentLocale } = Astro
+const coverImage = await getImage({
+  src: `https://cdn.sittingonclouds.net/game/${slug}.png`,
+  height: 150,
+  width: 150
+})
+---
+
+<SEO
+  slot='head'
+  titleDefault='Sitting on Clouds'
+  title={game.name ?? undefined}
+  description='Largest Video Game & Animation Soundtrack サウンドトラック Archive'
+  openGraph={{
+    basic: {
+      title: game.name ?? '',
+      type: 'website',
+      image: `https://www.sittingonclouds.net${coverImage.src}`,
+      url: Astro.url.pathname
+    },
+    optional: {
+      description: `${game.series.map((s) => s.series.name).join(' - ')}${game.series.length > 0 ? ' / ' : ''}${game.publishers.map((p) => p.publisher.name).join(' - ')}`,
+      siteName: 'Sitting on Clouds'
+    }
+  }}
+  extend={{
+    meta: [{ name: 'theme-color', content: game.headerColor ?? '#121212' }]
+  }}
+/>
+
+<BaseLayout>
+  <div class='flex flex-col flex-1 max-w-[1440px] mx-auto p-3'>
+    <div class='flex flex-wrap md:flex-nowrap gap-x-3'>
+      <div class='flex-1 flex-wrap md:flex-5/12'>
+        <div class='size-full relative cursor-pointer'>
+          <!--   <Image
+            src={`https://cdn.sittingonclouds.net/game/${slug}.png`}
+            alt={`${game.name} logo`}
+            class='rounded-sm size-full object-contain h-fit mb-2 md:min-h-96 px-10'
+            quality='mid'
+            width={500}
+            height={500}
+          /> -->
+        </div>
+      </div>
+      <div class='flex-1 flex-wrap md:flex-7/12'>
+        <div class='bg-dark rounded-xl py-4 px-6'>
+          <div class='font-medium text-4xl text-center'>{game.name}</div>
+          <table class='mt-4 border-spacing-y-4 border-separate w-full'>
+            <tbody>
+              {
+                game.releaseDate ? (
+                  <tr>
+                    <th class='width-row'>{m.releaseDate()}:</th>
+                    <td>{releaseDate(game.releaseDate)}</td>
+                  </tr>
+                ) : null
+              }
+              <tr>
+                <th class='width-row'>{m.publishers()}:</th>
+                <td
+                  >{
+                    game.publishers.map((p, i) => (
+                      <>
+                        <a href={`/publisher/${p.publisher.id}`}>{p.publisher.name}</a>
+                        {i < game.publishers.length - 1 ? <span> - </span> : null}
+                      </>
+                    ))
+                  }</td
+                >
+              </tr>
+              <tr>
+                <th class='width-row'>{m.platforms()}:</th>
+                <td
+                  >{
+                    game.platforms.map((p, i) => (
+                      <>
+                        <a href={`/platform/${p.platform.id}`}>{p.platform.name}</a>
+                        {i < game.platforms.length - 1 ? <span> - </span> : null}
+                      </>
+                    ))
+                  }</td
+                >
+              </tr>
+              <tr>
+                <th class='width-row'>{m.series()}:</th>
+                <td
+                  >{
+                    game.series.map((p, i) => (
+                      <>
+                        <a href={`/series/${p.series.slug}`}>{p.series.name}</a>
+                        {i < game.series.length - 1 ? <span> - </span> : null}
+                      </>
+                    ))
+                  }</td
+                >
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class='flex flex-wrap md:flex-nowrap gap-x-3'>
+      <div class='grid grid-cols-5 gap-x-2'>
+        {
+          game.albums.map((a) => (
+            <AlbumBox href={`/album/${a.album.id}`} image={`/album/${a.album.id}.png`} title={a.album.title} />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>
