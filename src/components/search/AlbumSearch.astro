@@ -44,7 +44,10 @@ const [count, search] = await Promise.all([
   <div>
     Albums ({count}) {
       count > take ? (
-        <span> / Showing {page === 1 ? `first ${take}` : `${(page - 1) * take}-${Math.min(page * take, count)}`} results</span>
+        <span>
+          {' '}
+          / Showing {page === 1 ? `first ${take}` : `${(page - 1) * take}-${Math.min(page * take, count)}`} results
+        </span>
       ) : null
     }
   </div>
@@ -56,7 +59,7 @@ const [count, search] = await Promise.all([
     }
   </div>
 </div>
-<div class='grid sm:grid-cols-1 md:grid-cols-3 mt-1.5 gap-4'>
+<div class='grid grid-cols-1 md:grid-cols-3 mt-1.5 gap-4'>
   {
     search.map((album) => (
       <a class='flex bg-gray h-40 group hover:no-underline' href={`/album/${album.id}`}>
