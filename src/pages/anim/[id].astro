@@ -7,7 +7,7 @@ import { Image } from 'astro:assets'
 
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
-import releaseDate from 'utils/releaseDate'
+import ReleaseDate from 'components/ReleaseDate.astro'
 
 const { id } = Astro.params
 
@@ -87,7 +87,9 @@ const { currentLocale } = Astro
               anim.releaseDate ? (
                 <div class='table-row'>
                   <div class='table-cell text-md font-medium'>{m.releaseDate()}</div>
-                  <div class='table-cell text-md'>{releaseDate(anim.releaseDate)}</div>
+                  <div class='table-cell text-md'>
+                    <ReleaseDate date={anim.releaseDate} />
+                  </div>
                 </div>
               ) : null
             }

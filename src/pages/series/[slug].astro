@@ -5,9 +5,8 @@ import { getImage, Image } from 'astro:assets'
 import { SEO } from 'astro-seo'
 
 import BaseLayout from 'layouts/base.astro'
-
 import AlbumBox from 'components/AlbumBox.astro'
-import releaseDate from 'utils/releaseDate'
+import ReleaseDate from 'components/ReleaseDate.astro'
 
 const { slug } = Astro.params
 if (!slug) return Astro.redirect('/404')
@@ -132,7 +131,8 @@ const coverImage = await getImage({
                   <tr>
                     <th class='width-row'>{m.firstRelease()}:</th>
                     <td>
-                      {releaseDate(firstGame.releaseDate)} - <a href={`/game/${firstGame.slug}`}>{firstGame.name}</a>
+                      <ReleaseDate date={firstGame.releaseDate} /> -{' '}
+                      <a href={`/game/${firstGame.slug}`}>{firstGame.name}</a>
                     </td>
                   </tr>
                 ) : null
@@ -142,7 +142,9 @@ const coverImage = await getImage({
                   <tr>
                     <th class='width-row'>{m.newestRelease()}:</th>
                     <td>
-                      {releaseDate(lastGame.releaseDate)} - <a href={`/game/${lastGame.slug}`}>{lastGame.name}</a>
+                      <ReleaseDate date={lastGame.releaseDate} />
+                      <span> - </span>
+                      <a href={`/game/${lastGame.slug}`}>{lastGame.name}</a>
                     </td>
                   </tr>
                 ) : null

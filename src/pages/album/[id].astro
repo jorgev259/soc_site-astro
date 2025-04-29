@@ -9,13 +9,13 @@ import BaseLayout from 'layouts/base.astro'
 import TrackList from 'components/albumPage/TrackList'
 import DownloadBtn from 'components/albumPage/DownloadBtn.astro'
 import AlbumBox from 'components/AlbumBox.astro'
-import releaseDate from 'utils/releaseDate'
 
 import kofi from 'img/socials/ko-fi-donate-button.png'
 import discord from 'img/socials/discord.png'
 import vgmdbLogo from 'img/assets/vgmdb-logo.png'
 import flyIcon from 'img/assets/fly-icon.png'
 import ouoIcon from 'img/assets/ouo-icon.png'
+import ReleaseDate from 'components/ReleaseDate.astro'
 
 const { id } = Astro.params
 const { permissions } = Astro.locals
@@ -131,7 +131,7 @@ const coverImage = await getImage({
                       <tr>
                         <th class='width-row'>{m.releaseDate()}</th>
                         <td>
-                          {releaseDate(album?.releaseDate)}
+                          <ReleaseDate date={album?.releaseDate} />
                         </td>
                       </tr>
                     ) : null

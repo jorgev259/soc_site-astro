@@ -1,0 +1,9 @@
+---
+interface Props {
+  date: Date
+}
+const { props, currentLocale: locale } = Astro
+const { date } = props
+---
+
+{new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)}
