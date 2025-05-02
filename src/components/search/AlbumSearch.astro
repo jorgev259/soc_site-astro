@@ -4,6 +4,7 @@ import type { DefaultArgs } from '@prisma/client/runtime/library'
 import { Image } from 'astro:assets'
 
 import prismaClient from 'utils/prisma-client'
+import SearchNav from './SearchNav.astro'
 
 interface Props {
   query: string
@@ -40,24 +41,18 @@ const [count, search] = await Promise.all([
 ])
 ---
 
-<div class='text-xl flex gap-x-4'>
-  <div>
-    Albums ({count}) {
-      count > take ? (
-        <span>
-          {' '}
-          / Showing {page === 1 ? `first ${take}` : `${(page - 1) * take}-${Math.min(page * take, count)}`} results
-        </span>
-      ) : null
-    }
-  </div>
-  <div class='flex gap-x-2'>
-    {
-      Array.from({ length: Math.ceil(count / take) }, (_, i) =>
-        page === i + 1 ? <span>{i + 1}</span> : <a href={`/search?q=${query}&page=${i + 1}`}>{i + 1}</a>
-      )
-    }
-  </div>
+<div class='text-xl'>
+  Albums ({count}) {
+    count > take ? (
+      <span>
+        {' '}
+        / Showing {page === 1 ? `first ${take}` : `${(page - 1) * take}-${Math.min(page * take, count)}`} results
+      </span>
+    ) : null
+  }
+</div>
+<div class='flex gap-x-2'>
+  <SearchNav query={query} count={count} take={take} page={page} />
 </div>
 <div class='grid grid-cols-1 md:grid-cols-3 mt-1.5 gap-4'>
   {
@@ -75,9 +70,14 @@ const [count, search] = await Promise.all([
         </div>
         <div class='flex flex-col p-2.5 justify-center text-left'>
           <div class=' text-link group-hover:underline'>{album.title}</div>
-          <div class='mt-0.5'>{album.releaseDate?.toISOString().split('T')[0]}</div>
+          <div class='text-sm text-slate-100 mt-0.5'>{album.releaseDate?.toISOString().split('T')[0]}</div>
         </div>
       </a>
     ))
   }
+</div>
+<div class='text-xl'>
+  <div class='flex gap-x-2'>
+    <SearchNav query={query} count={count} take={take} page={page} />
+  </div>
 </div>
