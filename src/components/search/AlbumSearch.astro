@@ -19,17 +19,17 @@ let { page } = Astro.props
 if (page < 1) page = 1
 
 const queryString = query
-  .toLowerCase()
-  .split('_')
-  .map((w) => `+${w}`)
+  .trim()
+  .split(/[\s_\-:]+/)
   .join(' ')
+
 const findQuery: Prisma.albumsFindManyArgs = {
   select: { title: true, releaseDate: true, id: true },
   where: {
     OR: [{ title: { search: queryString } }, { subTitle: { search: queryString } }]
   },
   orderBy: {
-    _relevance: { fields: ['title', 'subTitle'], sort: 'desc', search: query.toLowerCase() }
+    _relevance: { fields: ['title', 'subTitle'], sort: 'desc', search: queryString }
   }
 }
 const countQuery: Prisma.albumsCountArgs<DefaultArgs> = {
@@ -76,6 +76,6 @@ const end = Math.min(page * take, count)
   }
 </div>
 
-<div class='text-xl flex gap-x-2'>
+<div class='flex gap-x-2'>
   <SearchNav query={query} count={count} take={take} page={page} />
 </div>
