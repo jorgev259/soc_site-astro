@@ -1,0 +1,25 @@
+---
+interface Props {
+  count: number
+  take: number
+  page: number
+  query: string
+}
+
+const { count, take, page, query } = Astro.props
+const pageCount = Math.ceil(count / take)
+---
+
+{
+  pageCount > 1
+    ? Array.from({ length: pageCount }, (_, i) =>
+        page === i + 1 ? (
+          <span class='bg-gray rounded px-2 cursor-pointer'>{i + 1}</span>
+        ) : (
+          <a class='bg-gray/50 rounded px-2' href={`/search?q=${query}&page=${i + 1}`}>
+            {i + 1}
+          </a>
+        )
+      )
+    : null
+}

@@ -87,5 +87,8 @@
   "latestReleases": "Latest releases",
   "firstRelease": "First Release",
   "newestRelease": "Newest Release",
-  "variousGames": "Various Games"
+  "variousGames": "Various Games",
+  "searchResultsFor": "Search results for",
+  "firstResults": "Showing first {take} results",
+  "moreResults": "Showing {start}-{end} results"
 }
