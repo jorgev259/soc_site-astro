@@ -44,8 +44,12 @@ const placeholder = getRandom(placeholders)
   searchForm?.addEventListener('submit', (ev: Event) => {
     ev.preventDefault()
     const formData = new FormData(searchForm)
+    const query = (formData.get('query') as string).trim()
+
+    if (!query || query.length < 1) return
+
     const url = new URL('/search', window.location.origin)
-    url.searchParams.append('q', formData.get('query') as string)
+    url.searchParams.append('q', query)
 
     window.location.href = url.toString()
   })

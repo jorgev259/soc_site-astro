@@ -4,10 +4,10 @@ import * as m from 'paraglide/messages'
 import AlbumSearch from 'components/search/AlbumSearch.astro'
 import BaseLayout from 'layouts/base.astro'
 
-const query = Astro.url.searchParams.get('q')
+const query = (Astro.url.searchParams.get('q') ?? '').trim()
 const page = Astro.url.searchParams.get('page') || '1'
 
-if (!query) return Astro.redirect(404)
+if (!query || query.length < 1) return Astro.redirect(404)
 ---
 
 <BaseLayout>
