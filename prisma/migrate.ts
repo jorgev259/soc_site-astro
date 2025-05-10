@@ -20,6 +20,8 @@ const migrations: Migration[] = migrationFiles
   .map((id) => ({ id, migrationFn: require(path.join(dataMigrationsPath, id)).default }))
   .filter((migration) => migration.migrationFn !== undefined)
 
+if (migrations.length === 0) console.log('No data migrations to run.')
+
 for (const { id, migrationFn } of migrations) {
   const startDate = new Date()
   const migration = await prismaClient.migration.findFirst({ where: { id } })
