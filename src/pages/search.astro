@@ -3,6 +3,7 @@ import * as m from 'paraglide/messages'
 
 import AlbumSearch from 'components/search/AlbumSearch.astro'
 import BaseLayout from 'layouts/base.astro'
+import DefaultSEO from 'components/DefaultSEO.astro'
 
 const query = (Astro.url.searchParams.get('q') ?? '').trim()
 const page = Astro.url.searchParams.get('page') || '1'
@@ -10,6 +11,7 @@ const page = Astro.url.searchParams.get('page') || '1'
 if (!query || query.length < 1) return Astro.redirect(404)
 ---
 
+<DefaultSEO />
 <BaseLayout>
   <div class='w-full bg-dark'>
     <div class='flex max-w-[1200px] mx-auto justify-center px-8 py-3 flex-col'>

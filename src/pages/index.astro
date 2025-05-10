@@ -6,6 +6,7 @@ import { AlbumStatus } from '@prisma/client'
 import Sidebar from 'components/Sidebar.astro'
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
+import DefaultSEO from 'components/DefaultSEO.astro'
 
 const recentAlbums = await prismaClient.albums.findMany({
   where: { status: AlbumStatus.SHOW },
@@ -21,6 +22,7 @@ const lastAlbums = await prismaClient.albums.findMany({
 })
 ---
 
+<DefaultSEO />
 <BaseLayout>
   <div class='flex flex-col md:flex-row flex-1 max-w-[2000px]'>
     <div class='flex-1 px-2'>
@@ -50,7 +52,9 @@ const lastAlbums = await prismaClient.albums.findMany({
         }
       </div>
       <div class='flex gap-x-2 py-4'>
-        <a href="/last-added" class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-full'>{m.moreLastAdded}</a>
+        <a href='/last-added' class='bg-dark uppercase rounded-md text-2xl p-1.5 font-semibold w-full'
+          >{m.moreLastAdded}</a
+        >
       </div>
     </div>
     <Sidebar />

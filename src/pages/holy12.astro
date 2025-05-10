@@ -4,15 +4,17 @@ import * as m from 'paraglide/messages'
 import { getRandom } from 'utils/form'
 import { getRandomAlbum } from 'utils/queries'
 
-import Base from 'layouts/base.astro'
+import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
+import DefaultSEO from 'components/DefaultSEO.astro'
 
 const titles = [m.holy12_0(), m.holy12_1(), m.holy12_2(), m.holy12_3(), m.holy12_4(), m.holy12_5()]
 const title = getRandom(titles)
 const albums: { id: number; title: string }[] = await Promise.all(Array.from({ length: 12 }, getRandomAlbum))
 ---
 
-<Base>
+<DefaultSEO />
+<BaseLayout>
   <div class='flex flex-col px-28'>
     <h1 class='w-full uppercase font-medium tracking-wide text-4xl drop-shadow-2xl mt-5 mb-2 text-center'>{title}</h1>
     <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5 mb-4'>
@@ -23,4 +25,4 @@ const albums: { id: number; title: string }[] = await Promise.all(Array.from({ l
       }
     </div>
   </div>
-</Base>
+</BaseLayout>
