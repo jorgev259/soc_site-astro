@@ -1,5 +1,6 @@
 import { auth } from 'auth'
 import { defineMiddleware } from 'astro:middleware'
+import { paraglideMiddleware } from 'paraglide/server'
 
 import PAGES from 'utils/pages.json'
 import prismaClient from 'utils/prisma-client'
@@ -30,5 +31,5 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.pages = []
   }
 
-  return next()
+  return paraglideMiddleware(context.request, () => next())
 })

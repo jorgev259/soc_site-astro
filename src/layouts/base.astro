@@ -1,14 +1,13 @@
 ---
 import { Toaster } from 'react-hot-toast'
 
-import { languageTag } from '../paraglide/runtime'
 import Header from 'components/Header.astro'
 import Footer from 'components/Footer.astro'
 
 import 'styles/global.css'
 ---
 
-<html lang={languageTag()} dir={Astro.locals.paraglide.dir} class='h-full'>
+<html class='h-full'>
   <head>
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />

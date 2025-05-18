@@ -3,10 +3,10 @@ import { defineConfig, envField } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 import node from '@astrojs/node'
 import react from '@astrojs/react'
-import paraglide from '@inlang/paraglide-astro'
+import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import icon from 'astro-icon'
 
-import { languageTags } from './project.inlang/settings.json'
+import { locales } from './project.inlang/settings.json'
 
 // https://astro.build/config
 export default defineConfig({
@@ -31,19 +31,23 @@ export default defineConfig({
   },
   site: 'https://sittingonclouds.net',
   i18n: {
-    locales: languageTags,
+    locales,
     defaultLocale: 'en',
     routing: {
       prefixDefaultLocale: false,
       redirectToDefaultLocale: true
     }
   },
-  integrations: [
-    paraglide({ project: './project.inlang', outdir: './src/paraglide' }),
-    icon({ iconDir: 'src/img/icons' }),
-    react()
-  ],
-  vite: { plugins: [tailwindcss()] },
+  integrations: [icon({ iconDir: 'src/img/icons' }), react()],
+  vite: {
+    plugins: [
+      tailwindcss(),
+      paraglideVitePlugin({
+        project: './project.inlang',
+        outdir: './src/paraglide'
+      })
+    ]
+  },
   image: { domains: ['cdn.sittingonclouds.net'] },
   output: 'server',
   adapter: node({ mode: 'standalone' }),
@@ -51,7 +55,7 @@ export default defineConfig({
     '/en/[...params]': '/[...params]',
     '/profile': { status: 307, destination: '/maintenance' },
     '/profile/[username]': { status: 307, destination: '/maintenance' },
-    '/request': { status: 307, destination: '/maintenance' }
+    '/request': { status: 308, destination: '/requests' }
   },
   security: {
     checkOrigin: false
