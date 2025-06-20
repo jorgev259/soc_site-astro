@@ -23,7 +23,7 @@ export default function RequestsTable(props: { initial: Prisma.requestsGetPayloa
   const { initial } = props
 
   return (
-    <div className='w-full px-4 py-4'>
+    <div className='w-full min-h-[500px] px-4 py-4'>
       <AgGridReact
         gridOptions={gridOptions}
         rowData={initial}

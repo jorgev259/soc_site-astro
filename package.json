@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "build": "yarn run prisma:build && astro build",
     "prisma:migrate": "prisma migrate deploy && tsx ./prisma/migrate.ts",
-    "prisma:build": "yarn prisma:migrate && prisma generate --sql && "
+    "prisma:build": "yarn prisma:migrate && prisma generate --sql"
   },
   "dependencies": {
     "@ag-grid-community/locale": "^33.3.2",
