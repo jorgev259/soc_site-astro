@@ -2,10 +2,28 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "command": "yarn dev",
-      "name": "Development server",
+      "command": "yarn astro dev",
+      "name": "Astro",
+      "request": "launch",
+      "type": "node-terminal",
+      "serverReadyAction": {
+        "pattern": "http://localhost:([0-9]+)/",
+        "uriFormat": "http://localhost:%s",
+        "action": "openExternally"
+      }
+    },
+    {
+      "command": "yarn prisma generate --watch",
+      "name": "Prisma",
       "request": "launch",
       "type": "node-terminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Deveopment server",
+      "configurations": ["Astro", "Prisma"],
+      "stopAll": true
     }
   ]
 }
