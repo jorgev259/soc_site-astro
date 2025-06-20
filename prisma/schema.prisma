@@ -344,8 +344,7 @@ model requests {
   id          Int           @id @default(autoincrement())
   title       String?       @db.VarChar(255)
   link        String?       @db.VarChar(255)
-  user        String?       @db.VarChar(255)
-  userID      String?       @db.VarChar(255)
+  userID      String        @db.VarChar(255)
   state       RequestState
   donator     Boolean
   reason      String?       @db.VarChar(255)
@@ -359,8 +358,6 @@ model requests {
 model roles {
   name        String      @id @db.VarChar(255)
   permissions Json?
-  createdAt   DateTime    @db.DateTime(0)
-  updatedAt   DateTime    @db.DateTime(0)
   users       User_Role[]
 }
 

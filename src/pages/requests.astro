@@ -1,0 +1,14 @@
+---
+import BaseLayout from 'layouts/base.astro'
+import DefaultSEO from 'components/DefaultSEO.astro'
+import RequestsTable from 'components/requests/RequestsTable'
+
+import prismaClient from 'utils/prisma-client'
+
+const initialRequests = await prismaClient.requests.findMany({ orderBy: { createdAt: 'desc' } })
+---
+
+<DefaultSEO />
+<BaseLayout>
+  <RequestsTable client:only='react' initial={initialRequests} />
+</BaseLayout>

@@ -5,7 +5,7 @@ const LIMIT_PENDING = 5
 
 export default async function MigrationFn(tx: Prisma.TransactionClient) {
   const donatorRequests = await tx.requests.findMany({
-    where: { donator: true, state: RequestState.PENDING, userID: { not: null } }
+    where: { donator: true, state: RequestState.PENDING }
   })
   const donatorMap = new Map<string, typeof donatorRequests>()
 

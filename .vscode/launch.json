@@ -13,7 +13,7 @@
       }
     },
     {
-      "command": "yarn prisma generate --watch",
+      "command": "yarn prisma generate --sql --watch",
       "name": "Prisma",
       "request": "launch",
       "type": "node-terminal"

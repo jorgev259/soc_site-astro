@@ -90,5 +90,10 @@
   "variousGames": "Various Games",
   "searchResultsFor": "Search results for",
   "firstResults": "Showing first {take} results",
-  "moreResults": "Showing {start}-{end} results"
+  "moreResults": "Showing {start}-{end} results",
+  "requestID": "Request ID",
+  "userID": "userID",
+  "state": "State",
+  "createdAt": "Created At",
+  "updatedAt": "Updated At"
 }

@@ -54,7 +54,6 @@ const { session } = Astro.locals
       <a href='/'><NavButton>{m.home()}</NavButton></a>
       <a href='/last-added'><NavButton>{m.lastaddednav()}</NavButton></a>
       <a href='/album/list'><NavButton>{m.albumlist()}</NavButton></a>
-
       <Dropdown>
         {m.games()}
         <Fragment slot='items'>
@@ -65,7 +64,6 @@ const { session } = Astro.locals
           <DropdownItem href='/platform/list'>{m.platforms()}</DropdownItem>
         </Fragment>
       </Dropdown>
-
       <Dropdown>
         {m.animation()}
         <Fragment slot='items'>
@@ -74,13 +72,13 @@ const { session } = Astro.locals
           <DropdownItem href='/studio/list'>{m.studios()}</DropdownItem>
         </Fragment>
       </Dropdown>
+      <a href='/requests'>
+        <NavButton>{m.requests()}</NavButton>
+      </a>
 
       {
         session ? (
           <>
-            <a href='/requests'>
-              <NavButton>{m.requests()}</NavButton>
-            </a>
             <NavButton>{m.submitalbum()}</NavButton>
             <Dropdown>
               {m.adminGrounds()}
