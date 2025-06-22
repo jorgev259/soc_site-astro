@@ -9,6 +9,7 @@ import forgorTemplate from './utils/forgorTemplate'
 import verifyTemplate from './utils/verifyTemplate'
 
 export const auth = betterAuth({
+  trustedOrigins: ['https://sittingonclouds.net', 'https://www.sittingonclouds.net'],
   database: prismaAdapter(prismaClient, { provider: 'mysql' }),
   user: { modelName: 'users' },
   plugins: [username(), bearer()],
