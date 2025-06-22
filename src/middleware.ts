@@ -6,8 +6,10 @@ import PAGES from 'utils/pages.json'
 import prismaClient from 'utils/prisma-client'
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  const { request } = context
+  //paraglideMiddleware(request, async ({ locale, request }) => {
   const isAuthed = await auth.api.getSession({
-    headers: context.request.headers
+    headers: request.headers
   })
 
   if (isAuthed) {
@@ -31,5 +33,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.locals.pages = []
   }
 
-  return paraglideMiddleware(context.request, () => next())
+  return next()
+  //})
 })
