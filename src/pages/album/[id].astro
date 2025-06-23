@@ -186,7 +186,7 @@ const coverImage = await getImage({
                                   {platform.name}
                                 </span>
                               ) : (
-                                <a class='btn btn-link p-0' href={`/platform/${id}`}>
+                                <a class='btn btn-link p-0' href={`/platform/${platform.id}`}>
                                   {platform.name}
                                 </a>
                               )}
@@ -221,7 +221,7 @@ const coverImage = await getImage({
                         <td>
                           {album?.animations.map(({ animation }, i) => (
                             <Fragment key={id}>
-                              <a class='btn btn-link p-0' href={`/anim/${id}`}>
+                              <a class='btn btn-link p-0' href={`/anim/${animation.id}`}>
                                 {animation.title}
                               </a>
                               {i !== album?.animations.length - 1 && ', '}
