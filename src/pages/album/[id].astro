@@ -35,7 +35,7 @@ const album = await prismaClient.albums.findUnique({
     categories: { select: { categoryName: true } },
     classifications: { select: { classificationName: true } },
     platforms: { select: { platform: { select: { id: true, name: true } } } },
-    games: { select: { game: { select: { slug: true, name: true } } } },
+    games: { select: { game: { select: { slug: true, name: true,series: {select: {series: {select: {slug: true, name: true}}}} } } } },
     animations: { select: { animation: { select: { id: true, title: true } } } },
     stores: { select: { url: true, provider: true }, where: { NOT: { provider: 'SOON' } } },
     discs: { select: { number: true, body: true } },
@@ -51,6 +51,7 @@ const album = await prismaClient.albums.findUnique({
 
 if (!album) return Astro.redirect("/404");
 
+const series = album.games.map(g => g.game.series).flat().map(s => s.series)
 const { currentLocale } = Astro
 const coverImage = await getImage({
   src: `https://cdn.sittingonclouds.net/album/${album?.id}.png`,
@@ -191,6 +192,23 @@ const coverImage = await getImage({
                                 </a>
                               )}
                               {i !== album?.platforms.length - 1 && ', '}
+                            </Fragment>
+                          ))}
+                        </td>
+                      </tr>
+                    )
+                  }
+                  {
+                    series.length > 0 && (
+                      <tr>
+                        <th class='mr-2'>{m.series()}</th>
+                        <td>
+                          {series.map((s, i) => (
+                            <Fragment key={s.slug}>
+                              <a class='btn btn-link p-0' href={`/series/${s.slug}`}>
+                                {s.name}
+                              </a>
+                              {i !== series.length - 1 && ', '}
                             </Fragment>
                           ))}
                         </td>
