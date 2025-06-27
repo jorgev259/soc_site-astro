@@ -1,0 +1,81 @@
+name: Build Docker image
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['dev', 'prod']
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set environment variables
+        id: set_env_vars
+        env:
+          SOC_ENV_DEV: ${{ secrets.SOC_ENV_DEV }}
+          SOC_ENV_PROD: ${{ secrets.SOC_ENV_PROD }}
+          DATABASE_URL_DEV: ${{ secrets.SOC_MARIADB_URL_DEV }}
+          DATABASE_URL_PROD: ${{ secrets.SOC_MARIADB_URL_PROD }}
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "dev" ]; then
+            echo "SOC_ENV=${SOC_ENV_DEV}" >> $GITHUB_ENV
+            echo "DATABASE_URL=${DATABASE_URL_DEV}" >> $GITHUB_ENV
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          elif [ "${GITHUB_REF_NAME}" = "prod" ]; then
+            echo "SOC_ENV=${SOC_ENV_PROD}" >> $GITHUB_ENV
+            echo "DATABASE_URL=${DATABASE_URL_PROD}" >> $GITHUB_ENV
+            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+          fi
+
+      - name: Prepare environment files
+        run: |
+          # Create .env.runner with current environment variables
+          echo "SOC_ENV=${SOC_ENV}" > .env.runner
+          echo "DATABASE_URL=${DATABASE_URL}" >> .env.runner
+
+          # Create .env.docker with a dummy DATABASE_URL for build (no network access needed)
+          echo "SOC_ENV=${SOC_ENV}" > .env.docker
+          echo "DATABASE_URL=mysql://dummy:dummy@localhost:3306/dummy" >> .env.docker
+
+          # Create .env.runtime with the real database URL for runtime
+          echo "SOC_ENV=${SOC_ENV}" > .env.runtime
+          echo "DATABASE_URL=$(echo "${DATABASE_URL}" | sed 's#mariadb:3306#behemoth.cerberus-alligator.ts.net:3306#g')" >> .env.runtime
+
+          # Debug: Show what files were created
+          echo "=== .env.runner ==="
+          cat .env.runner
+          echo "=== .env.docker ==="
+          cat .env.docker
+          echo "=== .env.runtime ==="
+          cat .env.runtime
+          echo "=== Directory listing ==="
+          ls -la
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+          check-latest: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: soc-site:${{ github.ref_name }}
+          network: host
+          build-args: |
+            ENVIRONMENT=${{ env.ENVIRONMENT }}
