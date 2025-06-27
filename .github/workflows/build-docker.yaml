@@ -35,4 +35,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/soc-site:$BRANCH_NAME
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/soc-site:${{ BRANCH_NAME }}
