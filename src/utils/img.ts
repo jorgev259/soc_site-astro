@@ -13,7 +13,7 @@ function convertRGBtoHex(red: number, green: number, blue: number) {
 }
 
 export async function writeImg(file: File, folder: string, id: number | string) {
-  const pathString = path.join('/var/www/soc_img/img', folder)
+  const pathString = path.join('/mnt/soc_img/img', folder)
   const fullPath = path.join(pathString, `${id}.png`)
 
   const fileArray = Buffer.from(await file.arrayBuffer())
