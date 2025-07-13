@@ -1,0 +1,26 @@
+name: Build site docker image (development)
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+jobs:
+  build-docker-image:
+    environment: development
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql
+        options: --hostname mysql
+        env:
+          MYSQL_ROOT_PASSWORD: root
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          github-server-url: 'https://brokkr.sittingonclouds.net'
+      - name: Build Docker Images
+        run: |
+          docker build --network host -t soc-site:development \
+          --build-arg MODE=development \
+          .

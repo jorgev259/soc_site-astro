@@ -1,31 +1,23 @@
-FROM node:24-alpine AS build-deps
+# syntax=docker/dockerfile:experimental
+FROM node:24-alpine AS base
 WORKDIR /app
 RUN corepack enable
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn -v
 
-FROM node:24-alpine AS build
-ARG GIT_BRANCH
-WORKDIR /app
-COPY . .
-COPY --from=build-deps /app/node_modules ./node_modules
-COPY .env.docker .env
-RUN yarn build
-
-FROM node:24-alpine AS prod-deps
-WORKDIR /app
+FROM base AS deps
 COPY package.json yarn.lock ./
-RUN corepack enable
 RUN yarn install --production --frozen-lockfile
 
-FROM node:24-alpine AS runner
-ARG GIT_BRANCH
-WORKDIR /app
+FROM deps AS build
+ARG MODE=development
+ENV DATABASE_URL="mysql://root:root@mysql:3306/soc_dev"
+COPY src public project.inlang prisma messages ./
+RUN yarn build -m ${MODE}
+
+FROM deps AS runner
 ENV HOST=0.0.0.0
 ENV PORT=80
 EXPOSE 80
-COPY --from=build /app/dist ./dist
-COPY --from=prod-deps /app/node_modules ./node_modules
-COPY .env.runner .env
-COPY package.json yarn.lock
-CMD ["yarn prisma:migrate", "node ./dist/server/entry.mjs"]
+COPY --from=build /app/dist .
+COPY prisma package.json ./
+CMD ["node", "./dist/server/entry.mjs"]
