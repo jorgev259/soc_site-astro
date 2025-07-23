@@ -76,14 +76,14 @@ if (!album) {
         <input hidden readonly name='albumId' value={album.id} type='number' />
         <div class='grid grid-cols-4 gap-x-4 gap-y-1'>
           <Input dark defaultValue={album.title} name='title' label='Title' className='col-span-2' />
-          <Input dark defaultValue={album.subTitle} name='subTitle' label='Subtitle' className='col-span-2' />
+          <InputArea dark defaultValue={album.subTitle} name='subTitle' label='Subtitle' className='col-span-2' />
 
           <Input dark defaultValue={album.description} name='description' label='Description' className='col-span-3' />
           <Input dark name='cover' label='Cover image' type='file' />
 
           <InputSelect dark name='status' label='Status' defaultValue={album.status}>
-            <option value={AlbumStatus.HIDDEN}>Hidden</option>
             <option value={AlbumStatus.SHOW}>Show</option>
+            <option value={AlbumStatus.HIDDEN}>Hidden</option>
           </InputSelect>
           <Input
             dark
