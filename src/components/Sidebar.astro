@@ -11,7 +11,7 @@ import SidebarSection from './sidebar/SidebarSection.astro'
 import Highlight from './sidebar/Highlight.astro'
 import AlbumBox from './AlbumBox.astro'
 import AlbumCount from './sidebar/AlbumCount.astro'
-import CommentCarousel from './sidebar/CommentCarousel.astro'
+// import CommentCarousel from './sidebar/CommentCarousel.astro'
 import SidebarAd from './sidebar/SidebarAd.astro'
 import GetLuckyAlbum from './sidebar/GetLuckyAlbum.astro'
 
@@ -52,16 +52,16 @@ const listClass =
         <AlbumBox loading />
       </SidebarSection>
     </Highlight>
-    <CommentCarousel>
+    <!-- <CommentCarousel>
       <SidebarSection slot='fallback' class='h-24 animate-pulse' />
-    </CommentCarousel>
+    </CommentCarousel> -->
     <AlbumCount server:defer>
       <SidebarSection slot='fallback' class='h-32 animate-pulse' />
     </AlbumCount>
 
-    <SidebarSection class='p-0.5'>
+    <!-- <SidebarSection class='p-0.5'>
       <iframe title='radio' src='https://radio.sittingonclouds.net/widget' class='h-[400px] w-full rounded-md'></iframe>
-    </SidebarSection>
+    </SidebarSection> -->
 
     <SidebarAd />
   </div>

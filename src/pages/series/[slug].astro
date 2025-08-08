@@ -110,14 +110,14 @@ const coverImage = await getImage({
   <div class='flex flex-col flex-1 max-w-[1440px] mx-auto p-3'>
     <div class='flex flex-col md:flex-row flex-wrap md:flex-nowrap gap-x-3 gap-y-2'>
       <div class='flex-1 flex-wrap md:flex-5/12'>
-        <div class='size-full relative cursor-pointer bg-dark rounded-xl p-2'>
+        <div class='size-full relative p-4 flex items-center'>
           <Image
             src={`https://cdn.sittingonclouds.net/series/${slug}.png`}
             alt={`${series.name} logo`}
-            class='rounded-sm'
+            class='m-auto '
             quality='mid'
-            width={500}
-            height={500}
+            width={300}
+            height={200}
           />
         </div>
       </div>

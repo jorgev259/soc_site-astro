@@ -250,12 +250,12 @@ const coverImage = await getImage({
                     )
                   }
 
-                  <tr>
+                  <!-- <tr>
                     <th class='mr-2'>{m.avgRating()}</th>
                     <td>
-                      <!-- <StarCounter album?.Id={album?.id} /> -->
+                      <StarCounter album?.Id={album?.id} />
                     </td>
-                  </tr>
+                  </tr> -->
                 </tbody>
               </table>
               {
@@ -407,23 +407,25 @@ const coverImage = await getImage({
             <hr />
           </div>
         </div>
-        <!-- Comment List here -->
-        <div class='mt-2 bg-dark/85 rounded-xl uppercase text-4xl font-semibold text-center py-2 px-1.5'>
-          {m.relatedAlbums()}
-        </div>
-        <div class='mt-2'>
-          <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5 justify-items-center'>
-            {
-              album?.relatedAlbums.map(({ relatedAlbum }) => (
-                <AlbumBox
-                  title={relatedAlbum?.title}
-                  href={`/album/${relatedAlbum?.id}`}
-                  image={`/album/${relatedAlbum?.id}.png`}
-                />
-              ))
-            }
+        
+        {(album?.relatedAlbums.length>0) && (
+          <div class='mt-2 bg-dark/85 rounded-xl uppercase text-4xl font-semibold text-center py-2 px-1.5'>
+            {m.relatedAlbums()}
           </div>
-        </div>
+          <div class='mt-2'>
+            <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5 justify-items-center'>
+              {
+                album?.relatedAlbums.map(({ relatedAlbum }) => (
+                  <AlbumBox
+                    title={relatedAlbum?.title}
+                    href={`/album/${relatedAlbum?.id}`}
+                    image={`/album/${relatedAlbum?.id}.png`}
+                  />
+                ))
+              }
+            </div>
+          </div>
+        )}
       </div>
     </div>
   </div>
