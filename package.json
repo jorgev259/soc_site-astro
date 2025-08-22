@@ -4,9 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "yarn prisma:build && astro build",
-    "prisma:migrate": "prisma migrate deploy && tsx ./prisma/migrate.ts",
-    "prisma:build": "prisma generate --sql"
+    "build": "prisma generate && astro build",
+    "prisma:migrate": "prisma migrate deploy && tsx ./prisma/migrate.ts"
   },
   "dependencies": {
     "@ag-grid-community/locale": "^33.3.2",

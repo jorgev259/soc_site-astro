@@ -15,11 +15,10 @@ RUN yarn prisma generate
 
 FROM base AS build
 ARG MODE=development
-ENV DATABASE_URL="mysql://soc:soc@localhost:3306/soc"
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 RUN yarn build -m ${MODE}
-RUN yarn pkgrol
+RUN tsc prisma/migrate.ts --outDir dist/prisma --esModuleInterop
 
 FROM deps AS runner
 COPY --from=build /app/dist ./dist
@@ -28,4 +27,4 @@ COPY prisma .
 EXPOSE 4321
 ENV HOST=0.0.0.0
 ENV PORT=4321
-ENTRYPOINT node_modules/.bin/prisma migrate deploy && node dist/server/entry.mjs
+ENTRYPOINT node_modules/.bin/prisma migrate deploy && node dist/prisma/migrate.js && node dist/server/entry.mjs
