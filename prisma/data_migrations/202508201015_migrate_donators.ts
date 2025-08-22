@@ -6,7 +6,7 @@ export default async function MigrationFn(tx: Prisma.TransactionClient) {
 
   await Promise.all(
     donators.map(async (d) => {
-      await tx.users.updateMany({ where: { id: d.userUsername }, data: { role: Role.user } })
+      await tx.users.updateMany({ where: { id: d.userUsername }, data: { role: Role.donator } })
     })
   )
 

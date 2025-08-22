@@ -6,49 +6,57 @@ import { Role } from '@prisma/client'
 import prismaClient from 'utils/prisma-client'
 
 import BaseLayout from 'layouts/base.astro'
+import { authServer } from 'auth/auth-server'
 
 const { session, user } = Astro.locals
 
 async function getMessage() {
-  if (!user || !session) {
-    return m.loggedInPage()
-  }
-
-  if (user.role.includes(Role.donator)) {
-    return m.alreadyDonator()
-  }
-
-  const discordAcc = await prismaClient.account.findFirst({
-    where: { providerId: 'discord', userId: session.userId }
-  })
-
-  if (!discordAcc) {
-    return m.discordNeeded()
-  }
-
-  const memberInfoRes = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`, {
-    headers: {
-      Authorization: `Bearer ${discordAcc.accessToken}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
+  try {
+    if (!user || !session) {
+      return m.loggedInPage()
     }
-  })
 
-  if (memberInfoRes.status == 429) {
-    const { message, retry_after }: { message: string; retry_after: number } = await memberInfoRes.json()
-    return m.discordRateLimit({ message, retry_after })
-  } else if (memberInfoRes.status != 200) {
-    return m.errorDonatorCheck({ error: await memberInfoRes.json() })
+    if (user.role.includes(Role.donator)) {
+      return m.alreadyDonator()
+    }
+
+    const discordAcc = await prismaClient.account.findFirst({
+      where: { providerId: 'discord', userId: session.userId }
+    })
+
+    if (!discordAcc) {
+      return m.discordNeeded()
+    }
+
+    const memberInfoRes = await fetch(`https://discord.com/api/users/@me/guilds/${DISCORD_GUILD_ID}/member`, {
+      headers: {
+        Authorization: `Bearer ${discordAcc.accessToken}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+
+    if (memberInfoRes.status == 429) {
+      const { message, retry_after }: { message: string; retry_after: number } = await memberInfoRes.json()
+      return m.discordRateLimit({ message, retry_after })
+    } else if (memberInfoRes.status != 200) {
+      return m.errorDonatorCheck({ error: await memberInfoRes.json() })
+    }
+
+    const memberInfo: { roles: string[] } = await memberInfoRes.json()
+    const isDiscordDonator = memberInfo.roles.includes(DISCORD_DONATOR_ID)
+
+    if (!isDiscordDonator) {
+      return m.discordRoleNeeded()
+    }
+
+    await authServer.api.setRole({
+      body: { userId: user.id, role: Role.donator },
+      headers: Astro.request.headers
+    })
+    return m.addedDonator()
+  } catch (err) {
+    return err
   }
-
-  const memberInfo: { roles: string[] } = await memberInfoRes.json()
-  const isDiscordDonator = memberInfo.roles.includes(DISCORD_DONATOR_ID)
-
-  if (!isDiscordDonator) {
-    return m.discordRoleNeeded()
-  }
-
-  await prismaClient.user_Role.create({ data: { userUsername: user.id, roleName: 'Donator' } })
-  return m.addedDonator()
 }
 
 const message = await getMessage()
