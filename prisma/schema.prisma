@@ -101,7 +101,6 @@ model Studio_Animation {
 model User_Role {
   userUsername String @db.VarChar(255)
   roleName     String @db.VarChar(255)
-  users        users  @relation(fields: [userUsername], references: [id], onDelete: Cascade, map: "User_Role_ibfk_1")
   roles        roles  @relation(fields: [roleName], references: [name], onDelete: Cascade, map: "User_Role_ibfk_2")
 
   @@id([userUsername, roleName])
@@ -402,18 +401,28 @@ model submissions {
   request      requests? @relation(fields: [requestId], references: [id], map: "submissions_ibfk_2")
 }
 
-model users {
-  id              String   @id @db.VarChar(255)
-  name            String   @db.VarChar(20)
-  username        String?  @unique @db.VarChar(255)
-  displayUsername String   @default("Default display name")
-  email           String?  @unique @db.VarChar(255)
-  emailVerified   Boolean
-  createdAt       DateTime @db.DateTime(0)
-  updatedAt       DateTime @db.DateTime(0)
-  image           String?  @db.VarChar(255)
+enum Role {
+  user
+  donator
+  admin
+  mod
+}
 
-  roles       User_Role[]
+model users {
+  id              String    @id @db.VarChar(255)
+  name            String    @db.VarChar(20)
+  username        String?   @unique @db.VarChar(255)
+  displayUsername String    @default("Default display name")
+  email           String?   @unique @db.VarChar(255)
+  emailVerified   Boolean
+  createdAt       DateTime  @db.DateTime(0)
+  updatedAt       DateTime  @db.DateTime(0)
+  image           String?   @db.VarChar(255)
+  role            String    @default("user")
+  banned          Boolean?
+  banReason       String?
+  banExpires      DateTime?
+
   histories   albumHistories[]
   comments    comments[]
   favorites   favorites[]
@@ -426,14 +435,15 @@ model users {
 }
 
 model session {
-  id        String   @id
-  userId    String   @db.VarChar(255)
-  token     String   @unique
-  expiresAt DateTime
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime
-  updatedAt DateTime
+  id             String   @id
+  userId         String   @db.VarChar(255)
+  token          String   @unique
+  expiresAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime
+  updatedAt      DateTime
+  impersonatedBy String?
 
   user users @relation(fields: [userId], references: [id])
 }

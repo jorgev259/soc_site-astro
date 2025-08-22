@@ -1,7 +1,9 @@
 ---
 import { Image, Picture } from 'astro:assets'
 import * as m from '../paraglide/messages.js'
+
 import prismaClient from 'utils/prisma-client.js'
+import { hasPermission } from 'auth/auth-server'
 
 import logo from 'img/logos/winter.png'
 import logoEs from 'img/logos/default_es.png'
@@ -21,7 +23,8 @@ const [bannerConfig, bannerPositionConfig] = await Promise.all([
 const bannerId = bannerConfig?.value || ''
 const bannerPosition = bannerPositionConfig?.value || 'top'
 
-const { session } = Astro.locals
+const { session, user } = Astro.locals
+const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
 ---
 
 <header class='relative'>
@@ -80,23 +83,25 @@ const { session } = Astro.locals
         session ? (
           <>
             <NavButton>{m.submitalbum()}</NavButton>
-            <Dropdown>
-              {m.adminGrounds()}
-              <Fragment slot='items'>
-                <DropdownItem href='/admin' perms>
-                  {m.manageAlbums()}
-                </DropdownItem>
-                <DropdownItem href='/admin/user' perms>
-                  {m.manageUsers()}
-                </DropdownItem>
-                <DropdownItem href='/admin/request' perms>
-                  {m.manageRequests()}
-                </DropdownItem>
-                <DropdownItem href='/admin/submission' perms>
-                  {m.manageSubmissions()}
-                </DropdownItem>
-              </Fragment>
-            </Dropdown>
+            {hasUpdate ? (
+              <Dropdown>
+                {m.adminGrounds()}
+                <Fragment slot='items'>
+                  <DropdownItem href='/admin' perms>
+                    {m.manageAlbums()}
+                  </DropdownItem>
+                  <DropdownItem href='/admin/user' perms>
+                    {m.manageUsers()}
+                  </DropdownItem>
+                  <DropdownItem href='/admin/request' perms>
+                    {m.manageRequests()}
+                  </DropdownItem>
+                  <DropdownItem href='/admin/submission' perms>
+                    {m.manageSubmissions()}
+                  </DropdownItem>
+                </Fragment>
+              </Dropdown>
+            ) : null}
           </>
         ) : null
       }

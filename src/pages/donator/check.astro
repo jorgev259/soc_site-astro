@@ -1,18 +1,20 @@
 ---
 import * as m from 'paraglide/messages'
 import { DISCORD_DONATOR_ID, DISCORD_GUILD_ID } from 'astro:env/server'
+import { Role } from '@prisma/client'
+
 import prismaClient from 'utils/prisma-client'
 
 import BaseLayout from 'layouts/base.astro'
 
-const { session, user, roles } = Astro.locals
+const { session, user } = Astro.locals
 
 async function getMessage() {
   if (!user || !session) {
     return m.loggedInPage()
   }
 
-  if (roles.includes('Donator')) {
+  if (user.role.includes(Role.donator)) {
     return m.alreadyDonator()
   }
 
