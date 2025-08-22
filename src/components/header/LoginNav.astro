@@ -7,6 +7,7 @@ import RegisterBtn from './RegisterButton'
 import LoginBtn from './LoginButton'
 import LogoutBtn from './LogoutButton'
 import Button from 'components/Button'
+import NotifDrawer from './NotifDrawer.astro'
 
 const { permissions, session, user } = Astro.locals
 const isDonator = permissions.includes('SKIP_ADS')
@@ -18,12 +19,18 @@ const discordAcc = user
   : null
 ---
 
-<div class='px-2 flex gap-x-2 justify-end absolute w-full md:ms-auto md:block md:w-auto md:static'>
+<div class='px-2 flex gap-x-2 justify-end absolute w-full md:ms-auto md:w-auto md:static'>
   {
     session ? (
       <>
+        <Button className='rounded-t-none h-fit'>
+          <label for='notif-drawer' class='hover:cursor-pointer'>
+            Open drawer
+          </label>
+        </Button>
+        <NotifDrawer />
         {!discordAcc ? (
-          <Button id='link-discord' className='rounded-t-none'>
+          <Button id='link-discord' className='rounded-t-none h-fit'>
             {m.linkDiscord()}
           </Button>
         ) : null}

@@ -9,7 +9,7 @@ export default function LogoutBtn() {
   }
 
   return (
-    <Button className='rounded-t-none' onClick={handleClick}>
+    <Button className='rounded-t-none h-fit' onClick={handleClick}>
       {m.logout()}
     </Button>
   )

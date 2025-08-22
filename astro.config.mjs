@@ -22,6 +22,7 @@ export default defineConfig({
         default: 'http://localhost:4321'
       }),
       WEBHOOK_URL: envField.string({ context: 'server', access: 'secret' }),
+      DISCORD_TOKEN: envField.string({ context: 'server', access: 'secret' }),
       DISCORD_OAUTH_ID: envField.string({ context: 'server', access: 'public' }),
       DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
       DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'public' }),

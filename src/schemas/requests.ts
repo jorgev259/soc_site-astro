@@ -7,6 +7,5 @@ export const EditRequest = object({
   link: optional(string()),
   state: enums(Object.values(RequestState)),
   reason: optional(string()),
-  comments: optional(string()),
-  message: optional(string())
+  comments: optional(string())
 })
