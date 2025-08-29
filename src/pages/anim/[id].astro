@@ -117,9 +117,14 @@ const { currentLocale } = Astro
         </div>
         <div>
           <div class='grid w-full grid-cols-2 md:grid-cols-4 gap-x-2.5'>
-            {
-              anim.albums.map((a) => (
-                <AlbumBox href={`/album/${a.album.id}`} image={`/album/${a.album.id}.png`} title={a.album.title} />
+            {anim.albums
+              .sort((a, b) => (a.album.title ?? '').localeCompare(b.album.title ?? ''))
+              .map((a) => (
+                <AlbumBox
+                  href={`/album/${a.album.id}`}
+                  image={`/album/${a.album.id}.png`}
+                  title={a.album.title}
+                />
               ))
             }
           </div>
