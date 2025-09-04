@@ -82,26 +82,24 @@ const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
       {
         session ? (
           <>
-            <NavButton>{m.submitalbum()}</NavButton>
-            {hasUpdate ? (
-              <Dropdown>
-                {m.adminGrounds()}
-                <Fragment slot='items'>
-                  <DropdownItem href='/admin' perms>
-                    {m.manageAlbums()}
-                  </DropdownItem>
-                  <DropdownItem href='/admin/user' perms>
-                    {m.manageUsers()}
-                  </DropdownItem>
-                  <DropdownItem href='/admin/request' perms>
-                    {m.manageRequests()}
-                  </DropdownItem>
-                  <DropdownItem href='/admin/submission' perms>
-                    {m.manageSubmissions()}
-                  </DropdownItem>
-                </Fragment>
-              </Dropdown>
-            ) : null}
+            {/* <NavButton>{m.submitalbum()}</NavButton> */}
+            <Dropdown>
+              {m.adminGrounds()}
+              <Fragment slot='items'>
+                <DropdownItem href='/admin' perms>
+                  {m.manageAlbums()}
+                </DropdownItem>
+                <DropdownItem href='/admin/user' perms>
+                  {m.manageUsers()}
+                </DropdownItem>
+                <DropdownItem href='/admin/request' perms>
+                  {m.manageRequests()}
+                </DropdownItem>
+                <DropdownItem href='/admin/submission' perms>
+                  {m.manageSubmissions()}
+                </DropdownItem>
+              </Fragment>
+            </Dropdown>
           </>
         ) : null
       }
