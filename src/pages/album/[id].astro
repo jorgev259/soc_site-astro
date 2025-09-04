@@ -1,31 +1,34 @@
 ---
-import prismaClient from 'utils/prisma-client'
+
 import * as m from 'paraglide/messages'
 import { getImage, Image } from 'astro:assets'
 import { AlbumStatus } from '@prisma/client'
 import { SEO } from 'astro-seo'
 
+import { hasPermission } from 'auth/auth-server'
+import prismaClient from 'utils/prisma-client'
+
 import BaseLayout from 'layouts/base.astro'
 import TrackList from 'components/albumPage/TrackList'
 import DownloadBtn from 'components/albumPage/DownloadBtn.astro'
 import AlbumBox from 'components/AlbumBox.astro'
+import ReleaseDate from 'components/ReleaseDate.astro'
 
 import kofi from 'img/socials/ko-fi-donate-button.png'
 import discord from 'img/socials/discord.png'
 import vgmdbLogo from 'img/assets/vgmdb-logo.png'
 import flyIcon from 'img/assets/fly-icon.png'
 import ouoIcon from 'img/assets/ouo-icon.png'
-import ReleaseDate from 'components/ReleaseDate.astro'
 
 const { id } = Astro.params
-const { permissions } = Astro.locals
+const { user } = Astro.locals
 
 if (!id) return Astro.redirect("/404");
 const albumId = parseInt(id)
 if(!albumId) return Astro.redirect("/404");
 
-const hasDirect = permissions.includes('SKIP_ADS')
-const hasUpdate = permissions.includes('UPDATE')
+const hasDirect = await hasPermission(user?.id, {site: ['skip_ads']}) 
+const hasUpdate = await hasPermission(user?.id,  {cms: ['update']}) 
 const hiddenCondition = !hasUpdate ? { status: AlbumStatus.SHOW } : {}
 
 const album = await prismaClient.albums.findUnique({

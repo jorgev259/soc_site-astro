@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import * as m from 'paraglide/messages.js'
 import Button from 'components/Button'
 import Modal from 'components/Modal'
-import { forgetPassword, signIn } from 'utils/auth-client'
+import { forgetPassword, signIn } from 'auth/auth-client'
 import type { SetState } from 'types'
 
 type FormOptions = 'login' | 'forgor'

@@ -7,10 +7,12 @@ import { Status, parseForm, slug } from 'utils/form'
 import { handleCover } from 'utils/img'
 import { handleComplete } from 'integrations/requestCat'
 import { AlbumBase } from 'schemas/album'
+import { hasPermission } from 'auth/auth-server'
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { permissions, user } = locals
-  if (!user || !permissions.includes('CREATE')) return Status(403)
+  const { user } = locals
+  const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
+  if (!user || !hasPublish) return Status(403)
 
   let body
   try {

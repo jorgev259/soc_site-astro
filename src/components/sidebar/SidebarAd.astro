@@ -1,10 +1,11 @@
 ---
-const { permissions } = Astro.locals
-const show = !permissions.includes('SKIP_ADS')
+import { hasPermission } from "auth/auth-server"
+
+const {user} = Astro.locals
+const hide = await hasPermission(user?.id, {site: ['skip_ads']})
 ---
 
-{show ? (
-
+{!hide ? (
 <div class="rounded-md mb-2 h-full min-h-96">
       <iframe
             title='play-asia'

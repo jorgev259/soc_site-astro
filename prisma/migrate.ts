@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client'
 import fs from 'fs'
 import path from 'path'
 import { createRequire } from 'module'
+
 import prismaClient from 'utils/prisma-client'
 
 const require = createRequire(import.meta.url)
