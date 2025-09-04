@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import toast from 'react-hot-toast'
 
 import * as m from 'paraglide/messages.js'
-import { resetPassword } from 'utils/auth-client'
+import { resetPassword } from 'auth/auth-client'
 
 import Button from 'components/Button'
 import Modal from 'components/Modal'

@@ -7,9 +7,10 @@ import RegisterBtn from './RegisterButton'
 import LoginBtn from './LoginButton'
 import LogoutBtn from './LogoutButton'
 import Button from 'components/Button'
+import { Role } from '@prisma/client'
 
-const { permissions, session, user } = Astro.locals
-const isDonator = permissions.includes('SKIP_ADS')
+const { session, user } = Astro.locals
+const isDonator = user?.role.includes(Role.donator)
 
 const discordAcc = user
   ? await prismaClient.account.findFirst({
@@ -42,7 +43,7 @@ const discordAcc = user
 </div>
 
 <script>
-  import { linkSocial } from 'utils/auth-client'
+  import { linkSocial } from 'auth/auth-client'
 
   const discordBtn = document.getElementById('link-discord')
   discordBtn?.addEventListener('click', () => {

@@ -4,10 +4,12 @@ import prismaClient from 'utils/prisma-client'
 
 import { Status, parseForm } from 'utils/form'
 import { EditRequest } from 'schemas/requests'
+import { hasPermission } from 'auth/auth-server'
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { permissions, user } = locals
-  if (!user || !permissions.includes('REQUESTS')) return Status(403)
+  const { user } = locals
+  const hasRequest = await hasPermission(user?.id, { request: ['create'] })
+  if (!user || !hasRequest) return Status(403)
 
   let body
   try {

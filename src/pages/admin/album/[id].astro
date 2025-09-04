@@ -11,9 +11,11 @@ import Button from 'components/Button'
 import MultiSelectWrapper from 'components/form/MultiSelectWrapper'
 import StoresSection from 'components/adminAlbum/StoresSection'
 import DefaultSEO from 'components/DefaultSEO.astro'
+import { hasPermission } from 'auth/auth-server'
 
-const { user, permissions } = Astro.locals
-if (!user || !permissions.includes('UPDATE')) return Astro.redirect('/404')
+const { user } = Astro.locals
+const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
+if (!user || !hasUpdate) return Astro.redirect('/404')
 
 const albumId = parseInt(Astro.params.id as string)
 const album = await prismaClient.albums.findUnique({

@@ -5,10 +5,12 @@ import prismaClient from 'utils/prisma-client'
 import { Status, parseForm, slug } from 'utils/form'
 import { handleCover } from 'utils/img'
 import { EditAlbum } from 'schemas/album'
+import { hasPermission } from 'auth/auth-server'
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { permissions, user } = locals
-  if (!user || !permissions.includes('UPDATE')) return Status(403)
+  const { user } = locals
+  const hasUpdate = await hasPermission(user?.id, { cmd: ['update'] })
+  if (!user || !hasUpdate) return Status(403)
 
   let body
   try {

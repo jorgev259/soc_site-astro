@@ -1,18 +1,21 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { username, bearer } from 'better-auth/plugins'
+import { username, bearer, admin } from 'better-auth/plugins'
+import type { Statements } from 'better-auth/plugins/access'
 import { DISCORD_OAUTH_ID, DISCORD_OAUTH_SECRET } from 'astro:env/server'
+import { Role } from '@prisma/client'
 
-import prismaClient from './utils/prisma-client'
-import { sendEmail } from './utils/email'
-import forgorTemplate from './utils/forgorTemplate'
-import verifyTemplate from './utils/verifyTemplate'
+import prismaClient from '../utils/prisma-client'
+import { sendEmail } from '../utils/email'
+import forgorTemplate from '../utils/forgorTemplate'
+import verifyTemplate from '../utils/verifyTemplate'
+import { ac, roles } from 'auth/permissions'
 
-export const auth = betterAuth({
+export const authServer = betterAuth({
   trustedOrigins: ['https://sittingonclouds.net', 'https://www.sittingonclouds.net'],
   database: prismaAdapter(prismaClient, { provider: 'mysql' }),
   user: { modelName: 'users' },
-  plugins: [username(), bearer()],
+  plugins: [username(), bearer(), admin({ defaultRole: Role.user, adminRoles: Role.admin, ac, roles })],
   account: {
     accountLinking: {
       enabled: true,
@@ -41,3 +44,8 @@ export const auth = betterAuth({
     }
   }
 })
+
+export async function hasPermission(userId: string | undefined, permissions: Statements) {
+  const res = await authServer.api.userHasPermission({ body: { userId, permissions } })
+  return res.success
+}

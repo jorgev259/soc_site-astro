@@ -3,14 +3,16 @@ import * as s from 'superstruct'
 
 import prismaClient from 'utils/prisma-client'
 import { Status, parseForm } from 'utils/form'
+import { hasPermission } from 'auth/auth-server'
 
 const DeleteAlbum = s.object({ albumId: s.number() })
 
 export const POST: APIRoute = async ({ request, locals }) => {
-  const { session, permissions, user } = locals
+  const { session, user } = locals
 
   if (!session || !user) return Status(401)
-  if (!permissions.includes('CREATE')) return Status(403)
+  const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
+  if (!hasPublish) return Status(403)
 
   let body
   try {

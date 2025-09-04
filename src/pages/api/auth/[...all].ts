@@ -1,6 +1,6 @@
-import { auth } from 'auth'
+import { authServer } from 'auth/auth-server'
 import type { APIRoute } from 'astro'
 
 export const ALL: APIRoute = async (ctx) => {
-  return auth.handler(ctx.request)
+  return authServer.handler(ctx.request)
 }

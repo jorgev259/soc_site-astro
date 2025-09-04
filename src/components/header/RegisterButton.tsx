@@ -6,7 +6,7 @@ import Button from 'components/Button'
 import Modal from 'components/Modal'
 import { Input } from 'components/form/Input'
 
-import { signUp } from 'utils/auth-client'
+import { signUp } from 'auth/auth-client'
 
 export default function RegisterBtn() {
   const [modalOpen, setModalOpen] = useState(false)

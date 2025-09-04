@@ -55,9 +55,11 @@ const listClass =
     <!-- <CommentCarousel>
       <SidebarSection slot='fallback' class='h-24 animate-pulse' />
     </CommentCarousel> -->
-    <AlbumCount server:defer>
+
+    <!-- Disabled due to reliance on TypedSQL which requires an open DB on build. TODO: implement using alternatives   -->
+    <!--  <AlbumCount server:defer>
       <SidebarSection slot='fallback' class='h-32 animate-pulse' />
-    </AlbumCount>
+    </AlbumCount> -->
 
     <!-- <SidebarSection class='p-0.5'>
       <iframe title='radio' src='https://radio.sittingonclouds.net/widget' class='h-[400px] w-full rounded-md'></iframe>

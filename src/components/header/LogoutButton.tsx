@@ -1,6 +1,6 @@
 import * as m from 'paraglide/messages.js'
 import Button from 'components/Button'
-import { signOut } from 'utils/auth-client'
+import { signOut } from 'auth/auth-client'
 
 export default function LogoutBtn() {
   async function handleClick() {
