@@ -12,20 +12,19 @@ import { locales } from './project.inlang/settings.json'
 export default defineConfig({
   env: {
     schema: {
-      MAILSERVER: envField.string({ context: 'server', access: 'secret' }),
-      BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
-      DATABASE_URL: envField.string({ context: 'server', access: 'secret' }),
-      BETTER_AUTH_URL: envField.string({
+      MAILSERVER: envField.string({ context: 'server', access: 'secret', default: '{}' }),
+      BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
+      DATABASE_URL: envField.string({ context: 'server', access: 'secret', default: 'mysql://localhost:3306/default' }),
+      BETTER_AUTH_URL: envField.string({ context: 'server', access: 'secret', default: 'http://localhost:4321' }),
+      WEBHOOK_URL: envField.string({
         context: 'server',
-        access: 'public',
-        optional: true,
-        default: 'http://localhost:4321'
+        access: 'secret',
+        default: 'https://discord.com/api/webhooks/1234567890'
       }),
-      WEBHOOK_URL: envField.string({ context: 'server', access: 'secret' }),
-      DISCORD_OAUTH_ID: envField.string({ context: 'server', access: 'public' }),
-      DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
-      DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'public' }),
-      DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'public' })
+      DISCORD_OAUTH_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
+      DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
+      DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
+      DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'secret', default: '' })
     },
     validateSecrets: true
   },
