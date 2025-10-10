@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
+import { MAILSERVER } from 'astro:env/server'
 
-export const mailConfig = JSON.parse(import.meta.env.MAILSERVER || '{}')
+export const mailConfig = JSON.parse(MAILSERVER)
 export const transporter = nodemailer.createTransport(mailConfig)
 
 export async function sendEmail(to: string, subject: string, html: string) {

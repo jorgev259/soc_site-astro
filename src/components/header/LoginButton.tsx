@@ -147,7 +147,7 @@ function CreateForgorForm(props: { setForm: SetState<FormOptions>; setModalOpen:
           <input type='email' name='email' className='bg-zinc-200 rounded-md p-2 mt-2 mb-3 text-black' required />
         </div>
         <div className='mx-auto'>
-          <Button loading={loading} disabled={loading}>
+          <Button type='submit' loading={loading} disabled={loading}>
             {m.recoverPassword()}
           </Button>
         </div>
