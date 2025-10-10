@@ -1,0 +1,91 @@
+---
+import fs from 'fs-extra'
+import path from 'node:path'
+import { Image } from 'astro:assets'
+import { IMG_PATH } from 'astro:env/server'
+
+import { hasPermission } from 'auth/auth-server'
+
+import DefaultSEO from 'components/DefaultSEO.astro'
+import Base from 'layouts/base.astro'
+
+const { user } = Astro.locals
+const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
+if (!user || !hasUpdate) return Astro.redirect('/404')
+
+const bannerPath = path.join(IMG_PATH, 'live')
+const bannerList = (await fs.readdir(bannerPath)).map((b) => b.split('.')[0])
+---
+
+<script>
+  import toast from 'react-hot-toast'
+
+  document.getElementById('uploadBanner')?.addEventListener('submit', async (e: SubmitEvent) => {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+
+    document.getElementById('uploadBanner')?.classList.add('loading')
+    const response = await fetch('/api/site/banner', { method: 'PUT', body: formData })
+    document.getElementById('uploadBanner')?.classList.remove('loading')
+
+    if (response.ok) {
+      toast.success('Banner upload successfully')
+    } else {
+      toast.error(response.statusText)
+    }
+  })
+
+  document.querySelectorAll('.banner-select').forEach((e) => {
+    e.addEventListener('click', async (ev) => {
+      ev.preventDefault()
+      const bannerEl = ev.currentTarget as HTMLElement
+      const id = bannerEl.dataset.id
+
+      if (!id) return
+
+      const formData = new FormData()
+      formData.set('id', id)
+      const response = await fetch('/api/site/banner', { method: 'PATCH', body: formData })
+
+      if (response.ok) {
+        toast.success('Banner updated successfully')
+      } else {
+        toast.error(response.statusText)
+      }
+    })
+  })
+</script>
+
+<DefaultSEO />
+<Base>
+  <div class='p-4 w-full'>
+    <div class='w-full p-4 bg-dark rounded-md'>
+      <form class='mb-4' id='uploadBanner'>
+        <input type='file' accept='image/*' class='w-full p-2' name='banner' />
+        <label>
+          <input type='checkbox' class='mr-2' name='set' />
+          Set as current banner
+        </label>
+        <button type='submit' class='mt-2 p-2 bg-blue-500 text-white rounded'>Submit</button>
+      </form>
+
+      <div class='overflow-y-auto h-[200px]'>
+        <div class='grid grid-cols-3 gap-2'>
+          {
+            bannerList.map((b) => (
+              <div class='flex items-center p-2 h-28 banner-select' data-id={b}>
+                <Image
+                  class={`size-full object-cover object-top`}
+                  src={`https://cdn.sittingonclouds.net/live/${b}.png`}
+                  alt=''
+                  width={2560}
+                  height={150}
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>

@@ -95,5 +95,6 @@
   "userID": "userID",
   "state": "State",
   "createdAt": "Created At",
-  "updatedAt": "Updated At"
+  "updatedAt": "Updated At",
+  "dashboard": "Dashboard"
 }

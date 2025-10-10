@@ -2,6 +2,7 @@ import path from 'node:path'
 import fs from 'node:fs/promises'
 import sharp from 'sharp'
 import type { PrismaClient } from '@prisma/client/extension'
+import { IMG_PATH } from 'astro:env/server'
 
 function colorToHex(color: number) {
   const hexadecimal = color.toString(16)
@@ -13,7 +14,7 @@ function convertRGBtoHex(red: number, green: number, blue: number) {
 }
 
 export async function writeImg(file: File, folder: string, id: number | string) {
-  const pathString = path.join('/mnt/soc_img/img', folder)
+  const pathString = path.join(IMG_PATH, folder)
   const fullPath = path.join(pathString, `${id}.png`)
 
   const fileArray = Buffer.from(await file.arrayBuffer())
@@ -27,10 +28,9 @@ export async function writeImg(file: File, folder: string, id: number | string) 
   return fullPath
 }
 
-export async function handleImg(file: File, folder: string, id: number | string) {
+export async function handleImg(file: File, folder: string, id: number | string, handleColor = true) {
   const coverPath = await writeImg(file, folder, id)
-  const headerColor = await getImgColor(coverPath)
-  return headerColor
+  return handleColor ? await getImgColor(coverPath) : undefined
 }
 
 export async function handleCover(file: File, folder: string, id: number | string, tx: PrismaClient) {

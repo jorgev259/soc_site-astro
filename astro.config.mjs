@@ -24,7 +24,8 @@ export default defineConfig({
       DISCORD_OAUTH_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
-      DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'secret', default: '' })
+      DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
+      IMG_PATH: envField.string({ context: 'server', access: 'secret', default: '/mnt/soc_img/img' })
     },
     validateSecrets: true
   },

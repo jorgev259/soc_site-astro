@@ -23,6 +23,7 @@
     "better-auth": "^1.1.11",
     "clsx": "^2.1.1",
     "decode-formdata": "^0.9.0",
+    "fs-extra": "^11.3.2",
     "immer": "^10.1.1",
     "nodemailer": "^6.10.0",
     "prisma": "^6.4.1",
@@ -41,6 +42,7 @@
   "devDependencies": {
     "@inlang/paraglide-js": "^2.0.12",
     "@parcel/watcher": "^2.4.1",
+    "@types/fs-extra": "^11.0.4",
     "@types/nodemailer": "^6.4.17",
     "concurrently": "^8.2.2",
     "daisyui": "^5.0.43",
