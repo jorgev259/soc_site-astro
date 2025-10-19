@@ -9,7 +9,7 @@ import { hasPermission } from 'auth/auth-server'
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const { user } = locals
-  const hasUpdate = await hasPermission(user?.id, { cmd: ['update'] })
+  const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
   if (!user || !hasUpdate) return Status(403)
 
   let body
