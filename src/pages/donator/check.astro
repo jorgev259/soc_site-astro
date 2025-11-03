@@ -9,6 +9,7 @@ import BaseLayout from 'layouts/base.astro'
 import { authServer } from 'auth/auth-server'
 
 const { session, user } = Astro.locals
+Astro.locals.user
 
 async function getMessage() {
   try {
@@ -49,10 +50,10 @@ async function getMessage() {
       return m.discordRoleNeeded()
     }
 
-    await authServer.api.setRole({
-      body: { userId: user.id, role: Role.donator },
-      headers: Astro.request.headers
-    })
+    const roles = user.role as string[]
+    roles.push(Role.donator)
+    await prismaClient.users.update({ where: { id: user.id }, data: { role: roles.join(',') } })
+
     return m.addedDonator()
   } catch (err) {
     return err
