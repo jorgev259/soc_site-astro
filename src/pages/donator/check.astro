@@ -50,9 +50,7 @@ async function getMessage() {
       return m.discordRoleNeeded()
     }
 
-    const roles = user.role as string[]
-    roles.push(Role.donator)
-    await prismaClient.users.update({ where: { id: user.id }, data: { role: roles.join(',') } })
+    await prismaClient.users.update({ where: { id: user.id }, data: { role: Role.donator } })
 
     return m.addedDonator()
   } catch (err) {

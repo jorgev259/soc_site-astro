@@ -1,6 +1,6 @@
 import prismaClient from './prisma-client'
 
-export async function getRandomAlbum(): Promise<{ id: number; title: string }> {
+export async function getRandomAlbum(): Promise<{ id: number; title: string } | undefined> {
   const res: { id: number; title: string }[] = await prismaClient.$queryRawUnsafe(`
     SELECT r1.id as id, r1.title as title
     FROM albums AS r1 JOIN (

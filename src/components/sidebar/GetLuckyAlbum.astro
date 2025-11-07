@@ -11,4 +11,10 @@ const album = await getRandomAlbum()
 const { class: className } = Astro.props
 ---
 
-<a href={`/album/${album.id}`} class={className}>{m.getLucky()}</a>
+{
+  album ? (
+    <a href={`/album/${album.id}`} class={className}>
+      {m.getLucky()}
+    </a>
+  ) : null
+}
