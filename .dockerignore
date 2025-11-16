@@ -1,4 +1,11 @@
-node_modules
-dist
-.git
-.vscode
+node_modules/
+dist/
+.git/
+.vscode/
+
+prisma/generated/
+
+Dockerfile
+prettier.config.cjs
+README.md
+.editorconfig
