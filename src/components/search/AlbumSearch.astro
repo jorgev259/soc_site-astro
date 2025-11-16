@@ -24,7 +24,13 @@ const queryString = query
   .trim()
   .split(/[\s_\-:]+/)
   .join(' ')
-
+  .toLowerCase()
+  .replace('the', '')
+  .replace('original soundtrack', '')
+  .replace('soundtrack', '')
+  .replace('of', '')
+  .trim()
+  
 const tokens = queryString.length
   ? queryString.split(/\s+/).map((t) => t.toLowerCase()).filter(Boolean)
   : []
@@ -228,7 +234,7 @@ if (!tokens.length) {
 <div class='grid grid-cols-1 md:grid-cols-3 mt-1.5 gap-4'>
   {
     _search.map((album) => (
-      <div class='flex bg-gray h-40 cursor-pointer rounded overflow-hidden shadow-md hover:shadow-lg hover:scale-102 transition group' href={`/album/${album.id}`}>
+      <a class='flex bg-gray h-40 cursor-pointer rounded overflow-hidden shadow-md hover:shadow-lg hover:scale-102 transition group' href={`/album/${album.id}`}>
         <div class='h-full w-40 shrink-0'>
           <Image
             class='object-cover'
@@ -243,7 +249,7 @@ if (!tokens.length) {
           <div class=''>{album.title}</div>
           <div class='text-sm text-slate-300 mt-0.5'>{album.releaseDate ? new Date(album.releaseDate).toISOString().split('T')[0] : ''}</div>
         </div>
-      </div>
+      </a>
     ))
   }
 </div>
