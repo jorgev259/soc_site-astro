@@ -36,7 +36,7 @@ const currentList = pageList[currentListIndex] ?? []
   {
     currentList.map((item) => (
       <FooterNavItem
-        class:list={[{ ['cursor-auto text-white bg-gray-hover hover:no-underline']: item === page }]}
+        class:list={[{ 'cursor-auto text-white bg-gray-hover hover:no-underline': item === page }]}
         href={`/last-added/${item}`}
       >
         {item}

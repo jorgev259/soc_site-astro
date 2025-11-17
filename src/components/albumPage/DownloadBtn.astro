@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
 
 interface Props {
   href: string | null
@@ -20,6 +21,7 @@ const disabled = direct && !hasDirect
   ]}
   target='_blank'
   href={disabled ? null : href}
+  rel='noreferrer'
 >
   {icon ? <Image class='rounded-md' width={20} height={20} alt={alt ?? ''} src={icon} /> : null}
   <slot />

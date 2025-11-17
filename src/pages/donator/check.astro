@@ -9,7 +9,6 @@ import BaseLayout from 'layouts/base.astro'
 import { authServer } from 'auth/auth-server'
 
 const { session, user } = Astro.locals
-Astro.locals.user
 
 async function getMessage() {
   try {
@@ -36,10 +35,10 @@ async function getMessage() {
       }
     })
 
-    if (memberInfoRes.status == 429) {
+    if (memberInfoRes.status === 429) {
       const { message, retry_after }: { message: string; retry_after: number } = await memberInfoRes.json()
       return m.discordRateLimit({ message, retry_after })
-    } else if (memberInfoRes.status != 200) {
+    } else if (memberInfoRes.status !== 200) {
       return m.errorDonatorCheck({ error: await memberInfoRes.json() })
     }
 

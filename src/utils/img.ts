@@ -35,7 +35,7 @@ export async function handleImg(file: File, folder: string, id: number | string,
 
 export async function handleCover(file: File, folder: string, id: number | string, tx: PrismaClient) {
   const headerColor = await handleImg(file, folder, id)
-  await tx.albums.update({ where: { id: id }, data: { headerColor } })
+  await tx.albums.update({ where: { id }, data: { headerColor } })
 }
 
 export async function getImgColor(filePath: string) {
