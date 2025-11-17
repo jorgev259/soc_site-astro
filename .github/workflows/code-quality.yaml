@@ -1,25 +1,18 @@
-name: Build image
+name: Build and publish image
 on:
   push:
-    branches_ignore:
+    branches-ignore:
       - development
       - production
   pull_request:
   workflow_dispatch:
 
 jobs:
-  build-docker-image:
+  code-quality:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Login to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

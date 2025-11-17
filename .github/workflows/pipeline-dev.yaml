@@ -1,0 +1,35 @@
+name: Dev pipeline
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+jobs:
+  build-publish-dev:
+    uses: ./.github/workflows/build-publish.yaml
+    secrets: inherit
+    permissions:
+      packages: write
+      contents: write
+    with:
+      environment: development
+
+  deploy-dev:
+    uses: ./.github/workflows/deploy.yaml
+    needs: build-publish-dev
+    secrets: inherit
+    with:
+      environment: development
+
+  merge-to-prod:
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+    environment:
+      name: development
+    steps:
+      - uses: devmasx/merge-branch@master
+        with:
+          type: now
+          target_branch: production
+          github_token: ${{ secrets.GITHUB_TOKEN }}

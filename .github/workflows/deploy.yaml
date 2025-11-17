@@ -1,0 +1,29 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+    steps:
+      - uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.TS_BEHEMOTH }}
+          username: admin
+          password: ${{ secrets.TS_BEHEMOTH_PASS }}
+          script: |
+            cd ~/stacks/${{ vars.STACK_NAME }}
+            docker compose pull
+            docker compose up -d
+            docker image prune -f

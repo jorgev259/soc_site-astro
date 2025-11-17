@@ -1,0 +1,23 @@
+name: Prod pipeline
+on:
+  push:
+    branches:
+      - production
+  workflow_dispatch:
+
+jobs:
+  build-publish-prod:
+    uses: ./.github/workflows/build-publish.yaml
+    secrets: inherit
+    permissions:
+      packages: write
+      contents: write
+    with:
+      environment: production
+
+  deploy-dev:
+    uses: ./.github/workflows/deploy.yaml
+    needs: build-publish-prod
+    secrets: inherit
+    with:
+      environment: production
