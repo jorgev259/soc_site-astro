@@ -13,12 +13,10 @@ RUN yarn install --frozen-lockfile --production=false
 FROM base AS build
 COPY --from=deps-build /app/node_modules/ ./node_modules
 COPY . .
-RUN yarn prisma generate
 RUN yarn build
 
 FROM base AS runner
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/prisma/generated/ ./prisma/generated
 COPY prisma/ ./prisma
 COPY package.json yarn.lock  ./
-ENTRYPOINT yarn install --frozen-lockfile --production=true && yarn prisma migrate deploy && yarn start
+ENTRYPOINT yarn install --frozen-lockfile --production=true && yarn prisma generate && yarn prisma migrate deploy && yarn start
