@@ -27,3 +27,8 @@ jobs:
             docker compose pull
             docker compose up -d
             docker image prune -f
+
+      - uses: styfle/cancel-workflow-action@0.12.1
+        if: success()
+        with:
+          access_token: ${{ github.token }}
