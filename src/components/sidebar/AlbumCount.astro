@@ -4,8 +4,8 @@ import * as m from 'paraglide/messages.js'
 
 import SidebarSection from './SidebarSection.astro'
 
-import { getAlbumCount } from '@prisma/client/sql'
-import { AlbumStatus } from '@prisma/client'
+import { getAlbumCount } from '@/prisma/sql/getAlbumCount'
+import { AlbumStatus } from '@/prisma/enums'
 
 const albumCount = await prismaClient.albums.count({ where: { status: AlbumStatus.SHOW } })
 const categoryRows = await prismaClient.$queryRawTyped(getAlbumCount())

@@ -3,7 +3,7 @@ import prismaClient from 'utils/prisma-client'
 
 import LetterList from 'layouts/LetterList.astro'
 import PlatformGameList from 'components/letterList/PlatformGameList.astro'
-import { AlbumStatus } from '@prisma/client'
+import { AlbumStatus } from '@/prisma/enums'
 
 const { id } = Astro.params
 

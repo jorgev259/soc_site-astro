@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from './generated/client'
 import fs from 'fs'
 import path from 'path'
 import { createRequire } from 'module'

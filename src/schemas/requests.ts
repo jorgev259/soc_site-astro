@@ -1,4 +1,4 @@
-import { RequestState } from '@prisma/client'
+import { RequestState } from '@/prisma/enums'
 import { object, string, number, optional, enums } from 'superstruct'
 
 export const EditRequest = object({

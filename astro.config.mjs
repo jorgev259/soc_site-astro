@@ -5,10 +5,10 @@ import node from '@astrojs/node'
 import react from '@astrojs/react'
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import icon from 'astro-icon'
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 import { locales } from './project.inlang/settings.json'
 
-// https://astro.build/config
 export default defineConfig({
   env: {
     schema: {
@@ -45,7 +45,8 @@ export default defineConfig({
       paraglideVitePlugin({
         project: './project.inlang',
         outdir: './src/paraglide'
-      })
+      }),
+      tsconfigPaths()
     ]
   },
   image: { domains: ['cdn.sittingonclouds.net'] },

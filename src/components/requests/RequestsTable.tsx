@@ -1,6 +1,6 @@
 import { type ColDef, type GridOptions } from 'ag-grid-community'
 import { AgGridReact } from 'ag-grid-react'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma/browser'
 import { m } from 'paraglide/messages.js'
 
 import AgGridTheme from 'components/AgGrid/AgGridTheme'

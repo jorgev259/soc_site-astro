@@ -7,6 +7,9 @@
     "jsxImportSource": "react",
     "baseUrl": "src",
     "strictNullChecks": true,
-    "allowJs": true
+    "allowJs": true,
+    "paths": {
+      "@/prisma/*": ["../prisma/generated/*"]
+    }
   }
 }

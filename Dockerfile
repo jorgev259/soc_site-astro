@@ -7,8 +7,12 @@ RUN corepack enable
 RUN yarn -v
 
 FROM base AS deps-build
-COPY prisma package.json yarn.lock ./
+COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production=false
+
+FROM base AS deps-prod
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production=true
 
 FROM base AS build
 COPY --from=deps-build /app/node_modules/ ./node_modules
@@ -16,7 +20,8 @@ COPY . .
 RUN yarn build
 
 FROM base AS runner
+COPY --from=deps-prod /app/node_modules/ ./node_modules
 COPY --from=build /app/dist ./dist
-COPY prisma/ ./prisma
-COPY package.json yarn.lock  ./
-ENTRYPOINT yarn install --frozen-lockfile --production=true && yarn prisma generate && yarn prisma migrate deploy && yarn start
+COPY --from=build /app/prisma ./prisma
+COPY package.json ./
+ENTRYPOINT yarn run migrate && yarn start

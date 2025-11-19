@@ -1,8 +1,7 @@
 ---
-
 import * as m from 'paraglide/messages'
 import { getImage, Image } from 'astro:assets'
-import { AlbumStatus } from '@prisma/client'
+import { AlbumStatus } from '@/prisma/enums'
 import { SEO } from 'astro-seo'
 
 import { hasPermission } from 'auth/auth-server'
@@ -23,12 +22,12 @@ import ouoIcon from 'img/assets/ouo-icon.png'
 const { id } = Astro.params
 const { user } = Astro.locals
 
-if (!id) return Astro.redirect("/404");
+if (!id) return Astro.redirect('/404')
 const albumId = parseInt(id)
-if(!albumId) return Astro.redirect("/404");
+if (!albumId) return Astro.redirect('/404')
 
-const hasDirect = await hasPermission(user?.id, {site: ['skip_ads']}) 
-const hasUpdate = await hasPermission(user?.id,  {cms: ['update']}) 
+const hasDirect = await hasPermission(user?.id, { site: ['skip_ads'] })
+const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
 const hiddenCondition = !hasUpdate ? { status: AlbumStatus.SHOW } : {}
 
 const album = await prismaClient.albums.findUnique({
@@ -38,7 +37,13 @@ const album = await prismaClient.albums.findUnique({
     categories: { select: { categoryName: true } },
     classifications: { select: { classificationName: true } },
     platforms: { select: { platform: { select: { id: true, name: true } } } },
-    games: { select: { game: { select: { slug: true, name: true,series: {select: {series: {select: {slug: true, name: true}}}} } } } },
+    games: {
+      select: {
+        game: {
+          select: { slug: true, name: true, series: { select: { series: { select: { slug: true, name: true } } } } }
+        }
+      }
+    },
     animations: { select: { animation: { select: { id: true, title: true } } } },
     stores: { select: { url: true, provider: true }, where: { NOT: { provider: 'SOON' } } },
     discs: { select: { number: true, body: true } },
@@ -52,10 +57,13 @@ const album = await prismaClient.albums.findUnique({
   }
 })
 
-if (!album) return Astro.redirect("/404");
+if (!album) return Astro.redirect('/404')
 
-const series = album.games.map(g => g.game.series).flat().map(s => s.series)
-const { currentLocale } = Astro
+const series = album.games
+  .map((g) => g.game.series)
+  .flat()
+  .map((s) => s.series)
+// const { currentLocale } = Astro
 const coverImage = await getImage({
   src: `https://cdn.sittingonclouds.net/album/${album?.id}.png`,
   height: 150,
@@ -93,12 +101,7 @@ const coverImage = await getImage({
   }}
 />
 
-{album?.status === AlbumStatus.HIDDEN ? (
-  <script>
-    import toast from 'react-hot-toast'
-    toast('This page is currently hidden', { duration: Infinity })
-  </script>
-) : null}
+{album?.status === AlbumStatus.HIDDEN ? <script src='./hiddenAlert.ts' /> : null}
 
 <BaseLayout>
   <div
@@ -156,7 +159,7 @@ const coverImage = await getImage({
                       {
                         [
                           album?.categories
-                          // @ts-expect-error
+                            // @ts-expect-error
                             .map(({ categoryName }) => m[`${categoryName}Osts` as keyof typeof m]())
                             .join(' & '),
                           album?.classifications.map(({ classificationName }) => classificationName).join(', ')
@@ -410,25 +413,27 @@ const coverImage = await getImage({
             <hr />
           </div>
         </div>
-        
-        {(album?.relatedAlbums.length>0) && (
-          <div class='mt-2 bg-dark/85 rounded-xl uppercase text-4xl font-semibold text-center py-2 px-1.5'>
-            {m.relatedAlbums()}
-          </div>
-          <div class='mt-2'>
-            <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5 justify-items-center'>
-              {
-                album?.relatedAlbums.map(({ relatedAlbum }) => (
-                  <AlbumBox
-                    title={relatedAlbum?.title}
-                    href={`/album/${relatedAlbum?.id}`}
-                    image={`/album/${relatedAlbum?.id}.png`}
-                  />
-                ))
-              }
-            </div>
-          </div>
-        )}
+
+        {
+          album?.relatedAlbums.length > 0 && (
+            <>
+              <div class='mt-2 bg-dark/85 rounded-xl uppercase text-4xl font-semibold text-center py-2 px-1.5'>
+                {m.relatedAlbums()}
+              </div>
+              <div class='mt-2'>
+                <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5 justify-items-center'>
+                  {album?.relatedAlbums.map(({ relatedAlbum }) => (
+                    <AlbumBox
+                      title={relatedAlbum?.title}
+                      href={`/album/${relatedAlbum?.id}`}
+                      image={`/album/${relatedAlbum?.id}.png`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </>
+          )
+        }
       </div>
     </div>
   </div>

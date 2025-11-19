@@ -3,7 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { username, bearer, admin } from 'better-auth/plugins'
 import type { Statements } from 'better-auth/plugins/access'
 import { DISCORD_OAUTH_ID, DISCORD_OAUTH_SECRET } from 'astro:env/server'
-import { Role } from '@prisma/client'
+import { Role } from '@/prisma/enums'
 
 import prismaClient from '../utils/prisma-client'
 import { sendEmail } from '../utils/email'

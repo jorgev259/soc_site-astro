@@ -1,0 +1,25 @@
+volumes:
+  mariadb:
+
+services:
+  mariadb:
+    image: mariadb:12
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadb:/var/lib/mysql:Z
+  soc-local:
+    ports:
+      - 4321:4321
+    depends_on:
+      - mariadb
+    build:
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+    environment:
+      DATABASE_URL: 'mysql://root:root@mariadb:3306/soc-local'

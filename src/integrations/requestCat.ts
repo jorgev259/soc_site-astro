@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@/prisma/client'
 import axios from 'axios'
 import prismaClient from 'utils/prisma-client'
 

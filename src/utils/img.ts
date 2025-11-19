@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import sharp from 'sharp'
-import type { PrismaClient } from '@prisma/client/extension'
+import type { PrismaClient } from '@/prisma/client'
 import { IMG_PATH } from 'astro:env/server'
 
 function colorToHex(color: number) {

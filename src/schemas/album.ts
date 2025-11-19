@@ -1,5 +1,5 @@
 import * as s from 'superstruct'
-import { AlbumStatus } from '@prisma/client'
+import { AlbumStatus } from '@/prisma/enums'
 import { DownloadProvider } from 'utils/consts'
 
 export const LinkInput = s.object({

@@ -1,5 +1,5 @@
 import rss, { type RSSFeedItem } from '@astrojs/rss'
-import { AlbumStatus } from '@prisma/client'
+import { AlbumStatus } from '@/prisma/enums'
 import type { APIContext } from 'astro'
 import prismaClient from 'utils/prisma-client'
 

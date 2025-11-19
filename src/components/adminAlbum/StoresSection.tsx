@@ -1,5 +1,5 @@
 import { useImmer } from 'use-immer'
-import type { Prisma } from '@prisma/client'
+import { Prisma } from '@/prisma/browser'
 
 import Button from 'components/Button'
 import { Input, InputSelect } from 'components/form/Input'

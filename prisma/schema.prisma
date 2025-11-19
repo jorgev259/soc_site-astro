@@ -1,6 +1,8 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../prisma/generated/client"
+  provider        = "prisma-client"
+  output          = "../prisma/generated"
+  previewFeatures = ["typedSql"]
+  runtime         = "nodejs"
 }
 
 datasource db {

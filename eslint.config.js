@@ -22,5 +22,5 @@ export default defineConfig([
   ...eslintPluginAstro.configs.recommended,
   eslintConfigPrettier,
   { rules: { 'no-unused-vars': 'warn', camelcase: 'warn' } },
-  { files: ['**/*.astro'], rules: { 'react/jsx-key': 'off' } }
+  { files: ['**/*.astro'], rules: { 'react/jsx-key': 'off', 'react/self-closing-comp': 'off' } }
 ])

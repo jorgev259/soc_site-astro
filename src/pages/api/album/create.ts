@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
 import * as s from 'superstruct'
 import prismaClient from 'utils/prisma-client'
-import { AlbumStatus } from '@prisma/client'
+import { AlbumStatus } from '@/prisma/enums'
 
 import { Status, parseForm, slug } from 'utils/form'
 import { handleCover } from 'utils/img'
