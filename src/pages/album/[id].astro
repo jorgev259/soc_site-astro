@@ -101,7 +101,7 @@ const coverImage = await getImage({
   }}
 />
 
-{album?.status === AlbumStatus.HIDDEN ? <script src='./hiddenAlert.ts' /> : null}
+{album?.status === AlbumStatus.HIDDEN ? <script is:inline src='./hiddenAlert.ts' /> : null}
 
 <BaseLayout>
   <div
