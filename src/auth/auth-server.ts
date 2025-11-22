@@ -1,4 +1,4 @@
-import { betterAuth } from 'better-auth'
+import { betterAuth } from 'better-auth/minimal'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { username, bearer, admin } from 'better-auth/plugins'
 import type { Statements } from 'better-auth/plugins/access'
