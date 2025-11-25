@@ -10,13 +10,15 @@
         "pattern": "http://localhost:([0-9]+)/",
         "uriFormat": "http://localhost:%s",
         "action": "openExternally"
-      }
+      },
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "command": "yarn prisma generate --watch",
       "name": "Prisma",
       "request": "launch",
-      "type": "node-terminal"
+      "type": "node-terminal",
+      "envFile": "${workspaceFolder}/.env"
     }
   ],
   "compounds": [

@@ -46,6 +46,8 @@ export const authServer = betterAuth({
 })
 
 export async function hasPermission(userId: string | undefined, permissions: Statements) {
+  if (!userId) return false
+
   const res = await authServer.api.userHasPermission({ body: { userId, permissions } })
   return res.success
 }
