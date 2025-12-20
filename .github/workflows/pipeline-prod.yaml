@@ -15,7 +15,7 @@ jobs:
     with:
       environment: production
 
-  deploy-dev:
+  deploy-prod:
     uses: ./.github/workflows/deploy.yaml
     needs: build-publish-prod
     secrets: inherit
