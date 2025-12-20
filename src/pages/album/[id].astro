@@ -18,6 +18,8 @@ import discord from 'img/socials/discord.png'
 import vgmdbLogo from 'img/assets/vgmdb-logo.png'
 import flyIcon from 'img/assets/fly-icon.png'
 import ouoIcon from 'img/assets/ouo-icon.png'
+import { DISCORD_URL } from 'utils/consts'
+import MegaWarning from 'components/MegaWarning.astro'
 
 const { id } = Astro.params
 const { user } = Astro.locals
@@ -325,6 +327,10 @@ const coverImage = await getImage({
               )
             }
             <hr />
+            <div class='text-xl'>
+              <MegaWarning />
+            </div>
+            <hr />
             <div>
               {
                 album?.downloads?.map((download) => {
@@ -378,7 +384,7 @@ const coverImage = await getImage({
                 <h4 class='text-2xl'>{m.donationCall()}</h4>
                 <div>
                   <span> {m.donationSteps()} </span>
-                  <a href='https://discord.gg/AQc9vwGM' target='_blank' rel='noopener noreferrer'>Discord</a>
+                  <a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>Discord</a>
                 </div>
               </div>
               <div class='mt-1'>
@@ -388,10 +394,13 @@ const coverImage = await getImage({
               </div>
             </div>
             <hr />
-            <div class='text-xl'>
+            <div class='text-xl flex flex-col gap-y-2.5'>
+              <div>
+                <MegaWarning />
+              </div>
               <div class='flex items-center'>
                 <span>{m.brokenLinkContact()}</span>
-                <a class='' href='https://discord.gg/x23SFbE' target='_blank' rel='noopener noreferrer'>
+                <a class='' href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>
                   <Image
                     alt='Join our Discord!'
                     class='rounded-md ml-2'

@@ -20,3 +20,5 @@ export enum StoreProviders {
   BANDCAMP = 'bandcamp',
   DEEZER = 'deezer'
 }
+
+export const DISCORD_URL = 'https://discord.gg/x23SFbE'
