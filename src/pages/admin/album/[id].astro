@@ -51,13 +51,30 @@ if (!album) {
   }
 </style>
 
-<script is:inline src='editAlbum.ts'></script>
+<script>
+  import toast from 'react-hot-toast'
+
+  document.getElementById('editAlbum')?.addEventListener('submit', async (e: SubmitEvent) => {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+
+    document.getElementById('editAlbumSubmit')?.classList.add('loading')
+    const response = await fetch('/api/album/edit', { method: 'POST', body: formData })
+    document.getElementById('editAlbumSubmit')?.classList.remove('loading')
+
+    if (response.ok) {
+      toast.success('Album updated successfully')
+    } else {
+      toast.error(response.statusText)
+    }
+  })
+</script>
 
 <DefaultSEO />
 <Base>
   <div class='flex flex-col w-full'>
     <div class='w-full min-h-100vh mx-auto max-w-[1140px]'>
-      <form id='editAlbum' class='my-4 p-4 bg-dark rounded-md mx-2 flex gap-y-2 flex-col'>
+      <form id='editAlbum' class='my-4 p-4 bg-dark rounded-md mx-2 flex gap-y-2 flex-col' enctype='multipart/form-data'>
         <input hidden readonly name='albumId' value={album.id} type='number' />
         <div class='grid grid-cols-4 gap-x-4 gap-y-1'>
           <Input dark defaultValue={album.title} name='title' label='Title' className='col-span-2' />
