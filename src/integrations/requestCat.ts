@@ -3,10 +3,12 @@ import axios from 'axios'
 import prismaClient from 'utils/prisma-client'
 
 import { WEBHOOK_URL } from 'astro:env/server'
+import { RequestState } from '@prisma/client'
 
-const albumArtistNames = Prisma.validator<Prisma.albumsDefaultArgs>()({
+const albumArtistNames = {
   include: { artists: { include: { artist: { select: { name: true } } } } }
-})
+} satisfies Prisma.albumsDefaultArgs
+
 type AlbumArtistNames = Prisma.albumsGetPayload<typeof albumArtistNames>
 
 async function postWebhook(album: AlbumArtistNames, userText = '') {
@@ -23,7 +25,7 @@ export async function handleComplete(album: AlbumArtistNames, requestId?: number
       where: { id: requestId },
       select: { state: true, id: true, userID: true, user: true }
     })
-    if (!request || request.state === 'complete') return
+    if (!request || request.state === RequestState.COMPLETE) return
 
     await fetch('http://localhost:7001/complete', { method: 'POST', body: JSON.stringify({ requestId: request.id }) })
 
