@@ -1,8 +1,9 @@
 import path from 'node:path'
-import fs from 'node:fs/promises'
 import sharp from 'sharp'
 import type { PrismaClient } from '@/prisma/client'
-import { IMG_PATH } from 'astro:env/server'
+import { S3_ROOT } from 'astro:env/client'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { s3Client } from './s3'
 
 function colorToHex(color: number) {
   const hexadecimal = color.toString(16)
@@ -13,33 +14,38 @@ function convertRGBtoHex(red: number, green: number, blue: number) {
   return '#' + colorToHex(red) + colorToHex(green) + colorToHex(blue)
 }
 
-export async function writeImg(file: File, folder: string, id: number | string) {
-  const pathString = path.join(IMG_PATH, folder)
-  const fullPath = path.join(pathString, `${id}.png`)
+async function writeImg(file: ArrayBuffer, folder: string, id: number | string) {
+  const fileName = `${id}.png`
+  const pathString = path.posix.join(S3_ROOT, folder)
+  const fullPath = path.posix.join(pathString, fileName)
 
-  const fileArray = Buffer.from(await file.arrayBuffer())
-  await fs.mkdir(pathString, { recursive: true })
+  const command = new PutObjectCommand({
+    Bucket: 'sittingonclouds',
+    Key: fullPath,
+    Body: Buffer.from(file)
+  })
 
-  if (await fs.stat(fullPath).catch(() => false)) {
-    await fs.rm(fullPath)
-  }
-
-  await fs.writeFile(fullPath, fileArray)
+  await s3Client.send(command)
   return fullPath
 }
 
 export async function handleImg(file: File, folder: string, id: number | string, handleColor = true) {
-  const coverPath = await writeImg(file, folder, id)
-  return handleColor ? await getImgColor(coverPath) : undefined
+  const imgBuffer = await file.arrayBuffer()
+  await writeImg(imgBuffer, folder, id)
+
+  if (handleColor) {
+    const coverColor = getImgColor(imgBuffer)
+    return coverColor
+  }
 }
 
 export async function handleCover(file: File, folder: string, id: number | string, tx: PrismaClient) {
-  const headerColor = await handleImg(file, folder, id)
-  await tx.albums.update({ where: { id }, data: { headerColor } })
+  const headerColor = await handleImg(file, path.posix.join('img', folder), id)
+  await tx.albums.update({ where: { id: parseInt(id.toString()) }, data: { headerColor } })
 }
 
-export async function getImgColor(filePath: string) {
-  const { dominant } = await sharp(filePath).stats()
+async function getImgColor(file: ArrayBuffer) {
+  const { dominant } = await sharp(file).stats()
   const { r, g, b } = dominant
 
   return convertRGBtoHex(r, g, b)

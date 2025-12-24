@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets'
+import { getImgUrl } from 'utils/s3'
 
 type Props =
   | { title?: string | null; href: string; image: string; loading?: false; class?: string }
@@ -9,43 +10,43 @@ const { props } = Astro
 const { title, href, image, loading = false, class: className } = props
 ---
 
-<a
-  href={href}
-  class:list={[
-    'block w-full mt-2.5 rounded-xl bg-btn-dark ',
-    loading ? 'cursor-default' : 'hover:bg-gray/85 group',
-    className
-  ]}
->
-  {
-    loading ? (
-      <div class='pt-2.5'>
-        <div class='rounded-xl animate-pulse bg-gray/85 size-40 mx-auto' />
-      </div>
-    ) : (
-      <Image
-        src={`https://cdn.sittingonclouds.net${image}`}
-        alt={`${title} cover`}
-        height={500}
-        width={500}
-        quality='low'
-        class='rounded-md scale-95 group-hover:scale-98 transition-transform'
-      />
-    )
-  }
-
-  {
-    loading ? (
-      <div class='animate-pulse p-2.5 px-4'>
-        <div class='space-y-3'>
-          <div class='h-2 rounded-md bg-gray' />
-          <div class='h-2 rounded-md bg-gray' />
+{
+  image ? (
+    <a
+      href={href}
+      class:list={[
+        'block w-full mt-2.5 rounded-xl bg-btn-dark ',
+        loading ? 'cursor-default' : 'hover:bg-gray/85 group',
+        className
+      ]}
+    >
+      {loading ? (
+        <div class='pt-2.5'>
+          <div class='rounded-xl animate-pulse bg-gray/85 size-40 mx-auto' />
         </div>
-      </div>
-    ) : (
-      <div class='group-hover:text-hover-link group-hover:underline text-lg font-bold px-1 pb-1 text-center'>
-        {title}
-      </div>
-    )
-  }
-</a>
+      ) : (
+        <Image
+          src={getImgUrl(image)}
+          alt={`${title} cover`}
+          height={500}
+          width={500}
+          quality='low'
+          class='rounded-md scale-95 group-hover:scale-98 transition-transform'
+        />
+      )}
+
+      {loading ? (
+        <div class='animate-pulse p-2.5 px-4'>
+          <div class='space-y-3'>
+            <div class='h-2 rounded-md bg-gray' />
+            <div class='h-2 rounded-md bg-gray' />
+          </div>
+        </div>
+      ) : (
+        <div class='group-hover:text-hover-link group-hover:underline text-lg font-bold px-1 pb-1 text-center'>
+          {title}
+        </div>
+      )}
+    </a>
+  ) : null
+}

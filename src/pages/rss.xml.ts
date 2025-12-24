@@ -2,6 +2,7 @@ import rss, { type RSSFeedItem } from '@astrojs/rss'
 import { AlbumStatus } from '@/prisma/enums'
 import type { APIContext } from 'astro'
 import prismaClient from 'utils/prisma-client'
+import { getImgUrl } from 'utils/s3'
 
 export async function GET(context: APIContext) {
   const albums = await prismaClient.albums.findMany({
@@ -22,7 +23,7 @@ export async function GET(context: APIContext) {
           width="100"
           height="100"
           medium="image"
-          url="https://cdn.sittingonclouds.net/album/${album.id}.png" />
+          url="${getImgUrl(`album/${album.id}.png`)}" />
       `
   }))
 

@@ -50,7 +50,7 @@ const albums = Array.from(albumsMap.entries())
         {studio.name}
       </div>
       <div class='grid grid-cols-2 md:grid-cols-4 gap-x-2.5'>
-        {albums.map((a) => <AlbumBox href={`/album/${a.id}`} image={`/album/${a.id}.png`} title={a.title} />)}
+        {albums.map((a) => <AlbumBox href={`/album/${a.id}`} image={`album/${a.id}.png`} title={a.title} />)}
       </div>
     </div>
     <Sidebar />

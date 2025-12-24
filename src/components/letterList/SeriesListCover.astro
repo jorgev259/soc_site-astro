@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets'
 import prismaClient from 'utils/prisma-client'
+import { getImgUrl } from 'utils/s3'
 
 interface Props {
   letter: string
@@ -17,7 +18,7 @@ const albums = await prismaClient.series.findMany({
   albums.map((a) => (
     <a class='group text-left rounded-md p-2' href={`/series/${a.slug}`}>
       <Image
-        src={`https://cdn.sittingonclouds.net/series/${a.slug}.png`}
+        src={getImgUrl(`series/${a.slug}.png`)}
         alt={a.slug}
         height={500}
         width={500}

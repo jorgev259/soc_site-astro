@@ -26,7 +26,7 @@ const { albums, limitMD, limitXS, ...listProps } = Astro.props
         <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5'>
           {
             albums.map((album) => (
-              <AlbumBox title={album.title} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+              <AlbumBox title={album.title} href={`/album/${album.id}`} image={`album/${album.id}.png`} />
             ))
           }
         </div>

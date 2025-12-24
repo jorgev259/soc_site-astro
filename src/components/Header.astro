@@ -14,6 +14,7 @@ import Toggler from './header/Toggler.astro'
 import NavButton from './header/NavButton.astro'
 import LoginNav from './header/LoginNav.astro'
 import SearchBar from './search/SearchBar.astro'
+import { getImgUrl } from 'utils/s3'
 
 const [bannerConfig, bannerPositionConfig] = await Promise.all([
   prismaClient.config.findUnique({ where: { name: 'banner' }, select: { value: true } }),
@@ -25,6 +26,7 @@ const bannerPosition = bannerPositionConfig?.value || 'top'
 
 const { session, user } = Astro.locals
 const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
+const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
 ---
 
 <header class='relative'>
@@ -32,7 +34,7 @@ const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
     <div class='absolute size-full'>
       <Picture
         class={`size-full object-cover object-${bannerPosition || 'top'}`}
-        src={`https://cdn.sittingonclouds.net/live/${bannerId}.png`}
+        src={getImgUrl(`live/${bannerId}.png`)}
         alt=''
         width={2560}
         height={150}
@@ -83,14 +85,20 @@ const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
         session ? (
           <>
             <NavButton>{m.submitalbum()}</NavButton>
-            {hasUpdate ? (
+            {hasUpdate || hasPublish ? (
               <Dropdown>
                 {m.adminGrounds()}
+
                 <Fragment slot='items'>
-                  <DropdownItem href='/admin'>{m.dashboard()}</DropdownItem>
-                  <DropdownItem href='/admin/user'>{m.manageUsers()}</DropdownItem>
-                  <DropdownItem href='/admin/request'>{m.manageRequests()}</DropdownItem>
-                  <DropdownItem href='/admin/submission'>{m.manageSubmissions()}</DropdownItem>
+                  {hasPublish ? <DropdownItem href='/admin/album'>Create album</DropdownItem> : null}
+                  {hasUpdate ? (
+                    <>
+                      <DropdownItem href='/admin'>{m.dashboard()}</DropdownItem>
+                      <DropdownItem href='/admin/user'>{m.manageUsers()}</DropdownItem>
+                      <DropdownItem href='/admin/request'>{m.manageRequests()}</DropdownItem>
+                      <DropdownItem href='/admin/submission'>{m.manageSubmissions()}</DropdownItem>
+                    </>
+                  ) : null}
                 </Fragment>
               </Dropdown>
             ) : null}

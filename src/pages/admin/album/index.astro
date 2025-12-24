@@ -1,0 +1,157 @@
+---
+import { AlbumStatus } from '@/prisma/enums'
+// import prismaClient from 'utils/prisma-client'
+
+import Base from 'layouts/base.astro'
+import DiscSection from 'components/adminAlbum/DiscSection'
+import DownloadSections from 'components/adminAlbum/DownloadSections'
+import AsyncMultiSelect from 'components/form/AsyncMultiSelect'
+import { Input, InputArea, InputLabel, InputSelect } from 'components/form/Input'
+import Button from 'components/Button'
+import MultiSelectWrapper from 'components/form/MultiSelectWrapper'
+import StoresSection from 'components/adminAlbum/StoresSection'
+import DefaultSEO from 'components/DefaultSEO.astro'
+import { hasPermission } from 'auth/auth-server'
+
+const { user } = Astro.locals
+const hasUpdate = await hasPermission(user?.id, { cms: ['publish'] })
+if (!user || !hasUpdate) return Astro.redirect('/404')
+---
+
+<style>
+  hr {
+    margin-block: calc(var(--spacing) * 2);
+  }
+</style>
+
+<script>
+  import toast from 'react-hot-toast'
+
+  document.getElementById('addAlbum')?.addEventListener('submit', async (e: SubmitEvent) => {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+
+    document.getElementById('addAlbumSubmit')?.classList.add('loading')
+    const response = await fetch('/api/album/create', { method: 'POST', body: formData })
+    document.getElementById('addAlbumSubmit')?.classList.remove('loading')
+
+    if (response.ok) {
+      toast.success('Album created successfully')
+    } else {
+      toast.error(response.statusText)
+    }
+  })
+</script>
+
+<DefaultSEO />
+<Base>
+  <div class='flex flex-col w-full'>
+    <div class='w-full min-h-100vh mx-auto max-w-[1140px]'>
+      <form id='addAlbum' class='my-4 p-4 bg-dark rounded-md mx-2 flex gap-y-2 flex-col'>
+        <div class='grid grid-cols-4 gap-x-4 gap-y-1'>
+          <Input dark name='title' label='Title' className='col-span-2' />
+          <InputArea dark name='subTitle' label='Subtitle' className='col-span-2' />
+
+          <Input dark name='description' label='Description' className='col-span-3' />
+          <Input dark name='cover' label='Cover image' type='file' />
+
+          <InputSelect dark name='status' label='Status' defaultValue={AlbumStatus.HIDDEN}>
+            <option value={AlbumStatus.SHOW}>Show</option>
+            <option value={AlbumStatus.HIDDEN}>Hidden</option>
+          </InputSelect>
+          <Input dark name='releaseDate' type='date' label='Release Date' />
+          <Input dark name='label' label='Label' />
+          <Input dark name='vgmdb' label='VGMDB' />
+
+          <InputArea dark name='artists' label='Artists' className='col-span-3' />
+          <div class='flex flex-col'>
+            <InputLabel dark name='classifications'>Classifications</InputLabel>
+            <MultiSelectWrapper
+              client:only='react'
+              name='classifications'
+              options={[
+                { value: 'Arrangement', label: 'Arrangement' },
+                { value: 'Drama', label: 'Drama' },
+                { value: 'GameRip', label: 'GameRip' },
+                { value: 'Live Event', label: 'Live Event' },
+                { value: 'Original Soundtrack', label: 'Original Soundtrack' },
+                { value: 'Vocal', label: 'Vocal' }
+              ]}
+              labelledBy='classifications'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='categories'>Categories</InputLabel>
+            <MultiSelectWrapper
+              client:only='react'
+              options={[
+                { value: 'Game', label: 'Game' },
+                { value: 'Animation', label: 'Animation' }
+              ]}
+              name='categories'
+              labelledBy='categories'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='platforms'>Platforms</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='platforms'
+              url='/api/platform/find'
+              nameColumn='name'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+
+          <div class='flex flex-col'>
+            <InputLabel dark name='games'>Games</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='games'
+              url='/api/game/find'
+              valueColumn='slug'
+              nameColumn='name'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='animations'>Animations</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='animations'
+              url='/api/anim/find'
+              nameColumn='title'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+          <div class='flex flex-col'>
+            <InputLabel dark name='related'>Related albums</InputLabel>
+            <AsyncMultiSelect
+              client:only='react'
+              name='related'
+              url='/api/album/find'
+              nameColumn='title'
+              className='rounded-md py-2 h-full'
+            />
+          </div>
+        </div>
+        <hr />
+        <StoresSection client:only='react' />
+        <hr />
+        <div class='flex flex-col gap-y-4'>
+          <DiscSection client:only='react' />
+        </div>
+        <hr />
+        <div class='flex flex-col gap-y-4'>
+          <DownloadSections client:only='react' />
+        </div>
+        <hr />
+        <div class=''>
+          <Button type='submit' id='addAlbumSubmit'>Add album</Button>
+        </div>
+      </form>
+    </div>
+  </div>
+</Base>

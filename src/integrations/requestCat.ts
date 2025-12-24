@@ -1,9 +1,9 @@
-import { Prisma } from '@/prisma/client'
+import { Prisma } from '@prisma/client'
 import axios from 'axios'
-import prismaClient from 'utils/prisma-client'
 
 import { WEBHOOK_URL } from 'astro:env/server'
-import { RequestState } from '@prisma/client'
+import prismaClient from 'utils/prisma-client'
+import { RequestState } from '@/prisma/enums'
 
 const albumArtistNames = {
   include: { artists: { include: { artist: { select: { name: true } } } } }

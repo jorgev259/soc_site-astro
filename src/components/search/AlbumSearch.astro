@@ -7,6 +7,7 @@ import { Image } from 'astro:assets'
 import prismaClient from 'utils/prisma-client'
 import SearchNav from './SearchNav.astro'
 import AlbumBox from 'components/AlbumBox.astro'
+import { getImgUrl } from 'utils/s3'
 // import { ACTION_ERROR_CODES } from 'astro:actions'
 
 interface Props {
@@ -176,7 +177,7 @@ if (!tokens.length) {
         <div class='flex flex-wrap gap-2 mb-4'>
           {animsResults.map((a) => (
             <div class='md:w-1/3 w-1/2'>
-              <AlbumBox class='!bg-btn-dark !mt-0' title={a.label} href={`/anim/${a.id}`} image={`/anim/${a.id}.png`} />
+              <AlbumBox class='!bg-btn-dark !mt-0' title={a.label} href={`/anim/${a.id}`} image={`anim/${a.id}.png`} />
             </div>
           ))}
         </div>
@@ -210,7 +211,7 @@ if (!tokens.length) {
             href={`/series/${s.id}`}
           >
             <Image
-              src={`https://cdn.sittingonclouds.net/series/${s.id}.png`}
+              src={getImgUrl(`series/${s.id}.png`)}
               alt={`${s.label} logo`}
               class='m-auto '
               quality='low'
@@ -247,7 +248,7 @@ if (!tokens.length) {
         <div class='h-full w-40 shrink-0'>
           <Image
             class='object-cover'
-            src={`https://cdn.sittingonclouds.net/album/${album.id}.png`}
+            src={getImgUrl(`album/${album.id}.png`)}
             alt={`${album.title} cover`}
             quality='low'
             height={160}

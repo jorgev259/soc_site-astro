@@ -15,6 +15,6 @@ const anims = await prismaClient.animation.findMany({
 
 {
   anims.map((a) => (
-    <AlbumBox class='!bg-btn-dark !mt-0' title={a.title} href={`/anim/${a.id}`} image={`/anim/${a.id}.png`} />
+    <AlbumBox class='bg-btn-dark! mt-0!' title={a.title} href={`/anim/${a.id}`} image={`anim/${a.id}.png`} />
   ))
 }

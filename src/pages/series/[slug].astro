@@ -7,6 +7,7 @@ import { SEO } from 'astro-seo'
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
 import ReleaseDate from 'components/ReleaseDate.astro'
+import { getImgUrl } from 'utils/s3'
 
 const { slug } = Astro.params
 if (!slug) return Astro.redirect('/404')
@@ -79,7 +80,7 @@ const singleAlbums = Object.values(singleAlbumsObj).sort((a, b) => {
 const firstGame = series.games[0]?.game
 const lastGame = series.games[series.games.length - 1]?.game
 const coverImage = await getImage({
-  src: `https://cdn.sittingonclouds.net/game/${slug}.png`,
+  src: getImgUrl(`game/${slug}.png`),
   height: 150,
   width: 150
 })
@@ -112,9 +113,9 @@ const coverImage = await getImage({
       <div class='flex-1 flex-wrap md:flex-5/12'>
         <div class='size-full relative p-4 flex items-center'>
           <Image
-            src={`https://cdn.sittingonclouds.net/series/${slug}.png`}
+            src={getImgUrl(`series/${slug}.png`)}
             alt={`${series.name} logo`}
-            class='m-auto '
+            class='m-auto'
             quality='mid'
             width={300}
             height={200}
@@ -161,7 +162,7 @@ const coverImage = await getImage({
         <div class='grid grid-cols-3 md:grid-cols-5 gap-x-2 bg-gray px-4 pb-2 rounded-b-md'>
           {
             variousAlbums.map((album) => (
-              <AlbumBox title={album.title ?? ''} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+              <AlbumBox title={album.title ?? ''} href={`/album/${album.id}`} image={`album/${album.id}.png`} />
             ))
           }
         </div>
@@ -176,7 +177,7 @@ const coverImage = await getImage({
               </div>
               <div class='grid grid-cols-3 md:grid-cols-5 gap-x-2 bg-gray px-4 pb-2 rounded-b-md'>
                 {s.albums.map((album) => (
-                  <AlbumBox title={album.title ?? ''} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+                  <AlbumBox title={album.title ?? ''} href={`/album/${album.id}`} image={`album/${album.id}.png`} />
                 ))}
               </div>
             </div>

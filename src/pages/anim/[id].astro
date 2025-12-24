@@ -8,6 +8,7 @@ import { Image } from 'astro:assets'
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
 import ReleaseDate from 'components/ReleaseDate.astro'
+import { getImgUrl } from 'utils/s3'
 
 const { id } = Astro.params
 
@@ -30,11 +31,11 @@ const anim = await prismaClient.animation.findUnique({
 if (!anim) return Astro.redirect('/404')
 
 const coverImage = await getImage({
-  src: `https://cdn.sittingonclouds.net/anim/${animId}.png`,
+  src: getImgUrl(`anim/${animId}.png`),
   height: 150,
   width: 150
 })
-const { currentLocale } = Astro
+// const { currentLocale } = Astro
 ---
 
 <SEO
@@ -65,14 +66,14 @@ const { currentLocale } = Astro
 <BaseLayout>
   <div
     class={`w-full min-h-100vh bg-fixed bg-center bg-cover`}
-    style={`background-image: url('https://cdn.sittingonclouds.net/anim/${animId}.png');`}
+    style={`background-image: url('${getImgUrl(`anim/${animId}.png`)}');`}
   >
     <div class='bg-gray/80 w-full min-h-full'>
       <div class='flex flex-col md:flex-row gap-x-4 max-w-[1440px] mx-auto p-3 min-h-full'>
         <div class='flex flex-col gap-y-2 w-full md:w-[430px] bg-dark rounded-md size-full py-2 px-3'>
           <div>
             <Image
-              src={`https://cdn.sittingonclouds.net/anim/${animId}.png`}
+              src={getImgUrl(`anim/${animId}.png`)}
               alt={`${anim.title} cover`}
               class='rounded-sm size-full object-contain h-fit'
               quality='mid'
@@ -119,7 +120,7 @@ const { currentLocale } = Astro
           <div class='grid w-full grid-cols-2 md:grid-cols-4 gap-x-2.5'>
             {
               anim.albums.map((a) => (
-                <AlbumBox href={`/album/${a.album.id}`} image={`/album/${a.album.id}.png`} title={a.album.title} />
+                <AlbumBox href={`/album/${a.album.id}`} image={`album/${a.album.id}.png`} title={a.album.title} />
               ))
             }
           </div>

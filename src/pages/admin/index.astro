@@ -1,10 +1,10 @@
 ---
-import fs from 'fs-extra'
-import path from 'node:path'
 import { Image } from 'astro:assets'
-import { IMG_PATH } from 'astro:env/server'
+import { ListObjectsCommand } from '@aws-sdk/client-s3'
+import { S3_ROOT } from 'astro:env/client'
 
 import { hasPermission } from 'auth/auth-server'
+import { getS3Url, s3Client } from 'utils/s3'
 
 import DefaultSEO from 'components/DefaultSEO.astro'
 import Base from 'layouts/base.astro'
@@ -13,8 +13,10 @@ const { user } = Astro.locals
 const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
 if (!user || !hasUpdate) return Astro.redirect('/404')
 
-const bannerPath = path.join(IMG_PATH, 'live')
-const bannerList = (await fs.readdir(bannerPath)).map((b) => b.split('.')[0])
+const listCommand = await new ListObjectsCommand({ Bucket: 'sittingonclouds', Prefix: `${S3_ROOT}/img/live` })
+const { Contents: bannerList } = await s3Client.send(listCommand)
+
+console.log(bannerList)
 ---
 
 <script>
@@ -72,17 +74,22 @@ const bannerList = (await fs.readdir(bannerPath)).map((b) => b.split('.')[0])
       <div class='overflow-y-auto h-[200px]'>
         <div class='grid grid-cols-3 gap-2'>
           {
-            bannerList.map((b) => (
-              <div class='flex items-center p-2 h-28 banner-select' data-id={b}>
-                <Image
-                  class={`size-full object-cover object-top`}
-                  src={`https://cdn.sittingonclouds.net/live/${b}.png`}
-                  alt=''
-                  width={2560}
-                  height={150}
-                />
-              </div>
-            ))
+            bannerList?.map((b) =>
+              b.Key ? (
+                <div
+                  class='flex items-center p-2 h-28 banner-select hover:cursor-pointer'
+                  data-id={b.Key.split('/').pop()?.split('.').shift()}
+                >
+                  <Image
+                    class={`size-full object-cover object-top`}
+                    src={getS3Url(b.Key.replace(`${S3_ROOT}/`, ''))}
+                    alt=''
+                    width={600}
+                    height={150}
+                  />
+                </div>
+              ) : null
+            )
           }
         </div>
       </div>

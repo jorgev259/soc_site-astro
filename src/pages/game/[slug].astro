@@ -8,6 +8,7 @@ import BaseLayout from 'layouts/base.astro'
 
 import AlbumBox from 'components/AlbumBox.astro'
 import ReleaseDate from 'components/ReleaseDate.astro'
+import { getImgUrl } from 'utils/s3'
 
 const { slug } = Astro.params
 if (!slug) return Astro.redirect('/404')
@@ -30,9 +31,9 @@ const game = await prismaClient.game.findUnique({
 
 if (!game) return Astro.redirect('/404')
 
-const { currentLocale } = Astro
+// const { currentLocale } = Astro
 const coverImage = await getImage({
-  src: `https://cdn.sittingonclouds.net/game/${slug}.png`,
+  src: getImgUrl(`game/${slug}.png`),
   height: 150,
   width: 150
 })
@@ -63,12 +64,12 @@ const coverImage = await getImage({
 <BaseLayout>
   <div class='flex flex-col flex-1 max-w-[1440px] mx-auto p-3'>
     <div class='flex flex-col md:flex-row flex-wrap md:flex-nowrap gap-x-3 gap-y-2'>
-      <div class='flex-1 flex-wrap md:flex-5/12 '>
+      <div class='flex-1 flex-wrap md:flex-5/12'>
         <div class='size-full relative p-4 flex items-center'>
           <Image
-            src={`https://cdn.sittingonclouds.net/game/${slug}.png`}
+            src={getImgUrl(`game/${slug}.png`)}
             alt={`${game.name} logo`}
-            class='m-auto '
+            class='m-auto'
             quality='mid'
             width={300}
             height={200}
@@ -139,12 +140,12 @@ const coverImage = await getImage({
       <div class='flex flex-wrap md:flex-nowrap gap-x-3'>
         <div class='grid grid-cols-2 md:grid-cols-5 gap-x-2'>
           {
-        game.albums
-          .filter((a) => a.album.games.length < 3)
-          .sort((a, b) => (a.album.title ?? '').localeCompare(b.album.title ?? ''))
-          .map((a) => (
-            <AlbumBox href={`/album/${a.album.id}`} image={`/album/${a.album.id}.png`} title={a.album.title} />
-          ))
+            game.albums
+              .filter((a) => a.album.games.length < 3)
+              .sort((a, b) => (a.album.title ?? '').localeCompare(b.album.title ?? ''))
+              .map((a) => (
+                <AlbumBox href={`/album/${a.album.id}`} image={`album/${a.album.id}.png`} title={a.album.title} />
+              ))
           }
         </div>
       </div>
@@ -153,12 +154,12 @@ const coverImage = await getImage({
       <div class='flex flex-wrap md:flex-nowrap gap-x-3'>
         <div class='grid grid-cols-2 md:grid-cols-5 gap-x-2'>
           {
-        game.albums
-          .filter((a) => a.album.games.length >= 3)
-          .sort((a, b) => (a.album.title ?? '').localeCompare(b.album.title ?? ''))
-          .map((a) => (
-            <AlbumBox href={`/album/${a.album.id}`} image={`/album/${a.album.id}.png`} title={a.album.title} />
-          ))
+            game.albums
+              .filter((a) => a.album.games.length >= 3)
+              .sort((a, b) => (a.album.title ?? '').localeCompare(b.album.title ?? ''))
+              .map((a) => (
+                <AlbumBox href={`/album/${a.album.id}`} image={`album/${a.album.id}.png`} title={a.album.title} />
+              ))
           }
         </div>
       </div>

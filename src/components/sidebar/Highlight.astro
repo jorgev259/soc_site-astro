@@ -22,7 +22,7 @@ const album = highlightConfig?.value
   album ? (
     <SidebarSection>
       <div class='uppercase text-center text-2xl/6 font-semibold'>{m.highlightAlbum()}</div>
-      <AlbumBox href={`/album/${album.id}`} title={album.title ?? 'Unknown Title'} image={`/album/${album.id}.png`} />
+      <AlbumBox href={`/album/${album.id}`} title={album.title ?? 'Unknown Title'} image={`album/${album.id}.png`} />
     </SidebarSection>
   ) : null
 }

@@ -25,6 +25,14 @@ export default defineConfig({
       DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
+      S3_ROOT: envField.enum({
+        context: 'client',
+        access: 'public',
+        values: ['local', 'dev', 'prod'],
+        default: 'local'
+      }),
+      S3_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
+      S3_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
       IMG_PATH: envField.string({ context: 'server', access: 'secret', default: '/mnt/soc_img/img' })
     },
     validateSecrets: true
@@ -49,7 +57,7 @@ export default defineConfig({
       tsconfigPaths()
     ]
   },
-  image: { domains: ['cdn.sittingonclouds.net'] },
+  image: { domains: ['sittingonclouds.s3web.calibour.net'] },
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   redirects: {

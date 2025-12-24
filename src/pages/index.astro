@@ -34,7 +34,7 @@ const lastAlbums = await prismaClient.albums.findMany({
       <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5'>
         {
           recentAlbums.map((album) => (
-            <AlbumBox title={album.title} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+            <AlbumBox title={album.title} href={`/album/${album.id}`} image={`album/${album.id}.png`} />
           ))
         }
       </div>
@@ -49,7 +49,7 @@ const lastAlbums = await prismaClient.albums.findMany({
       <div class='grid grid-cols-2 md:grid-cols-4 gap-x-1.5'>
         {
           lastAlbums.map((album) => (
-            <AlbumBox title={album.title} href={`/album/${album.id}`} image={`/album/${album.id}.png`} />
+            <AlbumBox title={album.title} href={`/album/${album.id}`} image={`album/${album.id}.png`} />
           ))
         }
       </div>

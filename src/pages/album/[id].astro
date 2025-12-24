@@ -20,6 +20,7 @@ import flyIcon from 'img/assets/fly-icon.png'
 import ouoIcon from 'img/assets/ouo-icon.png'
 import { DISCORD_URL } from 'utils/consts'
 import MegaWarning from 'components/MegaWarning.astro'
+import { getImgUrl } from 'utils/s3'
 
 const { id } = Astro.params
 const { user } = Astro.locals
@@ -67,7 +68,7 @@ const series = album.games
   .map((s) => s.series)
 // const { currentLocale } = Astro
 const coverImage = await getImage({
-  src: `https://cdn.sittingonclouds.net/album/${album?.id}.png`,
+  src: getImgUrl(`album/${album?.id}.png`),
   height: 150,
   width: 150
 })
@@ -109,7 +110,7 @@ const coverImage = await getImage({
   <div
     class={`w-full min-h-100vh bg-fixed bg-center bg-cover`}
     style={`
-    background-image: url('https://cdn.sittingonclouds.net/album/${album?.id}.png');
+    background-image: url('${getImgUrl(`album/${album?.id}.png`)}');
   `}
   >
     <div class='bg-dark/75 w-full min-h-100vh'>
@@ -118,7 +119,7 @@ const coverImage = await getImage({
           <div class='flex-1 flex-wrap md:flex-5/12'>
             <div class='size-full relative cursor-pointer'>
               <Image
-                src={`https://cdn.sittingonclouds.net/album/${album?.id}.png`}
+                src={getImgUrl(`album/${album?.id}.png`)}
                 alt={`${album?.title} cover`}
                 class='rounded-sm size-full object-contain h-fit mb-2 md:min-h-96 px-10'
                 quality='mid'
@@ -435,7 +436,7 @@ const coverImage = await getImage({
                     <AlbumBox
                       title={relatedAlbum?.title}
                       href={`/album/${relatedAlbum?.id}`}
-                      image={`/album/${relatedAlbum?.id}.png`}
+                      image={`album/${relatedAlbum?.id}.png`}
                     />
                   ))}
                 </div>
