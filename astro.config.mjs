@@ -26,8 +26,8 @@ export default defineConfig({
       DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
       S3_ROOT: envField.enum({
-        context: 'client',
-        access: 'public',
+        context: 'server',
+        access: 'secret',
         values: ['local', 'dev', 'prod'],
         default: 'local'
       }),
@@ -49,11 +49,14 @@ export default defineConfig({
   integrations: [icon({ iconDir: 'src/img/icons' }), react()],
   vite: {
     plugins: [
+      // @ts-expect-error
       tailwindcss(),
+      // @ts-expect-error
       paraglideVitePlugin({
         project: './project.inlang',
         outdir: './src/paraglide'
       }),
+      // @ts-expect-error
       tsconfigPaths()
     ]
   },

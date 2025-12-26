@@ -1,7 +1,6 @@
 import { S3Client } from '@aws-sdk/client-s3'
 
-import { S3_ID, S3_SECRET } from 'astro:env/server'
-import { S3_ROOT } from 'astro:env/client'
+import { S3_ID, S3_SECRET, S3_ROOT } from 'astro:env/server'
 
 export const s3Client = new S3Client({
   region: 'global',

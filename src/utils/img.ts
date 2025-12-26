@@ -1,7 +1,7 @@
 import path from 'node:path'
 import sharp from 'sharp'
 import type { PrismaClient } from '@/prisma/client'
-import { S3_ROOT } from 'astro:env/client'
+import { S3_ROOT } from 'astro:env/server'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { s3Client } from './s3'
 
