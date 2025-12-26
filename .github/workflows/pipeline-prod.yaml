@@ -1,23 +1,31 @@
 name: Prod pipeline
+
 on:
-  push:
-    branches:
-      - production
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
-  build-publish-prod:
-    uses: ./.github/workflows/build-publish.yaml
-    secrets: inherit
-    permissions:
-      packages: write
-      contents: write
-    with:
-      environment: production
+  merge-to-prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Merge development -> production
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: development
+          target_branch: production
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create new tag from existing image
+        run: |
+          docker buildx imagetools create \
+            --tag ghcr.io/${{ github.repository }}:${{ github.sha }} \
+            --tag  ghcr.io/${{ github.repository }}:production \
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
 
   deploy-prod:
     uses: ./.github/workflows/deploy.yaml
-    needs: build-publish-prod
+    needs: merge-to-prod
     secrets: inherit
     with:
       environment: production

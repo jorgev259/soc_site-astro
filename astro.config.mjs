@@ -32,12 +32,10 @@ export default defineConfig({
         default: 'local'
       }),
       S3_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
-      S3_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
-      IMG_PATH: envField.string({ context: 'server', access: 'secret', default: '/mnt/soc_img/img' })
+      S3_SECRET: envField.string({ context: 'server', access: 'secret', default: '' })
     },
     validateSecrets: true
   },
-  site: 'https://sittingonclouds.net',
   i18n: {
     locales,
     defaultLocale: 'en',
