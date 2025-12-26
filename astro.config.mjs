@@ -37,7 +37,6 @@ export default defineConfig({
     },
     validateSecrets: true
   },
-  site: 'https://sittingonclouds.net',
   i18n: {
     locales,
     defaultLocale: 'en',

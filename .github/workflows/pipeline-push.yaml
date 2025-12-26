@@ -16,5 +16,8 @@ jobs:
 
   pipeline-prod:
     needs: pipeline-dev
+    permissions:
+      packages: write
+      contents: write
     uses: ./.github/workflows/pipeline-prod.yaml
     secrets: inherit
