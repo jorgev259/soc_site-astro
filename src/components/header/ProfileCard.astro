@@ -1,0 +1,89 @@
+---
+import { DateTime } from 'luxon'
+import { Icon } from 'astro-icon/components'
+
+import { isDonator } from 'utils/discord'
+import prismaClient from 'utils/prisma-client'
+// import { getRandom } from 'utils/form'
+import { toAbsHumanDuration } from 'utils/luxon'
+import EditProfileButton from './EditProfileBtn'
+
+const { user } = Astro.locals
+if (!user) return null
+
+const discordAcc = await prismaClient.account.findFirst({ where: { userId: user.id, providerId: 'discord' } })
+const hasDiscord = discordAcc !== null
+
+const floating = toAbsHumanDuration(DateTime.fromJSDate(user.createdAt), DateTime.now())
+
+/* const leftSplat = getRandom(['bottom-left', 'top-left'])
+const rightSplat = getRandom(['right', leftSplat === 'bottom-left' ? 'top-right' : 'bottom-right']) */
+---
+
+<div class:list={[Astro.props.class, 'h-full ml-auto p-2.5 w-[315px]']}>
+  <div class='bg-gray size-full color-white flex'>
+    <div class='w-22 h-full bg-white'>
+      <img class='size-full object-cover object-left' src={user.image} />
+    </div>
+    <div class='p-2 flex justify-between flex-col font-light tracking-tight text-base w-full'>
+      <div class='absolute inset-0 pointer-events-none overflow-hidden bg-red'></div>
+      <div>
+        <div class='flex items-center gap-x-1 text-lg'>
+          <span class='font-medium'>{user.name}</span>
+          {
+            isDonator(user) && (
+              <span class=''>
+                <Icon name='donator' />
+              </span>
+            )
+          }
+          {
+            hasDiscord && (
+              <span class=''>
+                <Icon name='discord' />
+              </span>
+            )
+          }
+        </div>
+        <div class='text-xs'>Floating for: {floating}</div>
+      </div>
+      <div class='flex flex-col w-full'>
+        {
+          !hasDiscord ? (
+            <div>
+              <button class='hover:underline flex items-center gap-x-1' id='link-discord'>
+                <Icon name='link' fill='white' stroke='white' color='white' />
+                Link Discord account
+              </button>
+            </div>
+          ) : null
+        }
+        <div class='flex justify-between'>
+          <EditProfileButton user={user} client:only='react'>
+            <button class='hover:underline flex items-center gap-x-1'>
+              <Icon name='profile' fill='white' stroke='white' color='white' />
+              Edit profile
+            </button>
+          </EditProfileButton>
+          <button id='logout' class='hover:underline flex items-center gap-x-1'>
+            <Icon name='logout' fill='white' stroke='white' color='white' />
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { signOut, linkSocial } from 'auth/auth-client'
+
+  document.getElementById('logout')?.addEventListener('click', async () => {
+    await signOut()
+    location.reload()
+  })
+
+  document.getElementById('link-discord')?.addEventListener('click', () => {
+    linkSocial({ provider: 'discord', callbackURL: window.location.href })
+  })
+</script>

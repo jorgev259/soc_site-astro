@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import * as m from 'paraglide/messages.js'
 import Button from 'components/Button'
 import Modal from 'components/Modal'
-import { forgetPassword, signIn } from 'auth/auth-client'
+import { requestPasswordReset, signIn } from 'auth/auth-client'
 import type { SetState } from 'types'
 
 type FormOptions = 'login' | 'forgor'
@@ -84,24 +84,14 @@ function LoginForm(props: { setForm: SetState<FormOptions>; setModalOpen: SetSta
             {m.login()}
           </Button>
           <Button
-            onClick={(ev) => {
-              ev.preventDefault()
-              signIn.social({ provider: 'discord', callbackURL: window.location.href })
+            onClick={() => {
+              setForm('forgor')
             }}
           >
-            {m.loginDiscord()}
+            {m.recoverPassword()}
           </Button>
         </div>
       </form>
-      <div className='mx-auto'>
-        <Button
-          onClick={() => {
-            setForm('forgor')
-          }}
-        >
-          {m.recoverPassword()}
-        </Button>
-      </div>
     </div>
   )
 }
@@ -124,7 +114,7 @@ function CreateForgorForm(props: { setForm: SetState<FormOptions>; setModalOpen:
     if (!email) return
 
     setLoading(true)
-    const { error } = await forgetPassword({ email: email as string, redirectTo: '/forgor' })
+    const { error } = await requestPasswordReset({ email: email as string, redirectTo: '/forgor' })
     setLoading(false)
 
     if (error) {

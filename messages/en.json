@@ -96,5 +96,7 @@
   "state": "State",
   "createdAt": "Created At",
   "updatedAt": "Updated At",
-  "dashboard": "Dashboard"
+  "dashboard": "Dashboard",
+  "profileUpdated": "Profile updated succesfully",
+  "saveChanges": "Save changes"
 }

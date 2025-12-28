@@ -23,5 +23,5 @@ FROM base AS runner
 COPY --from=deps-prod /app/node_modules/ ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
-COPY package.json copy-db.sh yarn.lock ./
+COPY package.json yarn.lock ./
 ENTRYPOINT yarn start

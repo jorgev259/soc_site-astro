@@ -15,8 +15,6 @@ if (!user || !hasUpdate) return Astro.redirect('/404')
 
 const listCommand = new ListObjectsCommand({ Bucket: 'sittingonclouds', Prefix: `${S3_ROOT}/img/live` })
 const { Contents: bannerList } = await s3Client.send(listCommand)
-
-console.log(bannerList)
 ---
 
 <script>

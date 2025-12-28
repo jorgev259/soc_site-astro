@@ -1,6 +1,7 @@
 ---
 import { AlbumStatus } from '@/prisma/enums'
 import prismaClient from 'utils/prisma-client'
+import * as m from 'paraglide/messages'
 
 import Base from 'layouts/base.astro'
 import DiscSection from 'components/adminAlbum/DiscSection'
@@ -213,7 +214,7 @@ if (!album) {
         </div>
         <hr />
         <div class=''>
-          <Button type='submit' id='editAlbumSubmit'>Save changes</Button>
+          <Button type='submit' id='editAlbumSubmit'>{m.saveChanges()}</Button>
         </div>
       </form>
     </div>

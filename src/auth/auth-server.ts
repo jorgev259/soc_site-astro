@@ -36,6 +36,7 @@ export const authServer = betterAuth({
       await sendEmail(user.email, 'Verify your email address', verifyTemplate.replaceAll('{{verify_link}}', url))
     }
   },
+
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -51,3 +52,5 @@ export async function hasPermission(userId: string | undefined, permissions: Sta
   const res = await authServer.api.userHasPermission({ body: { userId, permissions } })
   return res.success
 }
+
+export type User = typeof authServer.$Infer.Session.user

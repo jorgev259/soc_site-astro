@@ -108,17 +108,6 @@ model User_Role {
   @@id([userUsername, roleName])
 }
 
-model albumHistories {
-  id          Int      @id @default(autoincrement())
-  updatedData Json?
-  createdAt   DateTime @db.DateTime(0)
-  updatedAt   DateTime @db.DateTime(0)
-  username    String?  @db.VarChar(255)
-  albumId     Int?
-  user        users?   @relation(fields: [username], references: [id], map: "albumHistories_ibfk_1")
-  album       albums?  @relation(fields: [albumId], references: [id], map: "albumHistories_ibfk_2")
-}
-
 enum AlbumStatus {
   SHOW   @map("Show")
   HIDDEN @map("Hidden")
@@ -144,7 +133,6 @@ model albums {
   classifications Album_Classification[]
   games           Album_Game[]
   platforms       Album_Platform[]
-  histories       albumHistories[]
   comments        comments[]
   discs           discs[]
   downloads       downloads[]
@@ -414,18 +402,17 @@ model users {
   id              String    @id @db.VarChar(255)
   name            String    @db.VarChar(20)
   username        String?   @unique @db.VarChar(255)
-  displayUsername String    @default("Default display name")
+  displayUsername String?
   email           String?   @unique @db.VarChar(255)
   emailVerified   Boolean
   createdAt       DateTime  @db.DateTime(0)
   updatedAt       DateTime  @db.DateTime(0)
-  image           String?   @db.VarChar(255)
+  image           String    @db.VarChar(255)
   role            String    @default("user")
   banned          Boolean?
   banReason       String?
   banExpires      DateTime?
 
-  histories   albumHistories[]
   comments    comments[]
   favorites   favorites[]
   forgors     forgors[]

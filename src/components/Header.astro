@@ -4,6 +4,7 @@ import * as m from '../paraglide/messages.js'
 
 import prismaClient from 'utils/prisma-client.js'
 import { hasPermission } from 'auth/auth-server'
+import { getImgUrl } from 'utils/s3'
 
 import logo from 'img/logos/winter.png'
 import logoEs from 'img/logos/default_es.png'
@@ -14,14 +15,14 @@ import Toggler from './header/Toggler.astro'
 import NavButton from './header/NavButton.astro'
 import LoginNav from './header/LoginNav.astro'
 import SearchBar from './search/SearchBar.astro'
-import { getImgUrl } from 'utils/s3'
+import ProfileCard from './header/ProfileCard.astro'
 
 const [bannerConfig, bannerPositionConfig] = await Promise.all([
   prismaClient.config.findUnique({ where: { name: 'banner' }, select: { value: true } }),
   prismaClient.config.findUnique({ where: { name: 'banner-position' }, select: { value: true } })
 ])
 
-const bannerId = bannerConfig?.value || ''
+const bannerId = bannerConfig?.value
 const bannerPosition = bannerPositionConfig?.value || 'top'
 
 const { session, user } = Astro.locals
@@ -31,31 +32,35 @@ const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
 
 <header class='relative'>
   <div class='relative h-[150px] bg-top bg-no-repeat bg-cover justify-center'>
-    <div class='absolute size-full'>
-      <Picture
-        class={`size-full object-cover object-${bannerPosition || 'top'}`}
-        src={getImgUrl(`live/${bannerId}.png`)}
-        alt=''
-        width={2560}
-        height={150}
-      />
-    </div>
-    <div class='relative md:px-20 size-full flex justify-center'>
+    {
+      bannerId ? (
+        <div class='absolute size-full'>
+          <Picture
+            class={`size-full object-cover object-${bannerPosition || 'top'}`}
+            src={getImgUrl(`live/${bannerId}.png`)}
+            alt=''
+            width={2560}
+            height={150}
+          />
+        </div>
+      ) : null
+    }
+    <div class='relative size-full flex'>
       <a href='/'>
         <Image
           src={Astro.currentLocale === 'es' ? logoEs : logo}
-          class='h-full md:py-0.5 w-auto'
+          class='h-full md:py-0.5 w-auto mx-2.5 md:mx-10'
           alt='logo'
           height={150}
           width={265}
         />
       </a>
-
-      <LoginNav />
+      {session ? <ProfileCard class='hidden md:block' /> : <LoginNav />}
     </div>
   </div>
   <div class='relative w-full md:h-[55px] bg-dark z-40'>
     <Toggler>
+      <ProfileCard class='block md:hidden w-full p-0!' />
       <a href='/'><NavButton>{m.home()}</NavButton></a>
       <a href='/last-added'><NavButton>{m.lastaddednav()}</NavButton></a>
       <a href='/album/list'><NavButton>{m.albumlist()}</NavButton></a>

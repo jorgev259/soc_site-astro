@@ -6,6 +6,7 @@ import react from '@astrojs/react'
 import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import icon from 'astro-icon'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import svgr from 'vite-plugin-svgr'
 
 import { locales } from './project.inlang/settings.json'
 
@@ -36,6 +37,7 @@ export default defineConfig({
     },
     validateSecrets: true
   },
+  site: 'https://sittingonclouds.net',
   i18n: {
     locales,
     defaultLocale: 'en',
@@ -44,7 +46,7 @@ export default defineConfig({
       redirectToDefaultLocale: true
     }
   },
-  integrations: [icon({ iconDir: 'src/img/icons' }), react()],
+  integrations: [icon({ iconDir: 'src/img/icons', svgoOptions: { plugins: ['collapseGroups'] } }), react()],
   vite: {
     plugins: [
       // @ts-expect-error
@@ -55,7 +57,13 @@ export default defineConfig({
         outdir: './src/paraglide'
       }),
       // @ts-expect-error
-      tsconfigPaths()
+      tsconfigPaths(),
+      // @ts-expect-error
+      svgr({
+        svgrOptions: {
+          plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx']
+        }
+      })
     ]
   },
   image: { domains: ['sittingonclouds.s3web.calibour.net'] },
