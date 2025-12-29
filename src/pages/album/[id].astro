@@ -53,7 +53,7 @@ const album = await prismaClient.albums.findUnique({
     downloads: {
       select: {
         title: true,
-        links: { select: { id: true, url: true, url2: true, provider: true, directUrl: hasDirect } }
+        links: { select: { id: true, url: true, url2: false, provider: true, directUrl: hasDirect } }
       }
     },
     relatedAlbums: { select: { relatedAlbum: { select: { id: true, title: true } } } }
@@ -341,7 +341,8 @@ const coverImage = await getImage({
                     <div class=''>
                       <h2 class='text-center text-3xl'>{title}</h2>
                       {links.map((link) => {
-                        const { id: linkId, url, url2, provider, directUrl } = link
+                        const { id: linkId, url, provider, directUrl } = link
+                        const url2 = null
 
                         return (
                           <Fragment key={linkId}>
@@ -355,7 +356,7 @@ const coverImage = await getImage({
                                   src={`/img/provider/${provider}.png`}
                                 />
                               </div>
-                              {url2 && (
+                              {url2 !== null && (
                                 <DownloadBtn href={url2} alt='fly inc' icon={flyIcon}>
                                   Fly.inc
                                 </DownloadBtn>
