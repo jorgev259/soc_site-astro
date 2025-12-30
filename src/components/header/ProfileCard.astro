@@ -26,9 +26,9 @@ const rightSplat = getRandom(['right', leftSplat === 'bottom-left' ? 'top-right'
     <div class='w-22 h-full bg-white'>
       <img class='size-full object-cover object-left' src={user.image} />
     </div>
-    <div class='p-2 flex justify-between flex-col font-light tracking-tight text-base w-full'>
+    <div class='p-2 flex justify-between flex-col font-light tracking-tight text-base w-full gap-y-1 md:gap-y-0'>
       <div>
-        <div class='flex items-center gap-x-1 text-lg'>
+        <div class='flex items-center gap-x-1 text-lg gap-y-1 md:gap-y-0'>
           <span class:list={[{ 'text-red-500': profileName === 'Unknown name???' }, 'font-medium']}>{profileName}</span>
           {
             isDonator(user) && (

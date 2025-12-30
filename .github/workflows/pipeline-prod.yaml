@@ -18,9 +18,10 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Merge development -> production
         run: |
+          git config user.name ${{ github.actor }}
           git fetch origin production
           git checkout production
-          git merge --no-commit development 
+          git merge --no-commit --allow-unrelated-histories development 
           git push
 
       - name: Create new tag from existing image
