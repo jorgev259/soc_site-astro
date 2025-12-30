@@ -15,6 +15,7 @@ const discordAcc = await prismaClient.account.findFirst({ where: { userId: user.
 const hasDiscord = discordAcc !== null
 
 const floating = toAbsHumanDuration(DateTime.fromJSDate(user.createdAt), DateTime.now())
+const profileName = user.name || user.displayUsername || user.username || 'Unknown name???'
 
 /* const leftSplat = getRandom(['bottom-left', 'top-left'])
 const rightSplat = getRandom(['right', leftSplat === 'bottom-left' ? 'top-right' : 'bottom-right']) */
@@ -26,10 +27,9 @@ const rightSplat = getRandom(['right', leftSplat === 'bottom-left' ? 'top-right'
       <img class='size-full object-cover object-left' src={user.image} />
     </div>
     <div class='p-2 flex justify-between flex-col font-light tracking-tight text-base w-full'>
-      <div class='absolute inset-0 pointer-events-none overflow-hidden bg-red'></div>
       <div>
         <div class='flex items-center gap-x-1 text-lg'>
-          <span class='font-medium'>{user.name}</span>
+          <span class:list={[{ 'text-red-500': profileName === 'Unknown name???' }, 'font-medium']}>{profileName}</span>
           {
             isDonator(user) && (
               <span class=''>

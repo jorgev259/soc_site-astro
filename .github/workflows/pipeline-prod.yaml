@@ -7,20 +7,21 @@ jobs:
   merge-to-prod:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-      - name: Merge development -> production
-        uses: devmasx/merge-branch@master
+      - uses: actions/checkout@v6
         with:
-          type: now
-          from_branch: development
-          target_branch: production
-          github_token: ${{ steps.generate-token.outputs.token }}
+          token: ${{ steps.generate-token.outputs.token }}
+      - name: Merge development -> production
+        run: |
+          git fetch origin production
+          git checkout production
+          git merge --no-commit development 
+          git push
 
       - name: Create new tag from existing image
         run: |
