@@ -60,7 +60,7 @@ const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
   </div>
   <div class='relative w-full md:h-[55px] bg-dark z-40'>
     <Toggler>
-      <ProfileCard class='block md:hidden w-full p-0!' />
+      <ProfileCard class='block md:hidden w-full' />
       <a href='/'><NavButton>{m.home()}</NavButton></a>
       <a href='/last-added'><NavButton>{m.lastaddednav()}</NavButton></a>
       <a href='/album/list'><NavButton>{m.albumlist()}</NavButton></a>

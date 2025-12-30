@@ -21,12 +21,12 @@ const profileName = user.name || user.displayUsername || user.username || 'Unkno
 const rightSplat = getRandom(['right', leftSplat === 'bottom-left' ? 'top-right' : 'bottom-right']) */
 ---
 
-<div class:list={[Astro.props.class, 'h-full ml-auto p-2.5 w-[315px]']}>
+<div class:list={[Astro.props.class, 'h-full ml-auto w-[315px] md:shadow-md']}>
   <div class='bg-gray size-full color-white flex'>
     <div class='w-22 h-full bg-white'>
       <img class='size-full object-cover object-left' src={user.image} />
     </div>
-    <div class='p-2 flex justify-between flex-col font-light tracking-tight text-base w-full gap-y-1 md:gap-y-0'>
+    <div class='py-2 px-3 flex justify-between flex-col font-light tracking-tight text-base w-full gap-y-1 md:gap-y-0'>
       <div>
         <div class='flex items-center gap-x-1 text-lg gap-y-1 md:gap-y-0'>
           <span class:list={[{ 'text-red-500': profileName === 'Unknown name???' }, 'font-medium']}>{profileName}</span>
