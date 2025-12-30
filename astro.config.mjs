@@ -14,8 +14,12 @@ export default defineConfig({
   env: {
     schema: {
       MAILSERVER: envField.string({ context: 'server', access: 'secret', default: '{}' }),
+      DATABASE_USER: envField.string({ context: 'server', access: 'secret', default: '' }),
+      DATABASE_PWD: envField.string({ context: 'server', access: 'secret', default: '' }),
+      DATABASE_HOST: envField.string({ context: 'server', access: 'secret', default: 'localhost' }),
+      DATABASE_NAME: envField.string({ context: 'server', access: 'secret', default: 'soc-local' }),
+      DATABASE_PORT: envField.number({ context: 'server', access: 'secret', default: 3306 }),
       BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
-      DATABASE_URL: envField.string({ context: 'server', access: 'secret', default: 'mysql://localhost:3306/default' }),
       BETTER_AUTH_URL: envField.string({ context: 'server', access: 'secret', default: 'http://localhost:4321' }),
       WEBHOOK_URL: envField.string({
         context: 'server',

@@ -2,12 +2,10 @@ generator client {
   provider        = "prisma-client"
   output          = "../prisma/generated"
   previewFeatures = ["typedSql"]
-  runtime         = "nodejs"
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 model Album_Animation {
