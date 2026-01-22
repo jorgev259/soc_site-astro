@@ -23,5 +23,6 @@ FROM base AS runner
 COPY --from=deps-prod /app/node_modules/ ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
-COPY package.json yarn.lock ./
-ENTRYPOINT yarn start
+COPY package.json yarn.lock start.sh prisma.config.ts ./
+RUN ["chmod", "+x", "./start.sh"]
+ENTRYPOINT ["/bin/sh", "./start.sh"]
