@@ -1,9 +1,8 @@
 import type { APIRoute } from 'astro'
-import * as s from 'superstruct'
 import prismaClient from 'utils/prisma-client'
 import { AlbumStatus } from '@/prisma/enums'
 
-import { Status, parseForm, slug } from 'utils/form'
+import { Status, decode, slug } from 'utils/form'
 import { handleCover } from 'utils/img'
 import { handleComplete } from 'integrations/requestCat'
 import { AlbumBase } from 'schemas/album'
@@ -16,8 +15,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   let body
   try {
-    const formData = await parseForm(await request.formData())
-    body = s.create(formData, AlbumBase)
+    const formData = decode(await request.formData())
+    body = AlbumBase.parse(formData)
   } catch (err) {
     return Status(422, (err as Error).message)
   }

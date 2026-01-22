@@ -46,23 +46,18 @@ export default defineConfig({
     locales,
     defaultLocale: 'en',
     routing: {
-      prefixDefaultLocale: false,
-      redirectToDefaultLocale: true
+      prefixDefaultLocale: false
     }
   },
   integrations: [icon({ iconDir: 'src/img/icons', svgoOptions: { plugins: ['collapseGroups'] } }), react()],
   vite: {
     plugins: [
-      // @ts-expect-error
       tailwindcss(),
-      // @ts-expect-error
       paraglideVitePlugin({
         project: './project.inlang',
         outdir: './src/paraglide'
       }),
-      // @ts-expect-error
       tsconfigPaths(),
-      // @ts-expect-error
       svgr({
         svgrOptions: {
           plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx']

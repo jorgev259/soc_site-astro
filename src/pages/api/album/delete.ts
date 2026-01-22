@@ -1,11 +1,11 @@
 import type { APIRoute } from 'astro'
-import * as s from 'superstruct'
+import { z } from 'astro/zod'
 
 import prismaClient from 'utils/prisma-client'
-import { Status, parseForm } from 'utils/form'
+import { Status, decode } from 'utils/form'
 import { hasPermission } from 'auth/auth-server'
 
-const DeleteAlbum = s.object({ albumId: s.number() })
+const DeleteAlbum = z.object({ albumId: z.number() })
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const { session, user } = locals
@@ -16,8 +16,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   let body
   try {
-    const formData = await parseForm(await request.formData())
-    body = s.create(formData, DeleteAlbum)
+    const formData = decode(await request.formData())
+    body = DeleteAlbum.parse(formData)
     await prismaClient.albums.findUniqueOrThrow({ where: { id: body.albumId }, select: { id: true } })
   } catch (err) {
     return Status(422, (err as Error).message)

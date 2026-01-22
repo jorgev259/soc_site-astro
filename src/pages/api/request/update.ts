@@ -1,8 +1,7 @@
 import type { APIRoute } from 'astro'
-import * as s from 'superstruct'
 import prismaClient from 'utils/prisma-client'
 
-import { Status, parseForm } from 'utils/form'
+import { Status, decode } from 'utils/form'
 import { EditRequest } from 'schemas/requests'
 import { hasPermission } from 'auth/auth-server'
 
@@ -13,8 +12,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   let body
   try {
-    const formData = await parseForm(await request.formData())
-    body = s.create(formData, EditRequest)
+    const formData = decode(await request.formData())
+    body = EditRequest.parse(formData)
   } catch (err) {
     return Status(422, (err as Error).message)
   }

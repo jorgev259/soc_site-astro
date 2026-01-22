@@ -1,18 +1,17 @@
 import type { APIRoute } from 'astro'
-import * as s from 'superstruct'
-import { decode } from 'decode-formdata'
+import { z } from 'astro/zod'
 
 import { hasPermission } from 'auth/auth-server'
 import { handleImg } from 'utils/img'
 import prismaClient from 'utils/prisma-client'
-import { coerceBool, Status } from 'utils/form'
+import { coerceBool, Status, decode } from 'utils/form'
 
-const uploadBannerSchema = s.object({
-  set: s.defaulted(coerceBool, false),
-  banner: s.instance(File)
+const uploadBannerSchema = z.object({
+  set: coerceBool.default(false),
+  banner: z.instanceof(File)
 })
 
-const updateBannerSchema = s.object({ id: s.string() })
+const updateBannerSchema = z.object({ id: z.string() })
 
 export const PUT: APIRoute = async ({ request, locals }) => {
   const { user } = locals
@@ -22,7 +21,7 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   let body
   try {
     const formData = decode(await request.formData())
-    body = s.create(formData, uploadBannerSchema)
+    body = uploadBannerSchema.parse(formData)
   } catch (err) {
     return Status(422, (err as Error).message)
   }
@@ -48,7 +47,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
   let body
   try {
     const formData = decode(await request.formData())
-    body = s.create(formData, updateBannerSchema)
+    body = updateBannerSchema.parse(formData)
   } catch (err) {
     return Status(422, (err as Error).message)
   }

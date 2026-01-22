@@ -149,8 +149,6 @@ model animation {
   id          Int                @id @default(autoincrement())
   title       String?            @unique(map: "title") @db.VarChar(255)
   releaseDate DateTime?          @db.Date
-  createdAt   DateTime           @db.DateTime(0)
-  updatedAt   DateTime           @db.DateTime(0)
   studioSlug  String?            @db.VarChar(255)
   subTitle    String?            @unique(map: "subTitle") @db.VarChar(255)
   placeholder String?            @db.Text
@@ -287,8 +285,6 @@ model pendings {
 model platform {
   id        Int              @id @default(autoincrement())
   name      String?          @db.VarChar(255)
-  createdAt DateTime         @db.DateTime(0)
-  updatedAt DateTime         @db.DateTime(0)
   type      String?          @default("Game") @db.VarChar(255)
   albums    Album_Platform[]
   games     Game_Platform[]

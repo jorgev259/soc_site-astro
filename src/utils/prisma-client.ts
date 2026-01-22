@@ -1,4 +1,4 @@
-import { PrismaClient } from '@/prisma/client'
+import { PrismaClient, type Prisma } from '@/prisma/client'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { DATABASE_HOST, DATABASE_NAME, DATABASE_PORT, DATABASE_PWD, DATABASE_USER } from 'astro:env/server'
 
@@ -12,4 +12,5 @@ const adapter = new PrismaMariaDb({
 })
 const prismaClient = new PrismaClient({ adapter, log: ['error'] })
 
+export type PrismaTransactionalClient = Prisma.TransactionClient
 export default prismaClient

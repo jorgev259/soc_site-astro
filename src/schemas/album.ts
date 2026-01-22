@@ -1,43 +1,43 @@
-import * as s from 'superstruct'
+import { z } from 'astro/zod'
 import { AlbumStatus } from '@/prisma/enums'
 import { DownloadProvider } from 'utils/consts'
 
-export const LinkInput = s.object({
-  provider: s.enums(Object.values(DownloadProvider)),
-  url: s.optional(s.string()),
-  url2: s.optional(s.string()),
-  directUrl: s.optional(s.string())
+export const LinkInput = z.object({
+  provider: z.enum(DownloadProvider),
+  url: z.string().optional(),
+  url2: z.string().optional(),
+  directUrl: z.string().optional()
 })
 
-export const DownloadInput = s.object({
-  title: s.string(),
-  links: s.defaulted(s.array(LinkInput), [])
+export const DownloadInput = z.object({
+  title: z.string(),
+  links: z.array(LinkInput).default([])
 })
 
-const coerceInt = s.coerce(s.integer(), s.string(), (value) => parseInt(value))
-export const StoreInput = s.object({ provider: s.string(), url: s.string() })
-export const DiscInput = s.object({ number: coerceInt, body: s.string() })
+const coerceInt = z.coerce.number().int()
+export const StoreInput = z.object({ provider: z.string(), url: z.string() })
+export const DiscInput = z.object({ number: coerceInt, body: z.string() })
 
-export const AlbumBase = s.object({
-  cover: s.instance(File),
-  title: s.optional(s.string()),
-  subTitle: s.optional(s.string()),
-  releaseDate: s.optional(s.date()),
-  label: s.optional(s.string()),
-  vgmdb: s.optional(s.string()),
-  description: s.optional(s.string()),
-  status: s.defaulted(s.enums(Object.values(AlbumStatus)), AlbumStatus.HIDDEN),
-  animations: s.defaulted(s.array(coerceInt), []),
-  artists: s.defaulted(s.optional(s.string()), ''),
-  categories: s.defaulted(s.array(s.string()), []),
-  classifications: s.defaulted(s.array(s.string()), []),
-  games: s.defaulted(s.array(s.string()), []),
-  platforms: s.defaulted(s.array(coerceInt), []),
-  discs: s.defaulted(s.array(DiscInput), []),
-  downloads: s.defaulted(s.array(DownloadInput), []),
-  related: s.defaulted(s.array(coerceInt), []),
-  stores: s.defaulted(s.array(StoreInput), []),
-  request: s.optional(coerceInt)
+export const AlbumBase = z.object({
+  cover: z.instanceof(File),
+  title: z.string().optional(),
+  subTitle: z.string().optional(),
+  releaseDate: z.date().optional(),
+  label: z.string().optional(),
+  vgmdb: z.string().optional(),
+  description: z.string().optional(),
+  status: z.enum(AlbumStatus).default(AlbumStatus.HIDDEN),
+  animations: z.array(coerceInt).default([]),
+  artists: z.string().optional().default(''),
+  categories: z.array(z.string()).default([]),
+  classifications: z.array(z.string()).default([]),
+  games: z.array(z.string()).default([]),
+  platforms: z.array(coerceInt).default([]),
+  discs: z.array(DiscInput).default([]),
+  downloads: z.array(DownloadInput).default([]),
+  related: z.array(coerceInt).default([]),
+  stores: z.array(StoreInput).default([]),
+  request: coerceInt.optional()
 })
 
-export const EditAlbum = s.assign(s.partial(AlbumBase), s.object({ albumId: coerceInt }))
+export const EditAlbum = AlbumBase.partial().extend({ albumId: coerceInt })

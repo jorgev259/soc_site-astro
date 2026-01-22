@@ -1,9 +1,10 @@
 import path from 'node:path'
 import sharp from 'sharp'
-import type { PrismaClient } from '@/prisma/client'
 import { S3_ROOT } from 'astro:env/server'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
+
 import { s3Client } from './s3'
+import type { PrismaTransactionalClient } from './prisma-client'
 
 function colorToHex(color: number) {
   const hexadecimal = color.toString(16)
@@ -39,7 +40,7 @@ export async function handleImg(file: File, folder: string, id: number | string,
   }
 }
 
-export async function handleCover(file: File, folder: string, id: number | string, tx: PrismaClient) {
+export async function handleCover(file: File, folder: string, id: number | string, tx: PrismaTransactionalClient) {
   const headerColor = await handleImg(file, path.posix.join('img', folder), id)
   await tx.albums.update({ where: { id: parseInt(id.toString()) }, data: { headerColor } })
 }

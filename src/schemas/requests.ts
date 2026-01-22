@@ -1,12 +1,13 @@
 import { RequestState } from '@/prisma/enums'
-import { object, string, number, optional, enums } from 'superstruct'
+import { z } from 'astro/zod'
 
-export const EditRequest = object({
-  id: number(),
-  title: optional(string()),
-  link: optional(string()),
-  state: enums(Object.values(RequestState)),
-  reason: optional(string()),
-  comments: optional(string()),
-  message: optional(string())
+export const EditRequest = z.object({
+  id: z.number(),
+  title: z.string().optional(),
+  link: z.string().optional(),
+  state: z.enum(RequestState),
+  reason: z.string().optional(),
+  comments: z.string().optional(),
+  message: z.string().optional()
 })
+
