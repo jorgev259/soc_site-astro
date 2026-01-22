@@ -236,8 +236,6 @@ model game {
   slug        String           @id @db.VarChar(255)
   name        String?          @db.VarChar(255)
   releaseDate DateTime?        @db.Date
-  createdAt   DateTime         @db.DateTime(0)
-  updatedAt   DateTime         @db.DateTime(0)
   placeholder String?          @db.Text
   headerColor String?          @default("#ffffff") @db.VarChar(255)
   albums      Album_Game[]
@@ -293,16 +291,12 @@ model platform {
 model publisher {
   id        Int              @id @default(autoincrement())
   name      String?          @db.VarChar(255)
-  createdAt DateTime         @db.DateTime(0)
-  updatedAt DateTime         @db.DateTime(0)
   games     Publisher_Game[]
 }
 
 model ratings {
   id        Int      @id @default(autoincrement())
   score     Int
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
   albumId   Int
   username  String   @db.VarChar(255)
   album     albums?  @relation(fields: [albumId], references: [id], map: "ratings_ibfk_1", onDelete: Cascade)
@@ -348,8 +342,6 @@ model roles {
 model series {
   slug        String        @id @db.VarChar(255)
   name        String?       @db.VarChar(255)
-  createdAt   DateTime      @db.DateTime(0)
-  updatedAt   DateTime      @db.DateTime(0)
   placeholder String?       @db.Text
   headerColor String?       @default("#ffffff") @db.VarChar(255)
   games       Series_Game[]
@@ -366,8 +358,6 @@ model stores {
 model studio {
   slug       String             @id @db.VarChar(255)
   name       String?            @db.VarChar(255)
-  createdAt  DateTime           @db.DateTime(0)
-  updatedAt  DateTime           @db.DateTime(0)
   animations Studio_Animation[]
 }
 
