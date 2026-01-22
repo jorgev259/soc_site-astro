@@ -2,6 +2,7 @@ generator client {
   provider        = "prisma-client"
   output          = "../prisma/generated"
   previewFeatures = ["typedSql"]
+  compilerBuild = "small"
 }
 
 datasource db {
