@@ -62,10 +62,15 @@ const album = await prismaClient.albums.findUnique({
 
 if (!album) return Astro.redirect('/404')
 
-const series = album.games
-  .map((g) => g.game.series)
-  .flat()
-  .map((s) => s.series)
+const series = Array.from(
+  new Map(
+    (album?.games ?? [])
+      .flatMap((g) => g.game?.series ?? [])
+      .map((s) => s?.series)
+      .filter(Boolean)
+      .map((s) => [s.slug, s])
+  ).values()
+)
 // const { currentLocale } = Astro
 const coverImage = await getImage({
   src: getImgUrl(`album/${album?.id}.png`),
@@ -172,7 +177,7 @@ const coverImage = await getImage({
                       }
                     </td>
                   </tr>
-                  {
+                  <!-- {
                     album?.label && (
                       <tr>
                         <th class='mr-2'>{m.publishedBy()}</th>
@@ -183,7 +188,7 @@ const coverImage = await getImage({
                         </td>
                       </tr>
                     )
-                  }
+                  } -->
                   {
                     (album?.platforms.length ?? 0) > 0 && (
                       <tr>
@@ -363,7 +368,7 @@ const coverImage = await getImage({
                               )}
                               {url ? (
                                 <DownloadBtn href={url} alt='ouo' icon={ouoIcon}>
-                                  ouo.io
+                                  DOWNLOAD
                                 </DownloadBtn>
                               ) : null}
 

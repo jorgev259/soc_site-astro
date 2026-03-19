@@ -3,6 +3,7 @@ export enum DownloadProvider {
   MEDIAFIRE = 'MEDIAFIRE',
   RANOZ = 'RANOZ',
   TERABOX = 'TERABOX',
+  SEND = 'SEND',
   MIRROR = 'MIRROR'
 }
 
@@ -20,5 +21,3 @@ export enum StoreProviders {
   BANDCAMP = 'bandcamp',
   DEEZER = 'deezer'
 }
-
-export const DISCORD_URL = 'https://discord.gg/x23SFbE'
