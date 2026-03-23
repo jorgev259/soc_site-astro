@@ -19,10 +19,7 @@ jobs:
       - name: Merge development -> production
         run: |
           git config user.name ${{ github.actor }}
-          git fetch origin production
-          git checkout production
-          git merge --no-commit --allow-unrelated-histories development 
-          git push
+          git push -f origin production
 
       - name: Create new tag from existing image
         run: |
