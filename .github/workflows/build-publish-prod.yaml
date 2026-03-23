@@ -1,26 +1,17 @@
-name: Prod pipeline
+name: Build & Publish development image
 
 on:
   workflow_call:
 
 jobs:
-  merge-to-prod:
+  publish-prod:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate a token
+      - uses: actions/create-github-app-token@v2
         id: generate-token
-        uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-      - uses: actions/checkout@v6
-        with:
-          token: ${{ steps.generate-token.outputs.token }}
-      - name: Merge development -> production
-        run: |
-          git config user.name ${{ github.actor }}
-          git push -f origin production
-
       - name: Create new tag from existing image
         run: |
           echo ${{github.token}} | docker login ghcr.io -u ${{github.actor}} --password-stdin
@@ -31,7 +22,19 @@ jobs:
 
   deploy-prod:
     uses: ./.github/workflows/deploy.yaml
-    needs: merge-to-prod
+    name: Deploy production image
+    needs: publish-prod
     secrets: inherit
     with:
       environment: production
+
+  push-prod:
+    runs-on: ubuntu-latest
+    needs: deploy-prod
+    steps:
+      - uses: actions/checkout@v6
+      - name: Push development to production branch
+        run: |
+          git config push.default nothing
+          git fetch origin production
+          git push -f origin development:production

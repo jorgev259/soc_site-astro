@@ -1,11 +1,18 @@
-name: Dev pipeline
+name: Dev push
+
 on:
-  workflow_call:
+  push:
+    branches:
+      - development
+
+permissions:
+  packages: write
+  contents: write
 
 jobs:
   build-publish-dev:
     uses: ./.github/workflows/build-publish.yaml
-    name: Build & publish Dev
+    name: Build & publish development image
     secrets: inherit
     permissions:
       packages: write
@@ -14,8 +21,13 @@ jobs:
 
   deploy-dev:
     uses: ./.github/workflows/deploy.yaml
-    name: Deploy Dev
+    name: Deploy development image
     needs: build-publish-dev
     secrets: inherit
     with:
       environment: development
+
+  build-prod:
+    uses: ./.github/workflows/build-publish-prod.yaml
+    needs: deploy-dev
+    secrets: inherit
