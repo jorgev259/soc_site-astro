@@ -7,8 +7,6 @@ services:
     environment:
       MARIADB_DATABASE: soc-local
       MARIADB_ROOT_PASSWORD: root
-    ports:
-      - 3306:3306
     volumes:
       - mariadb:/var/lib/mysql:Z
     healthcheck:
@@ -29,5 +27,4 @@ services:
       watch:
         - action: rebuild
           path: .
-    environment:
-      DATABASE_URL: 'mysql://root:root@mariadb:3306/soc-local'
+    env_file: ./.env

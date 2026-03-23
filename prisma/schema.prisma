@@ -1,8 +1,8 @@
 generator client {
   provider        = "prisma-client"
-  output          = "../prisma/generated"
+  output          = "./generated"
   previewFeatures = ["typedSql"]
-  compilerBuild = "small"
+  compilerBuild   = "small"
 }
 
 datasource db {
@@ -281,26 +281,26 @@ model pendings {
 }
 
 model platform {
-  id        Int              @id @default(autoincrement())
-  name      String?          @db.VarChar(255)
-  type      String?          @default("Game") @db.VarChar(255)
-  albums    Album_Platform[]
-  games     Game_Platform[]
+  id     Int              @id @default(autoincrement())
+  name   String?          @db.VarChar(255)
+  type   String?          @default("Game") @db.VarChar(255)
+  albums Album_Platform[]
+  games  Game_Platform[]
 }
 
 model publisher {
-  id        Int              @id @default(autoincrement())
-  name      String?          @db.VarChar(255)
-  games     Publisher_Game[]
+  id    Int              @id @default(autoincrement())
+  name  String?          @db.VarChar(255)
+  games Publisher_Game[]
 }
 
 model ratings {
-  id        Int      @id @default(autoincrement())
-  score     Int
-  albumId   Int
-  username  String   @db.VarChar(255)
-  album     albums?  @relation(fields: [albumId], references: [id], map: "ratings_ibfk_1", onDelete: Cascade)
-  user      users?   @relation(fields: [username], references: [id], map: "ratings_ibfk_2")
+  id       Int     @id @default(autoincrement())
+  score    Int
+  albumId  Int
+  username String  @db.VarChar(255)
+  album    albums? @relation(fields: [albumId], references: [id], map: "ratings_ibfk_1", onDelete: Cascade)
+  user     users?  @relation(fields: [username], references: [id], map: "ratings_ibfk_2")
 }
 
 model related_album {

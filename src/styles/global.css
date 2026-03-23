@@ -1,5 +1,4 @@
-@import 'tailwindcss' source('../../src/');
-
+@import 'tailwindcss';
 @theme {
   --breakpoint-*: initial;
   --breakpoint-md: 880px;

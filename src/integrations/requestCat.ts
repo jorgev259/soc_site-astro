@@ -1,7 +1,6 @@
-import { Prisma } from '@prisma/client'
-import axios from 'axios'
-
+import { Prisma } from '@/prisma/client'
 import { WEBHOOK_URL } from 'astro:env/server'
+
 import prismaClient from 'utils/prisma-client'
 import { RequestState } from '@/prisma/enums'
 
@@ -16,7 +15,14 @@ async function postWebhook(album: AlbumArtistNames, userText = '') {
   const content = `${url}${userText}`
   const payload = { content }
 
-  await axios.post(WEBHOOK_URL, payload)
+  await fetch(WEBHOOK_URL, {
+    body: JSON.stringify(payload),
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
 }
 
 export async function handleComplete(album: AlbumArtistNames, requestId?: number) {
