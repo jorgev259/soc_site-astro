@@ -4,7 +4,7 @@ import { S3_ID, S3_SECRET, S3_ROOT } from 'astro:env/server'
 
 export const s3Client = new S3Client({
   region: 'global',
-  endpoint: 'https://s3.calibour.net',
+  endpoint: 'https://store.calibour.net',
   credentials: {
     accessKeyId: S3_ID,
     secretAccessKey: S3_SECRET
@@ -14,5 +14,5 @@ export const s3Client = new S3Client({
 })
 
 export const getS3Url = (file: string) =>
-  `https://sittingonclouds.s3web.calibour.net/${S3_ROOT}/${file}`.replace(/--+/g, '-')
+  `https://sittingonclouds.objects.calibour.net/${S3_ROOT}/${file}`.replace(/--+/g, '-')
 export const getImgUrl = (file: string) => getS3Url(`img/${file}`)
