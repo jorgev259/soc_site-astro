@@ -65,7 +65,7 @@ export default defineConfig({
       })
     ]
   },
-  image: { domains: ['sittingonclouds.s3web.calibour.net'] },
+  image: { domains: ['sittingonclouds.objects.calibour.net'] },
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   redirects: {
