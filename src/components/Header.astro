@@ -2,7 +2,6 @@
 import { Image, Picture } from 'astro:assets'
 import * as m from '../paraglide/messages.js'
 
-import prismaClient from 'utils/prisma-client.js'
 import { hasPermission } from 'auth/auth-server'
 import { getImgUrl } from 'utils/cdn'
 
@@ -17,22 +16,24 @@ import LoginNav from './header/LoginNav.astro'
 import SearchBar from './search/SearchBar.astro'
 import ProfileCard from './header/ProfileCard.astro'
 
-const bannerPositionConfig = await prismaClient.config.findUnique({
+/* const bannerPositionConfig = await prismaClient.config.findUnique({
   where: { name: 'banner-position' },
   select: { value: true }
 })
-const bannerPosition = bannerPositionConfig?.value || 'top'
+const bannerPosition = bannerPositionConfig?.value || 'top' */
 
 const { session, user } = Astro.locals
-const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
-const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
+const [hasUpdate, hasPublish] = await Promise.all([
+  hasPermission(user?.id, { cms: ['update'] }),
+  hasPermission(user?.id, { cms: ['publish'] })
+])
 ---
 
 <header class='relative'>
   <div class='relative h-37.5 bg-top bg-no-repeat bg-cover justify-center'>
     <div class='absolute size-full'>
       <Picture
-        class={`size-full object-cover object-${bannerPosition || 'top'}`}
+        class='size-full object-cover object-top'
         src={getImgUrl(`live/banner.png`)}
         alt=''
         width={2560}
