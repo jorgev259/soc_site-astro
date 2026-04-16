@@ -17,12 +17,10 @@ import LoginNav from './header/LoginNav.astro'
 import SearchBar from './search/SearchBar.astro'
 import ProfileCard from './header/ProfileCard.astro'
 
-const [bannerConfig, bannerPositionConfig] = await Promise.all([
-  prismaClient.config.findUnique({ where: { name: 'banner' }, select: { value: true } }),
-  prismaClient.config.findUnique({ where: { name: 'banner-position' }, select: { value: true } })
-])
-
-const bannerId = bannerConfig?.value
+const bannerPositionConfig = await prismaClient.config.findUnique({
+  where: { name: 'banner-position' },
+  select: { value: true }
+})
 const bannerPosition = bannerPositionConfig?.value || 'top'
 
 const { session, user } = Astro.locals
@@ -31,20 +29,16 @@ const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
 ---
 
 <header class='relative'>
-  <div class='relative h-[150px] bg-top bg-no-repeat bg-cover justify-center'>
-    {
-      bannerId ? (
-        <div class='absolute size-full'>
-          <Picture
-            class={`size-full object-cover object-${bannerPosition || 'top'}`}
-            src={getImgUrl(`live/${bannerId}.png`)}
-            alt=''
-            width={2560}
-            height={150}
-          />
-        </div>
-      ) : null
-    }
+  <div class='relative h-37.5 bg-top bg-no-repeat bg-cover justify-center'>
+    <div class='absolute size-full'>
+      <Picture
+        class={`size-full object-cover object-${bannerPosition || 'top'}`}
+        src={getImgUrl(`live/banner.png`)}
+        alt=''
+        width={2560}
+        height={150}
+      />
+    </div>
     <div class='relative size-full flex'>
       <a href='/'>
         <Image
@@ -58,7 +52,7 @@ const hasPublish = await hasPermission(user?.id, { cms: ['publish'] })
       {session ? <ProfileCard class='hidden md:block' /> : <LoginNav />}
     </div>
   </div>
-  <div class='relative w-full md:h-[55px] bg-dark z-40'>
+  <div class='relative w-full md:h-13.75 bg-dark z-40'>
     <Toggler>
       <ProfileCard class='block md:hidden w-full' />
       <a href='/'><NavButton>{m.home()}</NavButton></a>
