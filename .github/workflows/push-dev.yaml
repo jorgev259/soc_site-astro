@@ -18,6 +18,7 @@ jobs:
       packages: write
     with:
       environment: dev-build
+      image-tag: development
 
   deploy-dev:
     uses: ./.github/workflows/deploy.yaml
@@ -36,6 +37,7 @@ jobs:
       packages: write
     with:
       environment: prod-build
+      image-tag: production
 
   deploy-prod:
     uses: ./.github/workflows/deploy.yaml

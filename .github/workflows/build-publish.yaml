@@ -4,6 +4,9 @@ on:
       environment:
         type: string
         required: true
+      image-tag:
+        type: string
+        required: true
 
 jobs:
   build-docker-image:
@@ -33,4 +36,4 @@ jobs:
             CDN_URL=${{ vars.CDN_URL }}
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
-            ghcr.io/${{ github.repository }}:${{ inputs.environment }}
+            ghcr.io/${{ github.repository }}:${{ inputs.image-tag }}
