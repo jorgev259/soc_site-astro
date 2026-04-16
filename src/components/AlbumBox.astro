@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets'
-import { getImgUrl } from 'utils/s3'
+import { getImgUrl } from 'utils/cdn'
 
 type Props =
   | { title?: string | null; href: string; image: string; loading?: false; class?: string }

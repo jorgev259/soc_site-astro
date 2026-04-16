@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets'
 import { ListObjectsCommand } from '@aws-sdk/client-s3'
-import { S3_ROOT } from 'astro:env/server'
+import { S3_BUCKET } from 'astro:env/server'
 
 import { hasPermission } from 'auth/auth-server'
 import { getS3Url, s3Client } from 'utils/s3'
@@ -13,7 +13,7 @@ const { user } = Astro.locals
 const hasUpdate = await hasPermission(user?.id, { cms: ['update'] })
 if (!user || !hasUpdate) return Astro.redirect('/404')
 
-const listCommand = new ListObjectsCommand({ Bucket: 'sittingonclouds', Prefix: `${S3_ROOT}/img/live` })
+const listCommand = new ListObjectsCommand({ Bucket: S3_BUCKET, Prefix: '/img/live' })
 const { Contents: bannerList } = await s3Client.send(listCommand)
 ---
 
@@ -80,7 +80,7 @@ const { Contents: bannerList } = await s3Client.send(listCommand)
                 >
                   <Image
                     class={`size-full object-cover object-top`}
-                    src={getS3Url(b.Key.replace(`${S3_ROOT}/`, ''))}
+                    src={getS3Url(b.Key)}
                     alt=''
                     width={600}
                     height={150}

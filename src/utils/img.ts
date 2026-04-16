@@ -1,6 +1,6 @@
 import path from 'node:path'
 import sharp from 'sharp'
-import { S3_ROOT } from 'astro:env/server'
+import { S3_BUCKET } from 'astro:env/server'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 import { s3Client } from './s3'
@@ -17,11 +17,10 @@ function convertRGBtoHex(red: number, green: number, blue: number) {
 
 async function writeImg(file: ArrayBuffer, folder: string, id: number | string) {
   const fileName = `${id}.png`
-  const pathString = path.posix.join(S3_ROOT, folder)
-  const fullPath = path.posix.join(pathString, fileName)
+  const fullPath = path.posix.join(folder, fileName)
 
   const command = new PutObjectCommand({
-    Bucket: 'sittingonclouds',
+    Bucket: S3_BUCKET,
     Key: fullPath,
     Body: Buffer.from(file)
   })

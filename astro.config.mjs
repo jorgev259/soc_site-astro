@@ -7,8 +7,10 @@ import { paraglideVitePlugin } from '@inlang/paraglide-js'
 import icon from 'astro-icon'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import svgr from 'vite-plugin-svgr'
+import { loadEnv } from 'vite'
 
 import { locales } from './project.inlang/settings.json'
+const { CDN_URL } = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '')
 
 export default defineConfig({
   env: {
@@ -30,14 +32,12 @@ export default defineConfig({
       DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
-      S3_ROOT: envField.enum({
-        context: 'server',
-        access: 'secret',
-        values: ['local', 'dev', 'prod'],
-        default: 'local'
-      }),
-      S3_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
-      S3_SECRET: envField.string({ context: 'server', access: 'secret', default: '' })
+      S3_ENDPOINT: envField.string({ context: 'server', access: 'secret', url: true }),
+      S3_REGION: envField.string({ context: 'server', access: 'secret', default: 'global' }),
+      S3_BUCKET: envField.string({ context: 'server', access: 'secret' }),
+      S3_ID: envField.string({ context: 'server', access: 'secret' }),
+      S3_SECRET: envField.string({ context: 'server', access: 'secret' }),
+      CDN_URL: envField.string({ context: 'client', access: 'public', url: true })
     },
     validateSecrets: true
   },
@@ -65,7 +65,7 @@ export default defineConfig({
       })
     ]
   },
-  image: { domains: ['sittingonclouds.objects.calibour.net'] },
+  image: { domains: [CDN_URL] },
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   redirects: {

@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro'
 import { editProfileSchema } from 'schemas/user'
 import { handleImg } from 'utils/img'
 import prismaClient from 'utils/prisma-client'
-import { getImgUrl } from 'utils/s3'
+import { getImgUrl } from 'utils/cdn'
 
 export const PATCH: APIRoute = async ({ request }) => {
   const formData = await request.formData()

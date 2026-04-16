@@ -8,7 +8,7 @@ import BaseLayout from 'layouts/base.astro'
 
 import AlbumBox from 'components/AlbumBox.astro'
 import ReleaseDate from 'components/ReleaseDate.astro'
-import { getImgUrl } from 'utils/s3'
+import { getImgUrl } from 'utils/cdn'
 
 const { slug } = Astro.params
 if (!slug) return Astro.redirect('/404')

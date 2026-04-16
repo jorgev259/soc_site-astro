@@ -3,7 +3,7 @@ import { authServer } from 'auth/auth-server'
 import { signUpSchema } from 'schemas/user'
 import { handleImg } from 'utils/img'
 import prismaClient from 'utils/prisma-client'
-import { getImgUrl } from 'utils/s3'
+import { getImgUrl } from 'utils/cdn'
 
 const DEFAULT_IMG = getImgUrl('user/clouds.png')
 
