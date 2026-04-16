@@ -15,6 +15,8 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production=true
 
 FROM base AS build
+ARG CDN_URL
+ENV CDN_URL=$CDN_URL
 COPY --from=deps-build /app/node_modules/ ./node_modules
 COPY . .
 RUN yarn build

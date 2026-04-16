@@ -32,11 +32,11 @@ export default defineConfig({
       DISCORD_OAUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_GUILD_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
       DISCORD_DONATOR_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
-      S3_ENDPOINT: envField.string({ context: 'server', access: 'secret', url: true }),
+      S3_ENDPOINT: envField.string({ context: 'server', access: 'secret', url: true, default: '' }),
       S3_REGION: envField.string({ context: 'server', access: 'secret', default: 'global' }),
-      S3_BUCKET: envField.string({ context: 'server', access: 'secret' }),
-      S3_ID: envField.string({ context: 'server', access: 'secret' }),
-      S3_SECRET: envField.string({ context: 'server', access: 'secret' }),
+      S3_BUCKET: envField.string({ context: 'server', access: 'secret', default: '' }),
+      S3_ID: envField.string({ context: 'server', access: 'secret', default: '' }),
+      S3_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
       CDN_URL: envField.string({ context: 'client', access: 'public', url: true })
     },
     validateSecrets: true

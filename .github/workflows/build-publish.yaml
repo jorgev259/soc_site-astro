@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       packages: write
+    environment:
+      name: ${{ inputs.environment }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -27,6 +29,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
+          build-args: |
+            CDN_URL=${{ vars.CDN_URL }}
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:${{ inputs.environment }}

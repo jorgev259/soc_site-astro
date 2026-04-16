@@ -17,7 +17,7 @@ jobs:
     permissions:
       packages: write
     with:
-      environment: development
+      environment: dev-build
 
   deploy-dev:
     uses: ./.github/workflows/deploy.yaml
@@ -27,7 +27,31 @@ jobs:
     with:
       environment: development
 
-  build-prod:
-    uses: ./.github/workflows/build-publish-prod.yaml
-    needs: deploy-dev
+  build-publish-prod:
+    uses: ./.github/workflows/build-publish.yaml
+    name: Build & publish development image
     secrets: inherit
+    needs: deploy-dev
+    permissions:
+      packages: write
+    with:
+      environment: prod-build
+
+  deploy-prod:
+    uses: ./.github/workflows/deploy.yaml
+    name: Deploy production image
+    needs: build-publish-prod
+    secrets: inherit
+    with:
+      environment: production
+
+  push-prod:
+    runs-on: ubuntu-latest
+    needs: deploy-prod
+    steps:
+      - uses: actions/checkout@v6
+      - name: Push development to production branch
+        run: |
+          git config push.default nothing
+          git fetch origin production
+          git push -f origin development:production
