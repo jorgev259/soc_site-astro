@@ -29,7 +29,7 @@ jobs:
 
   build-publish-prod:
     uses: ./.github/workflows/build-publish.yaml
-    name: Build & publish development image
+    name: Build & publish production image
     secrets: inherit
     needs: deploy-dev
     permissions:
