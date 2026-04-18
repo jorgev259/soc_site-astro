@@ -8,8 +8,7 @@ export const GET: APIRoute = async (context) => {
   const anims = await prismaClient.animation.findMany({
     where: titleParam ? { title: { contains: titleParam } } : undefined,
     select: { id: true, title: true },
-    take: 10,
-    orderBy: { createdAt: 'desc' }
+    take: 10
   })
 
   return new Response(JSON.stringify(anims), {

@@ -1,5 +1,8 @@
+import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { MultiSelect, type Option } from 'react-multi-select-component'
+
+import styles from 'styles/components/form/AsyncMultiSelect.module.css'
 
 interface Props {
   url: string
@@ -61,7 +64,7 @@ export default function AsyncMultiSelect(props: Props) {
         value={selected}
         onChange={setSelected}
         filterOptions={filterOptions}
-        className={className}
+        className={clsx(styles.amultiselect, className)}
       />
       {selected.map((s, i) => (
         <input key={i} hidden name={`${name}.${i}`} value={s.value} readOnly />
