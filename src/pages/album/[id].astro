@@ -96,7 +96,7 @@ const coverImage = await getImage({
     basic: {
       title: album?.title ?? '',
       type: 'website',
-      image: `https://www.sittingonclouds.net${coverImage.src}`,
+      image: coverImage.src,
       url: Astro.url.pathname
     },
     optional: {
