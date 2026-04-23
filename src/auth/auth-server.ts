@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth/minimal'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { username, bearer, admin } from 'better-auth/plugins'
 import type { Statements } from 'better-auth/plugins/access'
-import { DISCORD_OAUTH_ID, DISCORD_OAUTH_SECRET } from 'astro:env/server'
+import { BETTER_AUTH_ORIGINS, DISCORD_OAUTH_ID, DISCORD_OAUTH_SECRET } from 'astro:env/server'
 import { Role } from '@/prisma/enums'
 
 import prismaClient from '../utils/prisma-client'
@@ -11,8 +11,10 @@ import forgorTemplate from '../utils/forgorTemplate'
 import verifyTemplate from '../utils/verifyTemplate'
 import { ac, roles } from 'auth/permissions'
 
+const trustedOrigins = JSON.parse(BETTER_AUTH_ORIGINS) as string[]
+
 export const authServer = betterAuth({
-  trustedOrigins: ['https://sittingonclouds.net', 'https://www.sittingonclouds.net'],
+  trustedOrigins,
   database: prismaAdapter(prismaClient, { provider: 'mysql' }),
   user: { modelName: 'users' },
   plugins: [username(), bearer(), admin({ defaultRole: Role.user, adminRoles: Role.admin, ac, roles })],

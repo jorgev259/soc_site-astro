@@ -21,6 +21,7 @@ export default defineConfig({
       DATABASE_HOST: envField.string({ context: 'server', access: 'secret', default: 'localhost' }),
       DATABASE_NAME: envField.string({ context: 'server', access: 'secret', default: 'soc-local' }),
       DATABASE_PORT: envField.number({ context: 'server', access: 'secret', default: 3306 }),
+      BETTER_AUTH_ORIGINS: envField.string({ context: 'server', access: 'secret', default: '[]' }),
       BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret', default: '' }),
       BETTER_AUTH_URL: envField.string({ context: 'server', access: 'secret', default: 'http://localhost:4321' }),
       WEBHOOK_URL: envField.string({
