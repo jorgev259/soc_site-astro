@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - development
+  workflow_call:
 
 permissions:
   packages: write
