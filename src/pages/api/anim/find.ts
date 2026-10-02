@@ -9,7 +9,7 @@ export const GET: APIRoute = async (context) => {
     where: titleParam ? { title: { contains: titleParam } } : undefined,
     select: { id: true, title: true },
     take: 10,
-    orderBy: { createdAt: 'desc' }
+    orderBy: { id: 'desc' }
   })
 
   return new Response(JSON.stringify(anims), {

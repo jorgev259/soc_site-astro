@@ -3,6 +3,7 @@ export enum DownloadProvider {
   MEDIAFIRE = 'MEDIAFIRE',
   RANOZ = 'RANOZ',
   TERABOX = 'TERABOX',
+  SEND = 'SEND',
   MIRROR = 'MIRROR'
 }
 
