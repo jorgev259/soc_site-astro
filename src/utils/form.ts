@@ -7,7 +7,7 @@ export const slug = (text: string) => slugify(text, { lower: true, strict: true 
 
 export const decode = (formData: FormData) =>
   decodeFD(formData, {
-    arrays: ['animations', 'classifications', 'categories', 'platforms', 'related', 'games', 'downloads', 'discs'],
+    arrays: ['animations', 'classifications', 'categories', 'platforms', 'related', 'games', 'downloads', 'discs', 'studios'],
     dates: ['releaseDate']
   })
 
