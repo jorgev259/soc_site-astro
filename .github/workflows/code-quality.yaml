@@ -21,3 +21,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: false
+          build-args: |
+            CDN_URL=${{ vars.CDN_URL || 'https://cdn.sittingonclouds.net' }}
