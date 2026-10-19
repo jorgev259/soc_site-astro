@@ -8,7 +8,9 @@ const adapter = new PrismaMariaDb({
   user: DATABASE_USER,
   password: DATABASE_PWD,
   database: DATABASE_NAME,
-  connectionLimit: 10
+  connectionLimit: 10,
+  // The driver's 1s default is too short for remote databases (e.g. over Tailscale)
+  connectTimeout: 10000
 })
 const prismaClient = new PrismaClient({ adapter, log: ['error'] })
 
