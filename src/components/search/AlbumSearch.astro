@@ -1,14 +1,13 @@
 ---
 import * as m from 'paraglide/messages'
-import type { Prisma as PrismaTypes } from '@/prisma/client'
-import type { DefaultArgs } from '@prisma/client/runtime/library'
 import { Image } from 'astro:assets'
+import { AlbumStatus } from '@/prisma/enums'
 
 import prismaClient from 'utils/prisma-client'
 import SearchNav from './SearchNav.astro'
 import AlbumBox from 'components/AlbumBox.astro'
 import { getImgUrl } from 'utils/cdn'
-// import { ACTION_ERROR_CODES } from 'astro:actions'
+import { getWords, sortByRelevance } from 'utils/search'
 
 interface Props {
   query: string
@@ -16,168 +15,61 @@ interface Props {
 }
 
 const take = 24
+const sectionTake = 12
 const { query } = Astro.props
-let { page } = Astro.props
+const page = Math.max(1, Astro.props.page || 1)
 
-if (page < 1) page = 1
+// Every word has to match, otherwise "Pokemon Gold" also brings up every album with "Gold" in it
+const words = getWords(query)
+const [albumRows, animRows, gameRows, seriesRows] =
+  words.length > 0
+    ? await Promise.all([
+        prismaClient.albums.findMany({
+          where: {
+            status: AlbumStatus.SHOW,
+            AND: words.map((word) => ({ OR: [{ title: { contains: word } }, { subTitle: { contains: word } }] }))
+          },
+          select: { id: true, title: true, releaseDate: true },
+          orderBy: { releaseDate: 'desc' } // albums that rank the same stay newest first
+        }),
+        prismaClient.animation.findMany({
+          where: { AND: words.map((word) => ({ title: { contains: word } })) },
+          select: { id: true, title: true }
+        }),
+        prismaClient.game.findMany({
+          where: { AND: words.map((word) => ({ name: { contains: word } })) },
+          select: { slug: true, name: true }
+        }),
+        prismaClient.series.findMany({
+          where: { AND: words.map((word) => ({ name: { contains: word } })) },
+          select: { slug: true, name: true }
+        })
+      ])
+    : [[], [], [], []]
 
-const queryString = query
-  .trim()
-  .split(/[\s_\-:]+/)
-  .join(' ')
-  .toLowerCase()
-  .replace('the', '')
-  .replace('original soundtrack', '')
-  .replace('soundtrack', '')
-  .replace('of', '')
-  .trim()
+const albums = sortByRelevance(albumRows, words, (album) => album.title)
+const anims = sortByRelevance(animRows, words, (anim) => anim.title)
+const games = sortByRelevance(gameRows, words, (game) => game.name)
+const series = sortByRelevance(seriesRows, words, (s) => s.name)
 
-const tokens = queryString.length
-  ? queryString
-      .split(/\s+/)
-      .map((t) => t.toLowerCase())
-      .filter(Boolean)
-  : []
-
-const candidatePool = Math.max(200, take * 6)
-const smallPool = 24
-
-async function ormAndFind(model: 'animation' | 'game' | 'series', field: string, limit = smallPool) {
-  if (!tokens.length) return { total: 0, items: [] }
-
-  const andConditions = tokens.map((t) => ({ [field]: { contains: t } }))
-
-  if (model === 'animation') {
-    const items = await prismaClient.animation.findMany({
-      where: { AND: andConditions as any },
-      select: { id: true, title: true },
-      take: limit
-    })
-    return { total: items.length, items: items.map((r) => ({ id: r.id, label: r.title })) }
-  } else if (model === 'game') {
-    const items = await prismaClient.game.findMany({
-      where: { AND: andConditions as any },
-      select: { slug: true, name: true },
-      take: limit
-    })
-    return { total: items.length, items: items.map((r) => ({ id: r.slug, label: r.name })) }
-  } else {
-    // series
-    const items = await prismaClient.series.findMany({
-      where: { AND: andConditions as any },
-      select: { slug: true, name: true },
-      take: limit
-    })
-    return { total: items.length, items: items.map((r) => ({ id: r.slug, label: r.name })) }
-  }
-}
-
-let animsResults: Array<{ id: string; label: string }> = []
-let animsCount = 0
-
-let gamesResults: Array<{ id: string; label: string }> = []
-let gamesCount = 0
-
-let seriesResults: Array<{ id: string; label: string }> = []
-let seriesCount = 0
-
-if (tokens.length) {
-  const animOrm = await ormAndFind('animation', 'title', 12)
-  animsResults = (animOrm.items ?? []) as any
-  animsCount = animOrm.total
-
-  const gamesOrm = await ormAndFind('game', 'name', 12)
-  gamesResults = (gamesOrm.items ?? []) as any
-  gamesCount = gamesOrm.total
-
-  const seriesOrm = await ormAndFind('series', 'name', 12)
-  seriesResults = (seriesOrm.items ?? []) as any
-  seriesCount = seriesOrm.total
-}
-
-let _count = 0
-let _search: Array<{ id: string; title: string | null; subTitle?: string | null; releaseDate?: string | Date | null }> =
-  []
-let _start = 0
-let _end = 0
-
-if (!tokens.length) {
-  const countQuery: PrismaTypes.albumsCountArgs<DefaultArgs> = {
-    where: {}
-  }
-
-  const [count, search] = await Promise.all([
-    prismaClient.albums.count(countQuery),
-    prismaClient.albums.findMany({
-      select: { id: true, title: true, subTitle: true, releaseDate: true },
-      orderBy: { releaseDate: 'desc' },
-      take,
-      skip: (page - 1) * take
-    })
-  ])
-
-  _count = count
-  _search = search.map((a) => ({ ...a, id: String(a.id) }))
-  _start = (page - 1) * take
-  _end = Math.min(page * take, count)
-} else {
-  const orConditions = tokens.flatMap((t) => [{ title: { contains: t } }, { subTitle: { contains: t } }])
-
-  const count = await prismaClient.albums.count({ where: { OR: orConditions } })
-
-  const candidates = await prismaClient.albums.findMany({
-    where: { OR: orConditions },
-    select: { id: true, title: true, subTitle: true, releaseDate: true },
-    take: candidatePool
-  })
-
-  // Score candidates: title weight 2, subtitle 1, exact phrase boost
-  const qLower = queryString.toLowerCase()
-  const scored = candidates.map((row) => {
-    const title = (row.title ?? '').toString().toLowerCase()
-    const sub = (row.subTitle ?? '').toString().toLowerCase()
-
-    let score = 0
-    for (const t of tokens) {
-      if (title.includes(t)) score += 2
-      if (sub.includes(t)) score += 1
-    }
-
-    if (qLower.length > 0 && title.includes(qLower)) score += 5
-
-    const dateVal = row.releaseDate ? new Date(row.releaseDate).getTime() : 0
-    return { ...row, score, dateVal }
-  })
-
-  scored.sort((a, b) => {
-    if (b.score !== a.score) return b.score - a.score
-    if (b.dateVal !== a.dateVal) return b.dateVal - a.dateVal
-    return (a.title ?? '').localeCompare(b.title ?? '')
-  })
-
-  const start = (page - 1) * take
-  const end = Math.min(page * take, count)
-  const pageResults = scored.slice(start, start + take).map(({ score, dateVal, ...rest }) => ({
-    ...rest,
-    id: String(rest.id)
-  }))
-
-  _count = count
-  _search = pageResults
-  _start = start
-  _end = end
-}
+const start = (page - 1) * take
+const end = Math.min(start + take, albums.length)
 ---
 
 <div class='grid md:grid-cols-2 grid-cols-1'>
   {
-    animsResults.length > 0 ? (
+    anims.length > 0 ? (
       <div class='col-span-1'>
-        <div class='mb-2 text-lg text-slate-300 uppercase'>Animations ({animsCount})</div>
+        <div class='mb-2 text-lg text-slate-300 uppercase'>Animations ({anims.length})</div>
         <div class='flex flex-wrap gap-2 mb-4'>
-          {animsResults.map((a) => (
+          {anims.slice(0, sectionTake).map((anim) => (
             <div class='md:w-1/3 w-1/2'>
-              <AlbumBox class='!bg-btn-dark !mt-0' title={a.label} href={`/anim/${a.id}`} image={`anim/${a.id}.png`} />
+              <AlbumBox
+                class='!bg-btn-dark !mt-0'
+                title={anim.title}
+                href={`/anim/${anim.id}`}
+                image={`anim/${anim.id}.png`}
+              />
             </div>
           ))}
         </div>
@@ -185,13 +77,13 @@ if (!tokens.length) {
     ) : null
   }
   {
-    gamesResults.length > 0 ? (
+    games.length > 0 ? (
       <div class='col-span-1 border-0 md:border-l-2 border-slate-600 pl-4'>
-        <div class='mb-2 text-lg text-slate-300 uppercase'>Games ({gamesCount})</div>
-        {gamesResults.map((g) => (
+        <div class='mb-2 text-lg text-slate-300 uppercase'>Games ({games.length})</div>
+        {games.slice(0, sectionTake).map((game) => (
           <div class='gap-2 mb-1'>
-            <a class='text-left hover:bg-btn-gray/30 rounded-md p-1 px-2' href={`/game/${g.id}`}>
-              {g.label}
+            <a class='text-left hover:bg-btn-gray/30 rounded-md p-1 px-2' href={`/game/${game.slug}`}>
+              {game.name}
             </a>
           </div>
         ))}
@@ -201,24 +93,24 @@ if (!tokens.length) {
 </div>
 
 {
-  seriesResults.length > 0 ? (
+  series.length > 0 ? (
     <>
-      <div class='mb-2 text-lg text-slate-300 uppercase'>Game Series ({seriesCount})</div>
+      <div class='mb-2 text-lg text-slate-300 uppercase'>Game Series ({series.length})</div>
       <div class='flex'>
-        {seriesResults.map((s) => (
+        {series.slice(0, sectionTake).map((s) => (
           <a
             class='md:w-1/4 w-1/2 text-center bg-gray rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition group'
-            href={`/series/${s.id}`}
+            href={`/series/${s.slug}`}
           >
             <Image
-              src={getImgUrl(`series/${s.id}.png`)}
-              alt={`${s.label} logo`}
+              src={getImgUrl(`series/${s.slug}.png`)}
+              alt={`${s.name} logo`}
               class='m-auto '
               quality='low'
               width={120}
               height={60}
             />
-            {s.label}
+            {s.name}
           </a>
         ))}
       </div>
@@ -227,20 +119,20 @@ if (!tokens.length) {
 }
 
 <div class='text-lg text-slate-300 uppercase'>
-  {m.albums()} ({_count}) {
-    _count > take ? (
-      <span> / {page === 1 ? m.firstResults({ take }) : m.moreResults({ start: _start, end: _end })}</span>
+  {m.albums()} ({albums.length}) {
+    albums.length > take ? (
+      <span> / {page === 1 ? m.firstResults({ take }) : m.moreResults({ start: start + 1, end })}</span>
     ) : null
   }
 </div>
 
 <div class='flex gap-x-2'>
-  <SearchNav query={query} count={_count} take={take} page={page} />
+  <SearchNav query={query} count={albums.length} take={take} page={page} />
 </div>
 
 <div class='grid grid-cols-1 md:grid-cols-3 mt-1.5 gap-4'>
   {
-    _search.map((album) => (
+    albums.slice(start, end).map((album) => (
       <a
         class='flex bg-gray h-40 cursor-pointer rounded overflow-hidden shadow-md hover:shadow-lg hover:scale-102 transition group'
         href={`/album/${album.id}`}
@@ -267,5 +159,5 @@ if (!tokens.length) {
 </div>
 
 <div class='flex gap-x-2'>
-  <SearchNav query={query} count={_count} take={take} page={page} />
+  <SearchNav query={query} count={albums.length} take={take} page={page} />
 </div>

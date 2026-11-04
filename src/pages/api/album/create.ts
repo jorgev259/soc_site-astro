@@ -35,6 +35,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
           label: body.label,
           vgmdb: body.vgmdb,
           description: body.description,
+          ripAuthor: body.ripAuthor,
+          ripAuthorUrl: body.ripAuthorUrl,
           createdBy: user.name,
           status: body.status,
           animations: { create: body.animations.map((id) => ({ animation: { connect: { id } } })) },

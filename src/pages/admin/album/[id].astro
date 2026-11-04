@@ -201,6 +201,15 @@ if (!album) {
               className='rounded-md py-2 h-full'
             />
           </div>
+          <Input dark defaultValue={album.ripAuthor} name='ripAuthor' label='Rip author' />
+          <Input
+            dark
+            defaultValue={album.ripAuthorUrl}
+            name='ripAuthorUrl'
+            type='url'
+            label='Rip author link'
+            className='col-span-2'
+          />
         </div>
         <hr />
         <StoresSection client:only='react' defaultValue={album.stores} />

@@ -26,6 +26,8 @@ export const AlbumBase = z.object({
   label: z.string().optional(),
   vgmdb: z.string().optional(),
   description: z.string().optional(),
+  ripAuthor: z.string().optional(),
+  ripAuthorUrl: z.httpUrl().or(z.literal('')).optional(),
   status: z.enum(AlbumStatus).default(AlbumStatus.HIDDEN),
   animations: z.array(coerceInt).default([]),
   artists: z.string().optional().default(''),

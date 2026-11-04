@@ -263,6 +263,27 @@ const coverImage = await getImage({
                       </tr>
                     )
                   }
+                  {
+                    album?.ripAuthor && (
+                      <tr>
+                        <th class='mr-2'>{m.rippedBy()}</th>
+                        <td>
+                          {album?.ripAuthorUrl ? (
+                            <a
+                              class='btn btn-link p-0'
+                              href={album?.ripAuthorUrl}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                            >
+                              {album?.ripAuthor}
+                            </a>
+                          ) : (
+                            album?.ripAuthor
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  }
 
                   <!-- <tr>
                     <th class='mr-2'>{m.avgRating()}</th>
