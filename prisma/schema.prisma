@@ -128,6 +128,7 @@ model albums {
   headerColor     String                 @default("#ffffff") @db.VarChar(255)
   ripAuthor       String?                @db.VarChar(255)
   ripAuthorUrl    String?                @db.VarChar(255)
+  groupName       String?                @db.VarChar(255)
   animations      Album_Animation[]
   artists         Album_Artist[]
   categories      Album_Category[]

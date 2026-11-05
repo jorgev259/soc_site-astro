@@ -4,11 +4,14 @@ import * as m from 'paraglide/messages'
 import prismaClient from 'utils/prisma-client'
 import { getImage } from 'astro:assets'
 import { Image } from 'astro:assets'
+import { AlbumStatus } from '@/prisma/enums'
 
 import BaseLayout from 'layouts/base.astro'
 import AlbumBox from 'components/AlbumBox.astro'
+import AlbumFilters from 'components/AlbumFilters.astro'
 import ReleaseDate from 'components/ReleaseDate.astro'
 import { getImgUrl } from 'utils/cdn'
+import { getAlbumFilters, getGroups } from 'utils/albumFilters'
 
 const { id } = Astro.params
 
@@ -16,6 +19,7 @@ if (!id) return Astro.redirect('/404')
 const animId = parseInt(id)
 if (!animId) return Astro.redirect('/404')
 
+const { group, sort, orderBy } = getAlbumFilters(Astro.url)
 const anim = await prismaClient.animation.findUnique({
   where: { id: animId },
   select: {
@@ -24,11 +28,18 @@ const anim = await prismaClient.animation.findUnique({
     releaseDate: true,
     headerColor: true,
     studios: { select: { studioSlug: true, studio: { select: { name: true } } } },
-    albums: { select: { album: { select: { title: true, id: true } } } }
+    albums: {
+      where: { album: { status: AlbumStatus.SHOW } },
+      select: { album: { select: { title: true, id: true, groupName: true } } },
+      orderBy
+    }
   }
 })
 
 if (!anim) return Astro.redirect('/404')
+
+const groups = getGroups(anim.albums.map(({ album }) => album))
+const albums = anim.albums.filter(({ album }) => !group || album.groupName === group)
 
 const coverImage = await getImage({
   src: getImgUrl(`anim/${animId}.png`),
@@ -117,9 +128,10 @@ const coverImage = await getImage({
           </div>
         </div>
         <div>
+          <AlbumFilters groups={groups} group={group} sort={sort} />
           <div class='grid w-full grid-cols-2 md:grid-cols-4 gap-x-2.5'>
             {
-              anim.albums.map((a) => (
+              albums.map((a) => (
                 <AlbumBox href={`/album/${a.album.id}`} image={`album/${a.album.id}.png`} title={a.album.title} />
               ))
             }

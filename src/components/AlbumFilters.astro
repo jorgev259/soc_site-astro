@@ -1,0 +1,41 @@
+---
+import * as m from 'paraglide/messages'
+import { getFiltersHref, type AlbumSort } from 'utils/albumFilters'
+
+interface Props {
+  groups: string[]
+  group: string | null
+  sort: AlbumSort
+}
+
+const { groups, group, sort } = Astro.props
+const { pathname } = Astro.url
+
+const pillClass = (active: boolean) => ['rounded-md px-3 py-1', active ? 'bg-btn-gray' : 'bg-dark hover:bg-dark-hover']
+---
+
+<div class='flex flex-wrap items-center gap-2 mb-2'>
+  {
+    groups.length > 0 ? (
+      <>
+        <a href={getFiltersHref(pathname, null, sort)} class:list={pillClass(!group)}>
+          {m.all()}
+        </a>
+        {groups.map((name) => (
+          <a href={getFiltersHref(pathname, name, sort)} class:list={pillClass(name === group)}>
+            {name}
+          </a>
+        ))}
+      </>
+    ) : null
+  }
+  <div class='flex flex-wrap items-center gap-2 ml-auto'>
+    <span>{m.sortBy()}:</span>
+    <a href={getFiltersHref(pathname, group, 'title')} class:list={pillClass(sort === 'title')}>
+      {m.title()}
+    </a>
+    <a href={getFiltersHref(pathname, group, 'releaseDate')} class:list={pillClass(sort === 'releaseDate')}>
+      {m.releaseDate()}
+    </a>
+  </div>
+</div>

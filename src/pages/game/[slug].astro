@@ -3,16 +3,20 @@ import prismaClient from 'utils/prisma-client'
 import * as m from 'paraglide/messages'
 import { getImage, Image } from 'astro:assets'
 import { SEO } from 'astro-seo'
+import { AlbumStatus } from '@/prisma/enums'
 
 import BaseLayout from 'layouts/base.astro'
 
 import AlbumBox from 'components/AlbumBox.astro'
+import AlbumFilters from 'components/AlbumFilters.astro'
 import ReleaseDate from 'components/ReleaseDate.astro'
 import { getImgUrl } from 'utils/cdn'
+import { getAlbumFilters, getGroups } from 'utils/albumFilters'
 
 const { slug } = Astro.params
 if (!slug) return Astro.redirect('/404')
 
+const { group, sort, orderBy } = getAlbumFilters(Astro.url)
 const game = await prismaClient.game.findUnique({
   where: { slug },
   select: {
@@ -23,13 +27,17 @@ const game = await prismaClient.game.findUnique({
     series: { select: { series: { select: { name: true, slug: true } } } },
     headerColor: true,
     albums: {
-      select: { game: true, album: { select: { games: true, id: true, title: true, publishedAt: true } } },
-      orderBy: { album: { publishedAt: 'desc' } }
+      where: { album: { status: AlbumStatus.SHOW } },
+      select: { game: true, album: { select: { games: true, id: true, title: true, groupName: true } } },
+      orderBy
     }
   }
 })
 
 if (!game) return Astro.redirect('/404')
+
+const groups = getGroups(game.albums.map(({ album }) => album))
+const albums = game.albums.filter(({ album }) => !group || album.groupName === group)
 
 // const { currentLocale } = Astro
 const coverImage = await getImage({
@@ -136,13 +144,13 @@ const coverImage = await getImage({
       </div>
     </div>
     <hr />
+    <AlbumFilters groups={groups} group={group} sort={sort} />
     <div class=''>
       <div class='flex flex-wrap md:flex-nowrap gap-x-3'>
         <div class='grid grid-cols-2 md:grid-cols-5 gap-x-2'>
           {
-            game.albums
+            albums
               .filter((a) => a.album.games.length < 3)
-              .sort((a, b) => (a.album.title ?? '').localeCompare(b.album.title ?? ''))
               .map((a) => (
                 <AlbumBox href={`/album/${a.album.id}`} image={`album/${a.album.id}.png`} title={a.album.title} />
               ))
@@ -154,9 +162,8 @@ const coverImage = await getImage({
       <div class='flex flex-wrap md:flex-nowrap gap-x-3'>
         <div class='grid grid-cols-2 md:grid-cols-5 gap-x-2'>
           {
-            game.albums
+            albums
               .filter((a) => a.album.games.length >= 3)
-              .sort((a, b) => (a.album.title ?? '').localeCompare(b.album.title ?? ''))
               .map((a) => (
                 <AlbumBox href={`/album/${a.album.id}`} image={`album/${a.album.id}.png`} title={a.album.title} />
               ))

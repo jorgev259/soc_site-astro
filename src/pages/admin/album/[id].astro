@@ -210,6 +210,7 @@ if (!album) {
             label='Rip author link'
             className='col-span-2'
           />
+          <Input dark defaultValue={album.groupName} name='groupName' label='Group' />
         </div>
         <hr />
         <StoresSection client:only='react' defaultValue={album.stores} />

@@ -138,6 +138,7 @@ if (!user || !hasUpdate) return Astro.redirect('/404')
           </div>
           <Input dark name='ripAuthor' label='Rip author' />
           <Input dark name='ripAuthorUrl' type='url' label='Rip author link' className='col-span-2' />
+          <Input dark name='groupName' label='Group' />
         </div>
         <hr />
         <StoresSection client:only='react' />
