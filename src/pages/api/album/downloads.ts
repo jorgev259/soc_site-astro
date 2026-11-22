@@ -8,7 +8,9 @@ import { hasPermission } from 'auth/auth-server'
 
 const EditDownloads = z.object({
   albumId: z.coerce.number().int(),
-  downloads: z.array(DownloadInput).min(1)
+  downloads: z.array(DownloadInput).min(1),
+  // Left out, the related albums stay as they are
+  related: z.array(z.coerce.number().int()).optional()
 })
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -24,7 +26,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return Status(422, (err as Error).message)
   }
 
-  const { albumId, downloads } = body
+  const { albumId, downloads, related } = body
   const album = await prismaClient.albums.findUnique({ where: { id: albumId }, select: { id: true } })
   if (!album) return Status(404, `Album ${albumId} not found`)
 
@@ -37,6 +39,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
             title: d.title,
             albumId,
             links: { create: d.links }
+          }
+        })
+      }
+      if (related) {
+        await tx.albums.update({
+          where: { id: albumId },
+          data: {
+            relatedAlbums: { deleteMany: {}, create: related.map((id) => ({ relatedAlbum: { connect: { id } } })) }
           }
         })
       }
