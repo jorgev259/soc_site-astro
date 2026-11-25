@@ -38,6 +38,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           ripAuthor: body.ripAuthor,
           ripAuthorUrl: body.ripAuthorUrl,
           groupName: body.groupName,
+          concertUrl: body.concertUrl,
           createdBy: user.name,
           status: body.status,
           animations: { create: body.animations.map((id) => ({ animation: { connect: { id } } })) },

@@ -211,6 +211,14 @@ if (!album) {
             className='col-span-2'
           />
           <Input dark defaultValue={album.groupName} name='groupName' label='Group' />
+          <Input
+            dark
+            defaultValue={album.concertUrl}
+            name='concertUrl'
+            type='url'
+            label='Concert link'
+            className='col-span-2'
+          />
         </div>
         <hr />
         <StoresSection client:only='react' defaultValue={album.stores} />

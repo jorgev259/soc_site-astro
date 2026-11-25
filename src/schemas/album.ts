@@ -29,6 +29,7 @@ export const AlbumBase = z.object({
   ripAuthor: z.string().optional(),
   ripAuthorUrl: z.httpUrl().or(z.literal('')).optional(),
   groupName: z.string().trim().optional(),
+  concertUrl: z.httpUrl().or(z.literal('')).optional(),
   status: z.enum(AlbumStatus).default(AlbumStatus.HIDDEN),
   animations: z.array(coerceInt).default([]),
   artists: z.string().optional().default(''),
